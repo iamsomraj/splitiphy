@@ -1,0 +1,30 @@
+import { Button } from '@/components/ui/button';
+import { ClerkLoaded, ClerkLoading, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+
+const Header = () => {
+  return (
+    <header>
+      <ClerkLoading>
+        <p>Auth (Loading)</p>
+      </ClerkLoading>
+      <ClerkLoaded>
+        <SignedIn>
+          <p>Auth (Signed In)</p>
+          <UserButton afterSignOutUrl='/' />
+        </SignedIn>
+        <SignedOut>
+          <p>Auth (Signed Out)</p>
+          <SignInButton
+            mode='modal'
+            afterSignInUrl='/split'
+            afterSignUpUrl='/split'
+          >
+            <Button>Login</Button>
+          </SignInButton>
+        </SignedOut>
+      </ClerkLoaded>
+    </header>
+  );
+};
+
+export default Header;
