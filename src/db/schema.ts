@@ -1,3 +1,4 @@
+import { relations } from 'drizzle-orm';
 import { pgTable, serial, text, timestamp, boolean, date, decimal, integer } from 'drizzle-orm/pg-core';
 
 export const groups = pgTable('groups', {
@@ -7,6 +8,11 @@ export const groups = pgTable('groups', {
   updatedAt: timestamp('updated_at'),
   isDeleted: boolean('is_deleted').notNull().default(false),
 });
+
+export const groupsRelations = relations(groups, ({ many }) => ({
+  groupMemberships: many(groupMemberships),
+  groupExpenses: many(groupExpenses),
+}));
 
 export const groupMemberships = pgTable('group_memberships', {
   id: serial('id').primaryKey(),
