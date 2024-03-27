@@ -16,8 +16,8 @@ const Header = () => {
           <p>Auth (Signed Out)</p>
           <SignInButton
             mode='modal'
-            afterSignInUrl='/split'
-            afterSignUpUrl='/split'
+            afterSignInUrl='/groups'
+            afterSignUpUrl='/groups'
           >
             <Button>Login</Button>
           </SignInButton>
