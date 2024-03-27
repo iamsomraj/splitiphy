@@ -4,15 +4,11 @@ import { pgTable, serial, text, timestamp, boolean, date, decimal, integer } fro
 export const groups = pgTable('groups', {
   id: serial('id').primaryKey(),
   name: text('name').notNull(),
+  ownerId: text('owner_id').notNull(),
   createdAt: timestamp('created_at').notNull(),
   updatedAt: timestamp('updated_at'),
   isDeleted: boolean('is_deleted').notNull().default(false),
 });
-
-export const groupsRelations = relations(groups, ({ many }) => ({
-  groupMemberships: many(groupMemberships),
-  groupExpenses: many(groupExpenses),
-}));
 
 export const groupMemberships = pgTable('group_memberships', {
   id: serial('id').primaryKey(),
