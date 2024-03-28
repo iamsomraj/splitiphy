@@ -1,7 +1,7 @@
-import { getGroups } from '@/db/queries/get-groups';
+import { getUserGroups } from '@/db/queries/get-user-groups';
 
 const GroupsPage = async () => {
-  const groups = await getGroups();
+  const groups = await getUserGroups();
   return (
     <div>
       <p>Groups Page</p>
