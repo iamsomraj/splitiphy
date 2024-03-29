@@ -1,5 +1,5 @@
-import Footer from './footer';
-import Header from './header';
+import Header from '@/app/(home)/header';
+import Footer from '@/app/(home)/footer';
 
 export default function HomePage() {
   return (
