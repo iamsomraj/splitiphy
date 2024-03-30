@@ -5,13 +5,14 @@ import { eq } from 'drizzle-orm';
 import { cache } from 'react';
 
 export const getUserGroups = cache(async () => {
-  const { userId } = await auth();
+  const session = await auth();
 
-  if (!userId) {
+  if (!session || !session.userId) {
     return [];
   }
+
   const ownedGroups = await db.query.groups.findMany({
-    where: eq(groups.ownerId, userId),
+    where: eq(groups.ownerId, session.userId),
     with: {
       groupExpenses: true,
       groupMemberships: true,
