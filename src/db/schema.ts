@@ -1,8 +1,9 @@
-import { relations } from 'drizzle-orm';
-import { pgTable, serial, text, timestamp, boolean, date, decimal, integer } from 'drizzle-orm/pg-core';
+import { relations, sql } from 'drizzle-orm';
+import { pgTable, serial, text, timestamp, boolean, date, decimal, integer, uuid } from 'drizzle-orm/pg-core';
 
 export const groups = pgTable('groups', {
   id: serial('id').primaryKey(),
+  uuid: uuid('uuid').default(sql`gen_random_uuid()`),
   name: text('name').notNull(),
   ownerId: text('owner_id').notNull(),
   createdAt: timestamp('created_at').notNull(),
@@ -18,6 +19,7 @@ export const groupsRelations = relations(groups, ({ many }) => ({
 
 export const groupMemberships = pgTable('group_memberships', {
   id: serial('id').primaryKey(),
+  uuid: uuid('uuid').default(sql`gen_random_uuid()`),
   groupId: integer('group_id')
     .references(() => groups.id, { onDelete: 'cascade' })
     .notNull(),
@@ -36,6 +38,7 @@ export const groupMembershipsRelations = relations(groupMemberships, ({ one }) =
 
 export const expenses = pgTable('expenses', {
   id: serial('id').primaryKey(),
+  uuid: uuid('uuid').default(sql`gen_random_uuid()`),
   name: text('name').notNull(),
   description: text('description').notNull(),
   expenseDate: date('expense_date').notNull(),
@@ -51,6 +54,7 @@ export const expensesRelations = relations(expenses, ({ many }) => ({
 
 export const transactions = pgTable('transactions', {
   id: serial('id').primaryKey(),
+  uuid: uuid('uuid').default(sql`gen_random_uuid()`),
   amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
   ownerId: text('owner_id').notNull(),
   payerId: text('payer_id').notNull(),
@@ -72,6 +76,7 @@ export const transactionsRelations = relations(transactions, ({ one }) => ({
 
 export const groupExpenses = pgTable('group_expenses', {
   id: serial('id').primaryKey(),
+  uuid: uuid('uuid').default(sql`gen_random_uuid()`),
   expenseId: integer('expense_id')
     .references(() => expenses.id, { onDelete: 'cascade' })
     .notNull(),
@@ -96,6 +101,7 @@ export const groupExpensesRelations = relations(groupExpenses, ({ one }) => ({
 
 export const userBalances = pgTable('user_balances', {
   id: serial('id').primaryKey(),
+  uuid: uuid('uuid').default(sql`gen_random_uuid()`),
   groupId: integer('group_id')
     .references(() => groups.id, { onDelete: 'cascade' })
     .notNull(),

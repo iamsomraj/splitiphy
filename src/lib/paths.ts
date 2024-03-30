@@ -5,6 +5,9 @@ const paths = {
   groups() {
     return '/groups';
   },
+  groupShow(uuid: string) {
+    return `/groups/${uuid}`;
+  },
 };
 
 export default paths;
