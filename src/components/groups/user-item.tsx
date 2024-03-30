@@ -11,10 +11,10 @@ type UserItemProps = {
 const UserItem = ({ user, groupUuid }: UserItemProps) => {
   return (
     <div key={user.id}>
-      <p>{user.name}</p>
+      <p>{user.firstName + ' ' + user.lastName}</p>
       <button
         onClick={async () => {
-          await actions.addUserToGroup(user.id, groupUuid);
+          await actions.addUserToGroup(user, groupUuid);
         }}
       >
         Add to Group
