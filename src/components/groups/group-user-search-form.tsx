@@ -1,5 +1,6 @@
 'use client';
 import * as actions from '@/actions';
+import FormButton from '@/components/shared/form-button';
 import { useSearchParams } from 'next/navigation';
 
 type GroupUserSearchFormProps = {
@@ -20,7 +21,7 @@ const GroupUserSearchForm = ({ groupUuid }: GroupUserSearchFormProps) => {
           defaultValue={searchParams.get('term') ?? ''}
         />
       </div>
-      <button type="submit">Search</button>
+      <FormButton>Search</FormButton>
     </form>
   );
 };

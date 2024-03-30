@@ -1,5 +1,6 @@
 'use client';
 import * as actions from '@/actions';
+import FormButton from '@/components/shared/form-button';
 import { useFormState } from 'react-dom';
 
 const GroupCreateForm = () => {
@@ -19,7 +20,7 @@ const GroupCreateForm = () => {
       {formState.errors._form ? (
         <div>{formState.errors._form?.join(', ')}</div>
       ) : null}
-      <button type="submit">Create</button>
+      <FormButton>Create Group</FormButton>
     </form>
   );
 };
