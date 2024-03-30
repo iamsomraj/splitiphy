@@ -1,3 +1,4 @@
+import GroupExpenseForm from '@/components/groups/group-expense-form';
 import GroupUserSearchForm from '@/components/groups/group-user-search-form';
 import { getGroupDetailsById } from '@/db/queries';
 import paths from '@/lib/paths';
@@ -33,6 +34,7 @@ const GroupsShowPage = async ({ params }: GroupsShowPageProps) => {
           ))}
         </ul>
       </div>
+      <GroupExpenseForm />
     </div>
   );
 };
