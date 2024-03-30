@@ -17,7 +17,10 @@ const createGroupSchema = z.object({
     .max(50, {
       message: 'Group name must be at most 50 characters long',
     })
-    .regex(/[a-zA-Z0-9 ]+/, 'Group name must only contain lowercase or uppercase letters, numbers and spaces'),
+    .regex(
+      /[a-zA-Z0-9 ]+/,
+      'Group name must only contain lowercase or uppercase letters, numbers and spaces',
+    ),
 });
 
 interface CreateGroupFormState {
@@ -27,7 +30,10 @@ interface CreateGroupFormState {
   };
 }
 
-export async function createGroup(formState: CreateGroupFormState, formData: FormData): Promise<CreateGroupFormState> {
+export async function createGroup(
+  formState: CreateGroupFormState,
+  formData: FormData,
+): Promise<CreateGroupFormState> {
   const result = createGroupSchema.safeParse({
     name: formData.get('name'),
   });
@@ -58,7 +64,11 @@ export async function createGroup(formState: CreateGroupFormState, formData: For
       })
       .returning();
 
-    if (!insertedGroups.length || !insertedGroups[0].uuid || !insertedGroups[0].id) {
+    if (
+      !insertedGroups.length ||
+      !insertedGroups[0].uuid ||
+      !insertedGroups[0].id
+    ) {
       return {
         errors: {
           _form: ['Something went wrong while creating the group.'],

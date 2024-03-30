@@ -20,9 +20,16 @@ const createOrUpdateLoggedInUser = async () => {
       .insert(users)
       .values({
         id: currUser.id,
-        username: currUser.externalAccounts?.find((a) => !!a.username)?.username || '',
-        email: currUser.emailAddresses?.find((e) => e.id === currUser.primaryEmailAddressId)?.emailAddress || '',
-        phone: currUser.phoneNumbers?.find((p) => p.id === currUser.primaryPhoneNumberId)?.phoneNumber || '',
+        username:
+          currUser.externalAccounts?.find((a) => !!a.username)?.username || '',
+        email:
+          currUser.emailAddresses?.find(
+            (e) => e.id === currUser.primaryEmailAddressId,
+          )?.emailAddress || '',
+        phone:
+          currUser.phoneNumbers?.find(
+            (p) => p.id === currUser.primaryPhoneNumberId,
+          )?.phoneNumber || '',
         firstName: currUser.firstName || '',
         lastName: currUser.lastName || '',
         profileImage: currUser.imageUrl || '',
@@ -35,9 +42,16 @@ const createOrUpdateLoggedInUser = async () => {
     return await db
       .update(users)
       .set({
-        username: currUser.externalAccounts?.find((a) => !!a.username)?.username || '',
-        email: currUser.emailAddresses?.find((e) => e.id === currUser.primaryEmailAddressId)?.emailAddress || '',
-        phone: currUser.phoneNumbers?.find((p) => p.id === currUser.primaryPhoneNumberId)?.phoneNumber || '',
+        username:
+          currUser.externalAccounts?.find((a) => !!a.username)?.username || '',
+        email:
+          currUser.emailAddresses?.find(
+            (e) => e.id === currUser.primaryEmailAddressId,
+          )?.emailAddress || '',
+        phone:
+          currUser.phoneNumbers?.find(
+            (p) => p.id === currUser.primaryPhoneNumberId,
+          )?.phoneNumber || '',
         firstName: currUser.firstName || '',
         lastName: currUser.lastName || '',
         profileImage: currUser.imageUrl || '',

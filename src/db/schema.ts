@@ -1,5 +1,15 @@
 import { relations, sql } from 'drizzle-orm';
-import { pgTable, serial, text, timestamp, boolean, date, decimal, integer, uuid } from 'drizzle-orm/pg-core';
+import {
+  pgTable,
+  serial,
+  text,
+  timestamp,
+  boolean,
+  date,
+  decimal,
+  integer,
+  uuid,
+} from 'drizzle-orm/pg-core';
 
 export const users = pgTable('users', {
   id: text('id').primaryKey(),
@@ -62,16 +72,19 @@ export const groupMemberships = pgTable('group_memberships', {
   isDeleted: boolean('is_deleted').notNull().default(false),
 });
 
-export const groupMembershipsRelations = relations(groupMemberships, ({ one }) => ({
-  user: one(users, {
-    fields: [groupMemberships.userId],
-    references: [users.id],
+export const groupMembershipsRelations = relations(
+  groupMemberships,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [groupMemberships.userId],
+      references: [users.id],
+    }),
+    group: one(groups, {
+      fields: [groupMemberships.groupId],
+      references: [groups.id],
+    }),
   }),
-  group: one(groups, {
-    fields: [groupMemberships.groupId],
-    references: [groups.id],
-  }),
-}));
+);
 
 export const expenses = pgTable('expenses', {
   id: serial('id').primaryKey(),
@@ -167,7 +180,9 @@ export const userBalances = pgTable('user_balances', {
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   balance: decimal('balance', { precision: 10, scale: 2 }).notNull(),
-  lastExpenseId: integer('last_expense_id').references(() => expenses.id, { onDelete: 'cascade' }),
+  lastExpenseId: integer('last_expense_id').references(() => expenses.id, {
+    onDelete: 'cascade',
+  }),
   lastExpenseDate: date('last_expense_date'),
   createdAt: timestamp('created_at').notNull(),
   updatedAt: timestamp('updated_at'),

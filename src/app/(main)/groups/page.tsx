@@ -12,12 +12,9 @@ const GroupsPage = async () => {
       <p>Create Group</p>
       <GroupCreateForm />
       <h1>Your Groups</h1>
-      <div className='flex flex-col gap-y-4'>
+      <div className="flex flex-col gap-y-4">
         {groups.map((group) => (
-          <GroupItem
-            key={group.id}
-            group={group}
-          />
+          <GroupItem key={group.id} group={group} />
         ))}
       </div>
     </div>

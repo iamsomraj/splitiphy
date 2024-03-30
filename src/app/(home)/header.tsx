@@ -1,7 +1,14 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import paths from '@/lib/paths';
-import { ClerkLoaded, ClerkLoading, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import {
+  ClerkLoaded,
+  ClerkLoading,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from '@clerk/nextjs';
 import Link from 'next/link';
 
 const Header = () => {
@@ -19,7 +26,7 @@ const Header = () => {
         <SignedOut>
           <p>Auth (Signed Out)</p>
           <SignInButton
-            mode='modal'
+            mode="modal"
             afterSignInUrl={paths.groups()}
             afterSignUpUrl={paths.groups()}
           >

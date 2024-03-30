@@ -10,5 +10,4 @@ const Providers = ({ children }: Readonly<{ children: React.ReactNode }>) => {
   );
 };
 
-
 export default Providers;

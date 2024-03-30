@@ -45,7 +45,10 @@ const createOrUpdateUser = async (currUser: UserSearchResult[0]) => {
   }
 };
 
-export async function addUserToGroup(user: UserSearchResult[0], groupUuid: string) {
+export async function addUserToGroup(
+  user: UserSearchResult[0],
+  groupUuid: string,
+) {
   const group = await db.query.groups.findFirst({
     where: eq(groups.uuid, groupUuid),
   });

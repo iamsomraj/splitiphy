@@ -14,13 +14,13 @@ const GroupUserSearchForm = ({ groupUuid }: GroupUserSearchFormProps) => {
     <form action={searchUserAction}>
       <div>
         <input
-          type='text'
-          name='term'
-          placeholder='Search for users'
+          type="text"
+          name="term"
+          placeholder="Search for users"
           defaultValue={searchParams.get('term') ?? ''}
         />
       </div>
-      <button type='submit'>Search</button>
+      <button type="submit">Search</button>
     </form>
   );
 };

@@ -23,7 +23,7 @@ const GroupsShowPage = async ({ params }: GroupsShowPageProps) => {
       <GroupUserSearchForm groupUuid={params.uuid} />
       <div>
         <h2>Members</h2>
-        <ul className='flex flex-col gap-y-4'>
+        <ul className="flex flex-col gap-y-4">
           {group.groupMemberships.map((member) => (
             <li key={member.uuid}>
               <div>@{member.user.username}</div>

@@ -5,7 +5,12 @@ import { users } from '../schema';
 
 const getUsersBySearchTermFromDB = async (searchTerm: string) => {
   const response = await db.query.users.findMany({
-    where: or(ilike(users.username, `%${searchTerm}%`), ilike(users.email, `%${searchTerm}%`), ilike(users.firstName, `%${searchTerm}%`), ilike(users.lastName, `%${searchTerm}%`)),
+    where: or(
+      ilike(users.username, `%${searchTerm}%`),
+      ilike(users.email, `%${searchTerm}%`),
+      ilike(users.firstName, `%${searchTerm}%`),
+      ilike(users.lastName, `%${searchTerm}%`),
+    ),
   });
   return response;
 };
@@ -17,8 +22,12 @@ const getUsersBySearchTermFromAuth = async (searchTerm: string) => {
   return response.map((user) => ({
     id: user.id,
     username: user.externalAccounts?.find((a) => !!a.username)?.username || '',
-    email: user.emailAddresses?.find((e) => e.id === user.primaryEmailAddressId)?.emailAddress || '',
-    phone: user.phoneNumbers?.find((p) => p.id === user.primaryPhoneNumberId)?.phoneNumber || '',
+    email:
+      user.emailAddresses?.find((e) => e.id === user.primaryEmailAddressId)
+        ?.emailAddress || '',
+    phone:
+      user.phoneNumbers?.find((p) => p.id === user.primaryPhoneNumberId)
+        ?.phoneNumber || '',
     firstName: user.firstName || '',
     lastName: user.lastName || '',
     profileImage: user.imageUrl || '',
@@ -29,11 +38,19 @@ const getUsersBySearchTermFromAuth = async (searchTerm: string) => {
 };
 
 export const getUsersBySearchTerm = async (searchTerm: string) => {
-  const [dbUsers, authUsers] = await Promise.allSettled([getUsersBySearchTermFromDB(searchTerm), getUsersBySearchTermFromAuth(searchTerm)]);
+  const [dbUsers, authUsers] = await Promise.allSettled([
+    getUsersBySearchTermFromDB(searchTerm),
+    getUsersBySearchTermFromAuth(searchTerm),
+  ]);
 
-  const mergedUsers = [...(dbUsers.status === 'fulfilled' ? dbUsers.value : []), ...(authUsers.status === 'fulfilled' ? authUsers.value : [])];
+  const mergedUsers = [
+    ...(dbUsers.status === 'fulfilled' ? dbUsers.value : []),
+    ...(authUsers.status === 'fulfilled' ? authUsers.value : []),
+  ];
 
-  const uniqueUsers = Array.from(new Map(mergedUsers.map((user) => [user.id, user])).values());
+  const uniqueUsers = Array.from(
+    new Map(mergedUsers.map((user) => [user.id, user])).values(),
+  );
 
   return uniqueUsers;
 };

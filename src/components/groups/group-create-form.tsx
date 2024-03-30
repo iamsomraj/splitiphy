@@ -11,15 +11,15 @@ const GroupCreateForm = () => {
     <form action={action}>
       <div>
         <label>Group Name:</label>
-        <input
-          type='text'
-          name='name'
-          placeholder='Enter group name'
-        />
-        {formState.errors.name ? <span>{formState.errors.name?.join(', ')}</span> : null}
+        <input type="text" name="name" placeholder="Enter group name" />
+        {formState.errors.name ? (
+          <span>{formState.errors.name?.join(', ')}</span>
+        ) : null}
       </div>
-      {formState.errors._form ? <div>{formState.errors._form?.join(', ')}</div> : null}
-      <button type='submit'>Create</button>
+      {formState.errors._form ? (
+        <div>{formState.errors._form?.join(', ')}</div>
+      ) : null}
+      <button type="submit">Create</button>
     </form>
   );
 };

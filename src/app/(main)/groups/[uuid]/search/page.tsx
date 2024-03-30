@@ -13,7 +13,10 @@ type GroupUserSearchPageProps = {
   };
 };
 
-const GroupUserSearchPage = ({ params, searchParams }: GroupUserSearchPageProps) => {
+const GroupUserSearchPage = ({
+  params,
+  searchParams,
+}: GroupUserSearchPageProps) => {
   return (
     <div>
       <Link href={paths.groups()}>Back to Groups</Link>
