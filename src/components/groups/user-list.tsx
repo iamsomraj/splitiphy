@@ -6,10 +6,7 @@ interface UserListProps {
   groupUuid: string;
 }
 
-export default async function UserList({
-  fetchData,
-  groupUuid,
-}: UserListProps) {
+const UserList = async ({ fetchData, groupUuid }: UserListProps) => {
   const users = await fetchData();
   return (
     <div className="flex flex-col gap-y-4">
@@ -18,4 +15,6 @@ export default async function UserList({
       ))}
     </div>
   );
-}
+};
+
+export default UserList;
