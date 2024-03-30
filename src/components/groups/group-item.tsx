@@ -1,7 +1,9 @@
-import { GetUserGroups } from '@/db/queries/get-user-groups';
+import { UserGroupsWithData } from '@/db/queries';
+import paths from '@/lib/paths';
+import Link from 'next/link';
 
 type GroupItemProps = {
-  group: GetUserGroups[0];
+  group: UserGroupsWithData[0];
 };
 
 const GroupItem = ({ group }: GroupItemProps) => {
@@ -12,6 +14,7 @@ const GroupItem = ({ group }: GroupItemProps) => {
         Members Count:
         {group.groupMemberships.length}
       </p>
+      <Link href={paths.groupShow(group.uuid)}>View</Link>
     </div>
   );
 };

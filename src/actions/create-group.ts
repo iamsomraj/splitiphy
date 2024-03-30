@@ -1,7 +1,7 @@
 'use server';
 
 import db from '@/db/drizzle';
-import { groups } from '@/db/schema';
+import { groupMemberships, groups } from '@/db/schema';
 import paths from '@/lib/paths';
 import { auth } from '@clerk/nextjs';
 import { revalidatePath } from 'next/cache';
@@ -58,13 +58,19 @@ export async function createGroup(formState: CreateGroupFormState, formData: For
       })
       .returning();
 
-    if (!insertedGroups.length || !insertedGroups[0].uuid) {
+    if (!insertedGroups.length || !insertedGroups[0].uuid || !insertedGroups[0].id) {
       return {
         errors: {
           _form: ['Something went wrong while creating the group.'],
         },
       };
     }
+
+    await db.insert(groupMemberships).values({
+      userId: session.userId,
+      groupId: insertedGroups[0].id,
+      createdAt: new Date(),
+    });
   } catch (err: unknown) {
     if (err instanceof Error) {
       return {

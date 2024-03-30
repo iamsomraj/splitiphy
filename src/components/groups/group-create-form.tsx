@@ -14,6 +14,7 @@ const GroupCreateForm = () => {
         <input
           type='text'
           name='name'
+          placeholder='Enter group name'
         />
         {formState.errors.name ? <span>{formState.errors.name?.join(', ')}</span> : null}
       </div>

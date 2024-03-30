@@ -22,4 +22,4 @@ export const getUserGroups = cache(async () => {
   return ownedGroups;
 });
 
-export type GetUserGroups = Awaited<ReturnType<typeof getUserGroups>>;
+export type UserGroupsWithData = Awaited<ReturnType<typeof getUserGroups>>;
