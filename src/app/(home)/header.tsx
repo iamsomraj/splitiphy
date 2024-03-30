@@ -1,5 +1,6 @@
 'use client';
 import { Button } from '@/components/ui/button';
+import paths from '@/lib/paths';
 import { ClerkLoaded, ClerkLoading, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 
 const Header = () => {
@@ -11,14 +12,14 @@ const Header = () => {
       <ClerkLoaded>
         <SignedIn>
           <p>Auth (Signed In)</p>
-          <UserButton afterSignOutUrl='/' />
+          <UserButton afterSignOutUrl={paths.home()} />
         </SignedIn>
         <SignedOut>
           <p>Auth (Signed Out)</p>
           <SignInButton
             mode='modal'
-            afterSignInUrl='/groups'
-            afterSignUpUrl='/groups'
+            afterSignInUrl={paths.groups()}
+            afterSignUpUrl={paths.groups()}
           >
             <Button>Login</Button>
           </SignInButton>
