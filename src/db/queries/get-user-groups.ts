@@ -10,7 +10,7 @@ export const getUserGroups = cache(async () => {
   if (!userId) {
     return [];
   }
-  const data = await db.query.groups.findMany({
+  const ownedGroups = await db.query.groups.findMany({
     where: eq(groups.ownerId, userId),
     with: {
       groupExpenses: true,
@@ -18,5 +18,7 @@ export const getUserGroups = cache(async () => {
       userBalances: true,
     },
   });
-  return data;
+  return ownedGroups;
 });
+
+export type GetUserGroups = Awaited<ReturnType<typeof getUserGroups>>;
