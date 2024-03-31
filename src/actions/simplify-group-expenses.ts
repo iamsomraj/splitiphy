@@ -1,18 +1,32 @@
+'use server';
+
 import db from '@/db/drizzle';
 import { groups } from '@/db/schema';
 import { auth } from '@clerk/nextjs';
-import { and, eq } from 'drizzle-orm';
-import { cache } from 'react';
+import { eq } from 'drizzle-orm';
 
-export const getGroupDetailsById = cache(async (groupUuid: string) => {
+interface SettleGroupExpenseFormState {
+  errors: {
+    _form?: string[];
+  };
+}
+
+export async function simplifyGroupExpenses(
+  groupUuid: string,
+  formState: SettleGroupExpenseFormState,
+  formData: FormData,
+): Promise<SettleGroupExpenseFormState> {
   const session = await auth();
-
   if (!session || !session.userId) {
-    return null;
+    return {
+      errors: {
+        _form: ['You must be signed in to do this.'],
+      },
+    };
   }
 
   const group = await db.query.groups.findFirst({
-    where: and(eq(groups.uuid, groupUuid), eq(groups.ownerId, session.userId)),
+    where: eq(groups.uuid, groupUuid),
     with: {
       groupExpenses: {
         with: {
@@ -42,12 +56,13 @@ export const getGroupDetailsById = cache(async (groupUuid: string) => {
       owner: true,
     },
   });
-
   if (!group) {
-    return null;
+    return {
+      errors: {
+        _form: ['Invalid group provided.'],
+      },
+    };
   }
 
-  return group;
-});
-
-export type GroupWithData = Awaited<ReturnType<typeof getGroupDetailsById>>;
+  return { errors: {} };
+}

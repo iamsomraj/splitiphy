@@ -7,9 +7,9 @@ type GroupMembersProps = {
   group: GroupWithData;
 };
 
-const GroupSettleForm = ({ group }: GroupMembersProps) => {
+const GroupSimplifyForm = ({ group }: GroupMembersProps) => {
   const [formState, action] = useFormState(
-    actions.settleGroupExpenses.bind(null, group?.uuid || ''),
+    actions.simplifyGroupExpenses.bind(null, group?.uuid || ''),
     {
       errors: {},
     },
@@ -21,4 +21,4 @@ const GroupSettleForm = ({ group }: GroupMembersProps) => {
   ) : null;
 };
 
-export default GroupSettleForm;
+export default GroupSimplifyForm;

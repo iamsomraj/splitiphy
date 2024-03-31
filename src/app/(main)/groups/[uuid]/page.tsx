@@ -1,7 +1,7 @@
 import GroupExpenseForm from '@/components/groups/group-expense-form';
 import GroupExpenses from '@/components/groups/group-expenses';
 import GroupMembers from '@/components/groups/group-members';
-import GroupSettleForm from '@/components/groups/group-settle-form';
+import GroupSimplifyForm from '@/components/groups/group-simplify-form';
 import GroupUserSearchForm from '@/components/groups/group-user-search-form';
 import { getGroupDetailsById } from '@/db/queries';
 import paths from '@/lib/paths';
@@ -23,7 +23,7 @@ const GroupsShowPage = async ({ params }: GroupsShowPageProps) => {
       <GroupUserSearchForm groupUuid={params.uuid} />
       <GroupMembers group={group} />
       <GroupExpenses group={group} />
-      <GroupSettleForm group={group} />
+      <GroupSimplifyForm group={group} />
       <GroupExpenseForm group={group} />
     </div>
   ) : null;

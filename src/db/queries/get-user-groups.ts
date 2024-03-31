@@ -96,7 +96,12 @@ export const getUserGroups = cache(async () => {
           user: true,
         },
       },
-      userBalances: true,
+      userBalances: {
+        with: {
+          user: true,
+          otherUser: true,
+        },
+      },
       owner: true,
     },
   });
