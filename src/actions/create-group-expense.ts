@@ -127,9 +127,11 @@ export async function createGroupExpense(
       };
     }
 
-    const totalSplitAmount = Object.values(splitAmounts || {}).reduce(
-      (acc, amount) => acc + amount,
-      0,
+    const totalSplitAmount = Math.round(
+      Object.values(splitAmounts || {}).reduce(
+        (acc, amount) => acc + amount,
+        0,
+      ),
     );
 
     if (totalSplitAmount !== result.data.amount) {
