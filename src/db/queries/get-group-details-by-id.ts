@@ -31,3 +31,5 @@ export const getGroupDetailsById = cache(async (groupUuid: string) => {
 
   return group;
 });
+
+export type GroupWithData = Awaited<ReturnType<typeof getGroupDetailsById>>;

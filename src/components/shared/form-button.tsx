@@ -1,16 +1,16 @@
 'use client';
 
 import { useFormStatus } from 'react-dom';
-
-interface FormButtonProps {
+type HTMLButtonAttributes = React.ButtonHTMLAttributes<HTMLButtonElement>;
+type FormButtonProps = {
   children: React.ReactNode;
-}
+} & HTMLButtonAttributes;
 
-const FormButton = ({ children }: FormButtonProps) => {
+const FormButton = ({ children, ...props }: FormButtonProps) => {
   const { pending } = useFormStatus();
 
   return (
-    <button type="submit" disabled={pending}>
+    <button type="submit" disabled={pending} {...props}>
       {pending ? 'Loading...' : children}
     </button>
   );

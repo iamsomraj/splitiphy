@@ -34,7 +34,7 @@ const GroupsShowPage = async ({ params }: GroupsShowPageProps) => {
           ))}
         </ul>
       </div>
-      <GroupExpenseForm />
+      <GroupExpenseForm group={group} />
     </div>
   );
 };

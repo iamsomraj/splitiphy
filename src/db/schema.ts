@@ -29,6 +29,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   groups: many(groups),
   groupMemberships: many(groupMemberships),
   userBalances: many(userBalances),
+  expenses: many(expenses),
   ownedTransactions: many(transactions, {
     relationName: 'owner',
   }),
@@ -92,14 +93,21 @@ export const expenses = pgTable('expenses', {
   name: text('name').notNull(),
   description: text('description').notNull(),
   expenseDate: date('expense_date').notNull(),
+  ownerId: text('owner_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
   createdAt: timestamp('created_at').notNull(),
   updatedAt: timestamp('updated_at'),
   isDeleted: boolean('is_deleted').notNull().default(false),
 });
 
-export const expensesRelations = relations(expenses, ({ many }) => ({
+export const expensesRelations = relations(expenses, ({ many, one }) => ({
   groupExpenses: many(groupExpenses),
   transactions: many(transactions),
+  owner: one(users, {
+    fields: [expenses.ownerId],
+    references: [users.id],
+  }),
 }));
 
 export const transactions = pgTable('transactions', {

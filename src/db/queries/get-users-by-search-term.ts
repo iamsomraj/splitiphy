@@ -1,5 +1,6 @@
 import { clerkClient } from '@clerk/nextjs';
-import { or, ilike } from 'drizzle-orm';
+import { ilike, or } from 'drizzle-orm';
+import { cache } from 'react';
 import db from '../drizzle';
 import { users } from '../schema';
 
@@ -37,7 +38,7 @@ const getUsersBySearchTermFromAuth = async (searchTerm: string) => {
   }));
 };
 
-export const getUsersBySearchTerm = async (searchTerm: string) => {
+export const getUsersBySearchTerm = cache(async (searchTerm: string) => {
   const [dbUsers, authUsers] = await Promise.allSettled([
     getUsersBySearchTermFromDB(searchTerm),
     getUsersBySearchTermFromAuth(searchTerm),
@@ -53,6 +54,6 @@ export const getUsersBySearchTerm = async (searchTerm: string) => {
   );
 
   return uniqueUsers;
-};
+});
 
 export type UserSearchResult = Awaited<ReturnType<typeof getUsersBySearchTerm>>;
