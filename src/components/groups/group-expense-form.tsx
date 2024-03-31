@@ -25,12 +25,14 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
   ) => {
     const newExpenseAmount = parseFloat(event.target.value);
     const selectedUsers = formData.expenseSplitWith;
-    const evenSplitAmount = newExpenseAmount / selectedUsers.length;
+    const evenSplitAmount = (newExpenseAmount / selectedUsers.length).toFixed(
+      2,
+    );
     setFormData({
       ...formData,
-      expenseAmount: newExpenseAmount,
+      expenseAmount: parseFloat(newExpenseAmount.toFixed(2)),
       splitAmounts: selectedUsers.reduce(
-        (acc, userId) => ({ ...acc, [userId]: evenSplitAmount }),
+        (acc, userId) => ({ ...acc, [userId]: parseFloat(evenSplitAmount) }),
         {} as Record<string, number>,
       ),
     });
@@ -49,12 +51,12 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
       (option) => option.value,
     );
     const totalExpense = formData.expenseAmount || 0;
-    const evenSplitAmount = totalExpense / selectedUsers.length;
+    const evenSplitAmount = (totalExpense / selectedUsers.length).toFixed(2);
     setFormData({
       ...formData,
       expenseSplitWith: selectedUsers,
       splitAmounts: selectedUsers.reduce(
-        (acc, userId) => ({ ...acc, [userId]: evenSplitAmount }),
+        (acc, userId) => ({ ...acc, [userId]: parseFloat(evenSplitAmount) }),
         {} as Record<string, number>,
       ),
     });
@@ -68,7 +70,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
       ...formData,
       splitAmounts: {
         ...formData.splitAmounts,
-        [userId]: parseFloat(e.target.value),
+        [userId]: parseFloat(parseFloat(e.target.value).toFixed(2)),
       },
     });
   };
