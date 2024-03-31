@@ -15,6 +15,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
   });
 
   const [formData, setFormData] = useState({
+    expenseAmount: 0,
     expenseSplitWith: [] as string[],
     splitType: 'amount' as 'amount' | 'percentage',
     splitAmounts: {} as Record<string, number>,
@@ -23,6 +24,59 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
   const splitAmountPlaceholder = {
     amount: 'Enter Split Amount',
     percentage: 'Enter Split Percentage',
+  };
+
+  const handleExpenseAmountChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const newExpenseAmount = parseFloat(event.target.value);
+    const selectedUsers = formData.expenseSplitWith;
+
+    setFormData({
+      ...formData,
+      expenseAmount: newExpenseAmount,
+      splitAmounts: selectedUsers.reduce(
+        (acc, userId) => {
+          acc[userId] =
+            formData.splitType === 'amount'
+              ? newExpenseAmount / selectedUsers.length
+              : 100 / selectedUsers.length;
+          return acc;
+        },
+        {} as Record<string, number>,
+      ),
+    });
+  };
+
+  const handleSplitWithChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormData({
+      ...formData,
+      expenseSplitWith: Array.from(
+        e.target.selectedOptions,
+        (option) => option.value,
+      ),
+    });
+    const selectedUsers = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value,
+    );
+    const totalExpense = formData.expenseAmount || 0;
+    const evenSplitAmount = totalExpense / selectedUsers.length;
+    const evenSplitPercentage = 100 / selectedUsers.length;
+    setFormData({
+      ...formData,
+      expenseSplitWith: selectedUsers,
+      splitAmounts: selectedUsers.reduce(
+        (acc, userId) => {
+          acc[userId] =
+            formData.splitType === 'amount'
+              ? evenSplitAmount
+              : evenSplitPercentage;
+          return acc;
+        },
+        {} as Record<string, number>,
+      ),
+    });
   };
 
   const handleSplitTypeChange = (
@@ -91,6 +145,8 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
             id="expense-amount"
             name="expense-amount"
             placeholder="Enter Expense Amount"
+            value={formData.expenseAmount}
+            onChange={handleExpenseAmountChange}
           />
         </div>
 
@@ -113,15 +169,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
             multiple
             size={group?.groupMemberships.length}
             value={formData.expenseSplitWith}
-            onChange={(e) => {
-              setFormData({
-                ...formData,
-                expenseSplitWith: Array.from(
-                  e.target.selectedOptions,
-                  (option) => option.value,
-                ),
-              });
-            }}
+            onChange={handleSplitWithChange}
           >
             {group?.groupMemberships.map((member) => (
               <option key={member.user.id} value={member.user.id}>
@@ -155,6 +203,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
           </div>
         </div>
 
+        {JSON.stringify(formData.splitAmounts)}
         <div>
           <label htmlFor="expense-split-amount">Split Amount</label>
           <div>
