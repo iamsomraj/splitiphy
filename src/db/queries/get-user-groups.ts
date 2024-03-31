@@ -77,9 +77,27 @@ export const getUserGroups = cache(async () => {
   const ownedGroups = await db.query.groups.findMany({
     where: eq(groups.ownerId, session[0].id),
     with: {
-      groupExpenses: true,
-      groupMemberships: true,
+      groupExpenses: {
+        with: {
+          expense: {
+            with: {
+              transactions: {
+                with: {
+                  payer: true,
+                  receiver: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      groupMemberships: {
+        with: {
+          user: true,
+        },
+      },
       userBalances: true,
+      owner: true,
     },
   });
   return ownedGroups;
