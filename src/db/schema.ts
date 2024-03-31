@@ -9,7 +9,13 @@ import {
   decimal,
   integer,
   uuid,
+  pgEnum,
 } from 'drizzle-orm/pg-core';
+
+export const userBalanceTypeEnum = pgEnum('type', [
+  'AMOUNT_TO_GIVE',
+  'AMOUNT_TO_TAKE',
+]);
 
 export const users = pgTable('users', {
   id: text('id').primaryKey(),
@@ -28,7 +34,9 @@ export const users = pgTable('users', {
 export const usersRelations = relations(users, ({ many }) => ({
   groups: many(groups),
   groupMemberships: many(groupMemberships),
-  userBalances: many(userBalances),
+  userBalances: many(userBalances, {
+    relationName: 'user',
+  }),
   expenses: many(expenses),
   ownedTransactions: many(transactions, {
     relationName: 'owner',
@@ -188,7 +196,11 @@ export const userBalances = pgTable('user_balances', {
   userId: text('user_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-  balance: decimal('balance', { precision: 10, scale: 2 }).notNull(),
+  otherUserId: text('other_user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
+  type: userBalanceTypeEnum('type').notNull(),
   lastExpenseId: integer('last_expense_id').references(() => expenses.id, {
     onDelete: 'cascade',
   }),
@@ -202,6 +214,12 @@ export const userBalancesRelations = relations(userBalances, ({ one }) => ({
   user: one(users, {
     fields: [userBalances.userId],
     references: [users.id],
+    relationName: 'user',
+  }),
+  otherUser: one(users, {
+    fields: [userBalances.otherUserId],
+    references: [users.id],
+    relationName: 'otherUser',
   }),
   group: one(groups, {
     fields: [userBalances.groupId],
