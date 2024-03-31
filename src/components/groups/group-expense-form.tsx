@@ -73,9 +73,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
             placeholder="Enter Expense Description"
           ></textarea>
         </div>
-        {/* Expense Description */}
 
-        {/* Expense Date */}
         <div>
           <label htmlFor="expense-date">Expense Date</label>
           <input
@@ -95,9 +93,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
             placeholder="Enter Expense Amount"
           />
         </div>
-        {/* Expense Amount */}
 
-        {/* Expense Paid By Dropdown */}
         <div>
           <label htmlFor="expense-paid-by">Paid By</label>
           <select id="expense-paid-by" name="expense-paid-by">
