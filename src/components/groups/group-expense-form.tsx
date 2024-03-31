@@ -94,8 +94,10 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
             name="expense-name"
             placeholder="Enter Expense Name"
           />
+          {formState.errors.name ? (
+            <span>{formState.errors.name?.join(', ')}</span>
+          ) : null}
         </div>
-
         <div>
           <label htmlFor="expense-description">Expense Description</label>
           <textarea
@@ -103,8 +105,10 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
             name="expense-description"
             placeholder="Enter Expense Description"
           ></textarea>
+          {formState.errors.description ? (
+            <span>{formState.errors.description?.join(', ')}</span>
+          ) : null}
         </div>
-
         <div>
           <label htmlFor="expense-date">Expense Date</label>
           <input
@@ -113,8 +117,10 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
             name="expense-date"
             placeholder="Enter Expense Date"
           />
+          {formState.errors.date ? (
+            <span>{formState.errors.date?.join(', ')}</span>
+          ) : null}
         </div>
-
         <div>
           <label htmlFor="expense-amount">Expense Amount</label>
           <input
@@ -125,8 +131,10 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
             value={formData.expenseAmount}
             onChange={handleExpenseAmountChange}
           />
+          {formState.errors.amount ? (
+            <span>{formState.errors.amount?.join(', ')}</span>
+          ) : null}
         </div>
-
         <div>
           <label htmlFor="expense-paid-by">Paid By</label>
           <select id="expense-paid-by" name="expense-paid-by">
@@ -136,8 +144,10 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
               </option>
             ))}
           </select>
+          {formState.errors.paidBy ? (
+            <span>{formState.errors.paidBy?.join(', ')}</span>
+          ) : null}
         </div>
-
         <div>
           <label htmlFor="expense-split-with">Split With</label>
           <select
@@ -154,8 +164,10 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
               </option>
             ))}
           </select>
+          {formState.errors.splitWith ? (
+            <span>{formState.errors.splitWith?.join(', ')}</span>
+          ) : null}
         </div>
-
         <div>
           <label htmlFor="expense-split-amount">Split Amount</label>
           <div>
@@ -182,10 +194,14 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
                 </div>
               );
             })}
-            <div></div>
+            {formState.errors.splitAmounts ? (
+              <span>{formState.errors.splitAmounts?.join(', ')}</span>
+            ) : null}
           </div>
         </div>
-
+        {formState.errors._form ? (
+          <div>{formState.errors._form?.join(', ')}</div>
+        ) : null}
         <FormButton>Create Expense</FormButton>
       </form>
     </div>
