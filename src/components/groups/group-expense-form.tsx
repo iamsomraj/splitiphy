@@ -17,32 +17,20 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
   const [formData, setFormData] = useState({
     expenseAmount: 0,
     expenseSplitWith: [] as string[],
-    splitType: 'amount' as 'amount' | 'percentage',
     splitAmounts: {} as Record<string, number>,
   });
-
-  const splitAmountPlaceholder = {
-    amount: 'Enter Split Amount',
-    percentage: 'Enter Split Percentage',
-  };
 
   const handleExpenseAmountChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const newExpenseAmount = parseFloat(event.target.value);
     const selectedUsers = formData.expenseSplitWith;
-
+    const evenSplitAmount = newExpenseAmount / selectedUsers.length;
     setFormData({
       ...formData,
       expenseAmount: newExpenseAmount,
       splitAmounts: selectedUsers.reduce(
-        (acc, userId) => {
-          acc[userId] =
-            formData.splitType === 'amount'
-              ? newExpenseAmount / selectedUsers.length
-              : 100 / selectedUsers.length;
-          return acc;
-        },
+        (acc, userId) => ({ ...acc, [userId]: evenSplitAmount }),
         {} as Record<string, number>,
       ),
     });
@@ -62,29 +50,13 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
     );
     const totalExpense = formData.expenseAmount || 0;
     const evenSplitAmount = totalExpense / selectedUsers.length;
-    const evenSplitPercentage = 100 / selectedUsers.length;
     setFormData({
       ...formData,
       expenseSplitWith: selectedUsers,
       splitAmounts: selectedUsers.reduce(
-        (acc, userId) => {
-          acc[userId] =
-            formData.splitType === 'amount'
-              ? evenSplitAmount
-              : evenSplitPercentage;
-          return acc;
-        },
+        (acc, userId) => ({ ...acc, [userId]: evenSplitAmount }),
         {} as Record<string, number>,
       ),
-    });
-  };
-
-  const handleSplitTypeChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setFormData({
-      ...formData,
-      splitType: event.target.value as 'amount' | 'percentage',
     });
   };
 
@@ -180,31 +152,6 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
         </div>
 
         <div>
-          <label htmlFor="expense-split-type">Split Type</label>
-          <div>
-            <input
-              type="radio"
-              id="split-by-amount"
-              name="split-type"
-              value="amount"
-              checked={formData.splitType === 'amount'}
-              onChange={handleSplitTypeChange}
-            />
-            <label htmlFor="split-by-amount">Amount</label>
-            <input
-              type="radio"
-              id="split-by-percentage"
-              name="split-type"
-              value="percentage"
-              checked={formData.splitType === 'percentage'}
-              onChange={handleSplitTypeChange}
-            />
-            <label htmlFor="split-by-percentage">Percentage</label>
-          </div>
-        </div>
-
-        {JSON.stringify(formData.splitAmounts)}
-        <div>
           <label htmlFor="expense-split-amount">Split Amount</label>
           <div>
             {formData.expenseSplitWith.map((userID) => {
@@ -223,7 +170,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
                     type="number"
                     id={`split-amount-${member.user.id}`}
                     name={`split-amount-${member.user.id}`}
-                    placeholder={splitAmountPlaceholder[formData.splitType]}
+                    placeholder="Enter Split Amount"
                     value={formData.splitAmounts[member.user.id] ?? ''}
                     onChange={(e) => handleSplitAmountChange(e, member.user.id)}
                   />
