@@ -92,7 +92,7 @@ export const expenses = pgTable('expenses', {
   uuid: uuid('uuid').default(sql`gen_random_uuid()`),
   name: text('name').notNull(),
   description: text('description').notNull(),
-  expenseDate: date('expense_date').notNull(),
+  expenseDate: timestamp('expense_date').notNull(),
   ownerId: text('owner_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),

@@ -1,7 +1,10 @@
 'use server';
 
+import db from '@/db/drizzle';
+import { expenses, groupExpenses, groups, transactions } from '@/db/schema';
 import paths from '@/lib/paths';
 import { auth } from '@clerk/nextjs';
+import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
@@ -27,11 +30,10 @@ const createGroupExpenseSchema = z.object({
     .optional(),
   date: z.date(),
   amount: z.number().positive(),
-  paidBy: z.number(),
-  splitWith: z.array(z.number()).min(1, {
+  paidBy: z.string(),
+  splitWith: z.array(z.string()).min(1, {
     message: 'At least one member should be selected to split with',
   }),
-  splitType: z.enum(['amount', 'share', 'percentage']),
   splitAmounts: z.record(z.number()).optional(),
 });
 
@@ -43,26 +45,25 @@ interface CreateGroupExpenseFormState {
     amount?: string[];
     paidBy?: string[];
     splitWith?: string[];
-    splitType?: string[];
     splitAmounts?: string[];
     _form?: string[];
   };
 }
 
 export async function createGroupExpense(
-  formState: CreateGroupExpenseFormState,
+  groupUuid: string,
+  _formState: CreateGroupExpenseFormState,
   formData: FormData,
 ): Promise<CreateGroupExpenseFormState> {
   const result = createGroupExpenseSchema.safeParse({
-    name: formData.get('expense-name'),
-    description: formData.get('expense-description'),
-    date: formData.get('expense-date'),
+    name: formData.get('expense-name') as string,
+    description: formData.get('expense-description') as string,
+    date: new Date(formData.get('expense-date') as string),
     amount: parseFloat(formData.get('expense-amount') as string),
-    paidBy: parseInt(formData.get('expense-paid-by') as string),
+    paidBy: formData.get('expense-paid-by') as string,
     splitWith: Array.from(formData.getAll('expense-split-with')).map(
       (id) => id as string,
     ),
-    splitType: formData.get('split-type'),
     splitAmounts: Object.fromEntries(
       Array.from(formData.entries())
         .filter(([name]) => name.startsWith('split-amount-'))
@@ -88,6 +89,130 @@ export async function createGroupExpense(
     };
   }
 
-  revalidatePath(paths.groupShow(formData.get('groupId') as string));
-  redirect(paths.groupShow(formData.get('groupId') as string));
+  try {
+    const group = await db.query.groups.findFirst({
+      where: eq(groups.uuid, groupUuid),
+    });
+
+    if (!group) {
+      return {
+        errors: {
+          _form: ['Group not found'],
+        },
+      };
+    }
+
+    const groupMembers = await db.query.groupMemberships.findMany({
+      where: eq(groups.id, group.id),
+    });
+
+    const groupMemberIds = groupMembers.map((member) => member.userId);
+
+    if (!groupMemberIds.includes(session.userId)) {
+      return {
+        errors: {
+          _form: ['You are not a member of this group'],
+        },
+      };
+    }
+
+    const splitWith = result.data.splitWith;
+    const splitAmounts = result.data.splitAmounts;
+
+    if (splitWith.length !== Object.keys(splitAmounts || {}).length) {
+      return {
+        errors: {
+          _form: ['Split amount is required for each member'],
+        },
+      };
+    }
+
+    const totalSplitAmount = Object.values(splitAmounts || {}).reduce(
+      (acc, amount) => acc + amount,
+      0,
+    );
+
+    if (totalSplitAmount !== result.data.amount) {
+      return {
+        errors: {
+          _form: ['Split amounts should add up to the total amount'],
+        },
+      };
+    }
+    const expense = await db
+      .insert(expenses)
+      .values({
+        name: result.data.name,
+        description: result.data.description,
+        expenseDate: new Date(result.data.date),
+        ownerId: result.data.paidBy,
+        createdAt: new Date(),
+      } as typeof expenses.$inferInsert)
+      .returning();
+
+    if (!expense.length || !expense[0].uuid || !expense[0].id) {
+      return {
+        errors: {
+          _form: ['Something went wrong while creating the expense'],
+        },
+      };
+    }
+
+    const groupExpense = await db
+      .insert(groupExpenses)
+      .values({
+        groupId: group.id,
+        expenseId: expense[0].id,
+        createdAt: new Date(),
+      })
+      .returning();
+
+    if (!groupExpense.length || !groupExpense[0].id) {
+      return {
+        errors: {
+          _form: ['Something went wrong while creating the expense'],
+        },
+      };
+    }
+
+    const transactionRecords = Object.entries(splitAmounts || {}).map(
+      ([userId, amount]) => ({
+        ownerId: result.data.paidBy,
+        payerId: result.data.paidBy,
+        receiverId: userId,
+        expenseId: expense[0].id,
+        createdAt: new Date(),
+        amount: `${amount}`,
+      }),
+    ) as (typeof transactions.$inferInsert)[];
+
+    const trxs = await db
+      .insert(transactions)
+      .values(transactionRecords)
+      .returning();
+
+    if (!trxs.length) {
+      return {
+        errors: {
+          _form: ['Something went wrong while creating the transactions'],
+        },
+      };
+    }
+  } catch (err) {
+    if (err instanceof Error) {
+      return {
+        errors: {
+          _form: [err.message],
+        },
+      };
+    } else {
+      return {
+        errors: {
+          _form: ['Something went wrong'],
+        },
+      };
+    }
+  }
+  revalidatePath(paths.groupShow(groupUuid));
+  redirect(paths.groupShow(groupUuid));
 }

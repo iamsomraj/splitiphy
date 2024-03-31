@@ -10,9 +10,12 @@ type GroupExpenseFormProps = {
 };
 
 const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
-  const [_formState, action] = useFormState(actions.createGroupExpense, {
-    errors: {},
-  });
+  const [formState, action] = useFormState(
+    actions.createGroupExpense.bind(null, group?.uuid || ''),
+    {
+      errors: {},
+    },
+  );
 
   const [formData, setFormData] = useState({
     expenseAmount: 0,
