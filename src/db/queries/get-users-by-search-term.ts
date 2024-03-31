@@ -1,8 +1,8 @@
+import db from '@/db/drizzle';
+import { users } from '@/db/schema';
 import { clerkClient } from '@clerk/nextjs';
 import { ilike, or } from 'drizzle-orm';
 import { cache } from 'react';
-import db from '../drizzle';
-import { users } from '../schema';
 
 const getUsersBySearchTermFromDB = async (searchTerm: string) => {
   const response = await db.query.users.findMany({
