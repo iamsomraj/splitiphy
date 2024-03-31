@@ -180,7 +180,7 @@ export async function createGroupExpense(
 
     const transactionRecords = Object.entries(splitAmounts || {}).map(
       ([userId, amount]) => ({
-        ownerId: result.data.paidBy,
+        ownerId: session.userId,
         payerId: result.data.paidBy,
         receiverId: userId,
         expenseId: expense[0].id,
