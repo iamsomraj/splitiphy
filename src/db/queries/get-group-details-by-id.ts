@@ -14,7 +14,20 @@ export const getGroupDetailsById = cache(async (groupUuid: string) => {
   const group = await db.query.groups.findFirst({
     where: and(eq(groups.uuid, groupUuid), eq(groups.ownerId, session.userId)),
     with: {
-      groupExpenses: true,
+      groupExpenses: {
+        with: {
+          expense: {
+            with: {
+              transactions: {
+                with: {
+                  payer: true,
+                  receiver: true,
+                },
+              },
+            },
+          },
+        },
+      },
       groupMemberships: {
         with: {
           user: true,

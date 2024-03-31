@@ -144,7 +144,8 @@ export async function createGroupExpense(
       .values({
         name: result.data.name,
         description: result.data.description,
-        expenseDate: new Date(result.data.date),
+        amount: `${result.data.amount}`,
+        date: new Date(result.data.date),
         ownerId: result.data.paidBy,
         createdAt: new Date(),
       } as typeof expenses.$inferInsert)
@@ -214,5 +215,5 @@ export async function createGroupExpense(
     }
   }
   revalidatePath(paths.groupShow(groupUuid));
-  redirect(paths.groupShow(groupUuid));
+  redirect(paths.groups());
 }
