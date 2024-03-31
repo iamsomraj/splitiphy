@@ -34,6 +34,19 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
     });
   };
 
+  const handleSplitAmountChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    userId: string,
+  ) => {
+    setFormData({
+      ...formData,
+      splitAmounts: {
+        ...formData.splitAmounts,
+        [userId]: parseFloat(e.target.value),
+      },
+    });
+  };
+
   if (!group) {
     return null;
   }
@@ -167,15 +180,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
                     name={`split-amount-${member.user.id}`}
                     placeholder={splitAmountPlaceholder[formData.splitType]}
                     value={formData.splitAmounts[member.user.id] ?? ''}
-                    onChange={(e) => {
-                      setFormData({
-                        ...formData,
-                        splitAmounts: {
-                          ...formData.splitAmounts,
-                          [member.user.id]: parseFloat(e.target.value),
-                        },
-                      });
-                    }}
+                    onChange={(e) => handleSplitAmountChange(e, member.user.id)}
                   />
                 </div>
               );
