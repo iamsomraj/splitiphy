@@ -34,8 +34,11 @@ export const users = pgTable('users', {
 export const usersRelations = relations(users, ({ many }) => ({
   groups: many(groups),
   groupMemberships: many(groupMemberships),
-  userBalances: many(userBalances, {
-    relationName: 'user',
+  senderUserBalances: many(groupUserBalances, {
+    relationName: 'sender',
+  }),
+  recipientUserBalances: many(groupUserBalances, {
+    relationName: 'recipient',
   }),
   expenses: many(expenses),
   ownedTransactions: many(transactions, {
@@ -64,7 +67,7 @@ export const groupsRelations = relations(groups, ({ many, one }) => ({
   }),
   groupMemberships: many(groupMemberships),
   groupExpenses: many(groupExpenses),
-  userBalances: many(userBalances),
+  groupUserBalances: many(groupUserBalances),
 }));
 
 export const groupMemberships = pgTable('group_memberships', {
@@ -138,6 +141,7 @@ export const transactions = pgTable('transactions', {
   createdAt: timestamp('created_at').notNull(),
   updatedAt: timestamp('updated_at'),
   isDeleted: boolean('is_deleted').notNull().default(false),
+  isSimplified: boolean('is_simplified').notNull().default(false),
 });
 
 export const transactionsRelations = relations(transactions, ({ one }) => ({
@@ -187,46 +191,41 @@ export const groupExpensesRelations = relations(groupExpenses, ({ one }) => ({
   }),
 }));
 
-export const userBalances = pgTable('user_balances', {
+export const groupUserBalances = pgTable('user_balances', {
   id: serial('id').primaryKey(),
   uuid: uuid('uuid').default(sql`gen_random_uuid()`),
   groupId: integer('group_id')
     .references(() => groups.id, { onDelete: 'cascade' })
     .notNull(),
-  userId: text('user_id')
+  senderId: text('sender_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-  otherUserId: text('other_user_id')
+  recipientId: text('recipient_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
   type: userBalanceTypeEnum('type').notNull(),
-  lastExpenseId: integer('last_expense_id').references(() => expenses.id, {
-    onDelete: 'cascade',
-  }),
-  lastExpenseDate: date('last_expense_date'),
   createdAt: timestamp('created_at').notNull(),
   updatedAt: timestamp('updated_at'),
   isDeleted: boolean('is_deleted').notNull().default(false),
 });
 
-export const userBalancesRelations = relations(userBalances, ({ one }) => ({
-  user: one(users, {
-    fields: [userBalances.userId],
-    references: [users.id],
-    relationName: 'user',
+export const groupUserBalancesRelations = relations(
+  groupUserBalances,
+  ({ one }) => ({
+    sender: one(users, {
+      fields: [groupUserBalances.senderId],
+      references: [users.id],
+      relationName: 'sender',
+    }),
+    recipient: one(users, {
+      fields: [groupUserBalances.recipientId],
+      references: [users.id],
+      relationName: 'recipient',
+    }),
+    group: one(groups, {
+      fields: [groupUserBalances.groupId],
+      references: [groups.id],
+    }),
   }),
-  otherUser: one(users, {
-    fields: [userBalances.otherUserId],
-    references: [users.id],
-    relationName: 'otherUser',
-  }),
-  group: one(groups, {
-    fields: [userBalances.groupId],
-    references: [groups.id],
-  }),
-  lastExpense: one(expenses, {
-    fields: [userBalances.lastExpenseId],
-    references: [expenses.id],
-  }),
-}));
+);
