@@ -1,3 +1,4 @@
+import GroupBalances from '@/components/groups/group-balances';
 import GroupExpenseForm from '@/components/groups/group-expense-form';
 import GroupExpenses from '@/components/groups/group-expenses';
 import GroupMembers from '@/components/groups/group-members';
@@ -21,6 +22,7 @@ const GroupsShowPage = async ({ params }: GroupsShowPageProps) => {
       <Link href={paths.groups()}>Back to Groups</Link>
       <h1>Group Name: {group.name}</h1>
       <GroupUserSearchForm groupUuid={params.uuid} />
+      <GroupBalances group={group} />
       <GroupMembers group={group} />
       <GroupExpenses group={group} />
       <GroupSimplifyForm group={group} />

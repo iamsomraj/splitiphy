@@ -34,11 +34,7 @@ interface SettleGroupExpenseFormState {
   };
 }
 
-export async function simplifyGroupExpenses(
-  groupUuid: string,
-  _formState: SettleGroupExpenseFormState,
-  _formData: FormData,
-): Promise<SettleGroupExpenseFormState> {
+export async function simplifyGroupExpenses(groupUuid: string) {
   const session = await auth();
   if (!session || !session.userId) {
     return {
