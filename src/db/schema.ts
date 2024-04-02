@@ -135,7 +135,6 @@ export const transactions = pgTable('transactions', {
   createdAt: timestamp('created_at').notNull(),
   updatedAt: timestamp('updated_at'),
   isDeleted: boolean('is_deleted').notNull().default(false),
-  isSimplified: boolean('is_simplified').notNull().default(false),
 });
 
 export const transactionsRelations = relations(transactions, ({ one }) => ({
@@ -169,6 +168,7 @@ export const groupExpenses = pgTable('group_expenses', {
   groupId: integer('group_id')
     .references(() => groups.id, { onDelete: 'cascade' })
     .notNull(),
+  isExpenseSettled: boolean('is_expense_settled').notNull().default(false),
   createdAt: timestamp('created_at').notNull(),
   updatedAt: timestamp('updated_at'),
   isDeleted: boolean('is_deleted').notNull().default(false),

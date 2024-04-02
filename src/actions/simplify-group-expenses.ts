@@ -1,7 +1,7 @@
 'use server';
 
 import db from '@/db/drizzle';
-import { groupUserBalances, groups, transactions } from '@/db/schema';
+import { groupExpenses, groupUserBalances, groups } from '@/db/schema';
 import paths from '@/lib/paths';
 import SplitManagerService from '@/services/split-manager-service';
 import { auth } from '@clerk/nextjs';
@@ -59,11 +59,11 @@ export async function simplifyGroupExpenses(
                   payer: true,
                   receiver: true,
                 },
-                where: eq(transactions.isSimplified, false),
               },
             },
           },
         },
+        where: eq(groupExpenses.isExpenseSettled, false),
       },
       groupMemberships: {
         with: {
@@ -90,7 +90,7 @@ export async function simplifyGroupExpenses(
   const allTransactions = group.groupExpenses
     .flatMap((groupExpense) => groupExpense.expense.transactions)
     .map((transaction) => ({
-      id: transaction.id,
+      expenseId: transaction.expenseId,
       payer: transaction.payer.id,
       receiver: transaction.receiver.id,
       amount: parseFloat(transaction.amount),
@@ -119,15 +119,15 @@ export async function simplifyGroupExpenses(
       set: buildConflictUpdateColumns(groupUserBalances, ['amount']),
     });
 
+  const uniqueExpenseIds = [
+    ...Array.from(new Set(allTransactions.map((t) => t.expenseId))),
+  ];
   await db
-    .update(transactions)
-    .set({ isSimplified: true })
-    .where(
-      inArray(
-        transactions.id,
-        allTransactions.map((t) => t.id),
-      ),
-    );
+    .update(groupExpenses)
+    .set({
+      isExpenseSettled: true,
+    })
+    .where(inArray(groupExpenses.expenseId, uniqueExpenseIds));
 
   redirect(paths.groupShow(groupUuid));
 }
