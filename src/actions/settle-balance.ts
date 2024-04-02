@@ -1,3 +1,5 @@
+'use server';
+
 import db from '@/db/drizzle';
 import { groupUserBalances } from '@/db/schema';
 import paths from '@/lib/paths';
