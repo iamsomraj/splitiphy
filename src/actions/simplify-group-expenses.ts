@@ -47,10 +47,10 @@ export async function simplifyGroupExpenses(
           user: true,
         },
       },
-      userBalances: {
+      groupUserBalances: {
         with: {
-          user: true,
-          otherUser: true,
+          recipient: true,
+          sender: true,
         },
       },
       owner: true,

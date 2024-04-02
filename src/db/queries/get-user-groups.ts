@@ -96,10 +96,10 @@ export const getUserGroups = cache(async () => {
           user: true,
         },
       },
-      userBalances: {
+      groupUserBalances: {
         with: {
-          user: true,
-          otherUser: true,
+          sender: true,
+          recipient: true,
         },
       },
       owner: true,

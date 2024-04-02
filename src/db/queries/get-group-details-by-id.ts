@@ -33,10 +33,10 @@ export const getGroupDetailsById = cache(async (groupUuid: string) => {
           user: true,
         },
       },
-      userBalances: {
+      groupUserBalances: {
         with: {
-          user: true,
-          otherUser: true,
+          sender: true,
+          recipient: true,
         },
       },
       owner: true,
