@@ -1,5 +1,5 @@
 import db from '@/db/drizzle';
-import { groups } from '@/db/schema';
+import { groupExpenses, groups } from '@/db/schema';
 import { auth } from '@clerk/nextjs';
 import { and, eq } from 'drizzle-orm';
 import { cache } from 'react';
@@ -27,6 +27,7 @@ export const getGroupDetailsById = cache(async (groupUuid: string) => {
             },
           },
         },
+        where: eq(groupExpenses.isExpenseSimplified, false),
       },
       groupMemberships: {
         with: {

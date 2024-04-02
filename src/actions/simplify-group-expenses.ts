@@ -7,6 +7,7 @@ import SplitManagerService from '@/services/split-manager-service';
 import { auth } from '@clerk/nextjs';
 import { SQL, eq, getTableColumns, inArray, sql } from 'drizzle-orm';
 import { PgTable } from 'drizzle-orm/pg-core';
+import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 const buildConflictUpdateColumns = <
@@ -63,7 +64,7 @@ export async function simplifyGroupExpenses(
             },
           },
         },
-        where: eq(groupExpenses.isExpenseSettled, false),
+        where: eq(groupExpenses.isExpenseSimplified, false),
       },
       groupMemberships: {
         with: {
@@ -125,9 +126,10 @@ export async function simplifyGroupExpenses(
   await db
     .update(groupExpenses)
     .set({
-      isExpenseSettled: true,
+      isExpenseSimplified: true,
     })
     .where(inArray(groupExpenses.expenseId, uniqueExpenseIds));
 
+  revalidatePath(paths.groupShow(groupUuid));
   redirect(paths.groupShow(groupUuid));
 }

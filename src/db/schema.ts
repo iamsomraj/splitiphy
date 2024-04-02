@@ -168,7 +168,9 @@ export const groupExpenses = pgTable('group_expenses', {
   groupId: integer('group_id')
     .references(() => groups.id, { onDelete: 'cascade' })
     .notNull(),
-  isExpenseSettled: boolean('is_expense_settled').notNull().default(false),
+  isExpenseSimplified: boolean('is_expense_simplified')
+    .notNull()
+    .default(false),
   createdAt: timestamp('created_at').notNull(),
   updatedAt: timestamp('updated_at'),
   isDeleted: boolean('is_deleted').notNull().default(false),
