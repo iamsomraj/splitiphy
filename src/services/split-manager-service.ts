@@ -67,7 +67,7 @@ class SplitManagerService {
     this.setGraphEdges();
   }
 
-  setGraphEdges(): void {
+  private setGraphEdges(): void {
     this.transactions.forEach((transaction) => {
       const { payer, receiver, amount } = transaction;
       this.graph.addEdge(payer, receiver, amount);
@@ -86,8 +86,8 @@ class SplitManagerService {
           balances[source] += amount;
           balances[destination] -= amount;
           settlements.push({
-            payer: source,
-            receiver: destination,
+            payer: destination,
+            receiver: source,
             amount,
           });
           settlement = false;
