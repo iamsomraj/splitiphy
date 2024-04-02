@@ -117,7 +117,9 @@ export async function simplifyGroupExpenses(
         groupUserBalances.senderId,
         groupUserBalances.recipientId,
       ],
-      set: buildConflictUpdateColumns(groupUserBalances, ['amount']),
+      set: {
+        amount: sql`${groupUserBalances.amount} + excluded.amount`,
+      },
     });
 
   const uniqueExpenseIds = [
