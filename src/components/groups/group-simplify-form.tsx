@@ -18,7 +18,7 @@ const GroupSimplifyForm = ({ group }: GroupMembersProps) => {
   );
   return group ? (
     <form action={action}>
-      {formState.errors._form ? (
+      {formState?.errors?._form ? (
         <div>{formState.errors._form?.join(', ')}</div>
       ) : null}
       <FormButton>Settle Up</FormButton>

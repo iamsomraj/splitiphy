@@ -1,10 +1,12 @@
 'use server';
 
 import db from '@/db/drizzle';
-import { groups, users } from '@/db/schema';
+import { groupUserBalances, groups, transactions, users } from '@/db/schema';
+import paths from '@/lib/paths';
 import SplitManagerService from '@/services/split-manager-service';
 import { auth } from '@clerk/nextjs';
-import { eq } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
+import { redirect } from 'next/navigation';
 
 interface SettleGroupExpenseFormState {
   errors: {
@@ -77,27 +79,33 @@ export async function simplifyGroupExpenses(
   const allTransactions = group.groupExpenses
     .flatMap((groupExpense) => groupExpense.expense.transactions)
     .map((transaction) => ({
+      id: transaction.id,
       payer: transaction.payer.id,
       receiver: transaction.receiver.id,
       amount: parseFloat(transaction.amount),
     }));
 
   const splitManagerService = new SplitManagerService(allTransactions);
-  const balances = splitManagerService.settleBalances();
-
-  if (balances.length === 0) {
-    console.log('Group expenses settled successfully');
-    return { errors: {} };
-  }
-
-  balances.forEach(async (bal) => {
-    const payerUser = groupMembers[bal.payer];
-    const receiverUser = groupMembers[bal.receiver];
-    const amount = bal.amount.toFixed(2);
-    console.log(
-      `Payer: ${payerUser.firstName} Receiver: ${receiverUser.firstName} Amount: ${amount}`,
-    );
+  const balances = splitManagerService.settleBalances().map((bal) => {
+    return {
+      groupId: group.id,
+      senderId: bal.payer,
+      recipientId: bal.receiver,
+      amount: `${bal.amount.toFixed(2)}`,
+      createdAt: new Date(),
+    } as typeof groupUserBalances.$inferSelect;
   });
 
-  return { errors: {} };
+  await db.insert(groupUserBalances).values(balances);
+  await db
+    .update(transactions)
+    .set({ isSimplified: true })
+    .where(
+      inArray(
+        transactions.id,
+        allTransactions.map((t) => t.id),
+      ),
+    );
+
+  redirect(paths.groupShow(groupUuid));
 }

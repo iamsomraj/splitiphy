@@ -9,13 +9,7 @@ import {
   decimal,
   integer,
   uuid,
-  pgEnum,
 } from 'drizzle-orm/pg-core';
-
-export const userBalanceTypeEnum = pgEnum('type', [
-  'AMOUNT_TO_GIVE',
-  'AMOUNT_TO_TAKE',
-]);
 
 export const users = pgTable('users', {
   id: text('id').primaryKey(),
@@ -191,7 +185,7 @@ export const groupExpensesRelations = relations(groupExpenses, ({ one }) => ({
   }),
 }));
 
-export const groupUserBalances = pgTable('user_balances', {
+export const groupUserBalances = pgTable('group_user_balances', {
   id: serial('id').primaryKey(),
   uuid: uuid('uuid').default(sql`gen_random_uuid()`),
   groupId: integer('group_id')
@@ -204,7 +198,6 @@ export const groupUserBalances = pgTable('user_balances', {
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
-  type: userBalanceTypeEnum('type').notNull(),
   createdAt: timestamp('created_at').notNull(),
   updatedAt: timestamp('updated_at'),
   isDeleted: boolean('is_deleted').notNull().default(false),
