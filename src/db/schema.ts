@@ -1,13 +1,13 @@
 import { relations, sql } from 'drizzle-orm';
 import {
+  boolean,
+  decimal,
+  integer,
   pgTable,
+  primaryKey,
   serial,
   text,
   timestamp,
-  boolean,
-  date,
-  decimal,
-  integer,
   uuid,
 } from 'drizzle-orm/pg-core';
 
@@ -185,23 +185,32 @@ export const groupExpensesRelations = relations(groupExpenses, ({ one }) => ({
   }),
 }));
 
-export const groupUserBalances = pgTable('group_user_balances', {
-  id: serial('id').primaryKey(),
-  uuid: uuid('uuid').default(sql`gen_random_uuid()`),
-  groupId: integer('group_id')
-    .references(() => groups.id, { onDelete: 'cascade' })
-    .notNull(),
-  senderId: text('sender_id')
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
-  recipientId: text('recipient_id')
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
-  amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
-  createdAt: timestamp('created_at').notNull(),
-  updatedAt: timestamp('updated_at'),
-  isDeleted: boolean('is_deleted').notNull().default(false),
-});
+export const groupUserBalances = pgTable(
+  'group_user_balances',
+  {
+    uuid: uuid('uuid').default(sql`gen_random_uuid()`),
+    groupId: integer('group_id')
+      .references(() => groups.id, { onDelete: 'cascade' })
+      .notNull(),
+    senderId: text('sender_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    recipientId: text('recipient_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
+    createdAt: timestamp('created_at').notNull(),
+    updatedAt: timestamp('updated_at'),
+    isDeleted: boolean('is_deleted').notNull().default(false),
+  },
+  (table) => {
+    return {
+      pk: primaryKey({
+        columns: [table.groupId, table.senderId, table.recipientId],
+      }),
+    };
+  },
+);
 
 export const groupUserBalancesRelations = relations(
   groupUserBalances,

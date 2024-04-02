@@ -1,12 +1,31 @@
 'use server';
 
 import db from '@/db/drizzle';
-import { groupUserBalances, groups, transactions, users } from '@/db/schema';
+import { groupUserBalances, groups, transactions } from '@/db/schema';
 import paths from '@/lib/paths';
 import SplitManagerService from '@/services/split-manager-service';
 import { auth } from '@clerk/nextjs';
-import { eq, inArray } from 'drizzle-orm';
+import { SQL, eq, getTableColumns, inArray, sql } from 'drizzle-orm';
+import { PgTable } from 'drizzle-orm/pg-core';
 import { redirect } from 'next/navigation';
+
+const buildConflictUpdateColumns = <
+  T extends PgTable,
+  Q extends keyof T['_']['columns'],
+>(
+  table: T,
+  columns: Q[],
+) => {
+  const cls = getTableColumns(table);
+  return columns.reduce(
+    (acc, column) => {
+      const colName = cls[column].name;
+      acc[column] = sql.raw(`excluded.${colName}`);
+      return acc;
+    },
+    {} as Record<Q, SQL>,
+  );
+};
 
 interface SettleGroupExpenseFormState {
   errors: {
@@ -16,8 +35,8 @@ interface SettleGroupExpenseFormState {
 
 export async function simplifyGroupExpenses(
   groupUuid: string,
-  formState: SettleGroupExpenseFormState,
-  formData: FormData,
+  _formState: SettleGroupExpenseFormState,
+  _formData: FormData,
 ): Promise<SettleGroupExpenseFormState> {
   const session = await auth();
   if (!session || !session.userId) {
@@ -40,6 +59,7 @@ export async function simplifyGroupExpenses(
                   payer: true,
                   receiver: true,
                 },
+                where: eq(transactions.isSimplified, false),
               },
             },
           },
@@ -66,16 +86,7 @@ export async function simplifyGroupExpenses(
       },
     };
   }
-  const groupMembers: Record<string, typeof users.$inferSelect> =
-    group.groupMemberships.reduce(
-      (acc, groupMembership) => ({
-        ...acc,
-        [groupMembership.user.id]: {
-          ...groupMembership.user,
-        },
-      }),
-      {},
-    );
+
   const allTransactions = group.groupExpenses
     .flatMap((groupExpense) => groupExpense.expense.transactions)
     .map((transaction) => ({
@@ -96,7 +107,18 @@ export async function simplifyGroupExpenses(
     } as typeof groupUserBalances.$inferSelect;
   });
 
-  await db.insert(groupUserBalances).values(balances);
+  await db
+    .insert(groupUserBalances)
+    .values(balances)
+    .onConflictDoUpdate({
+      target: [
+        groupUserBalances.groupId,
+        groupUserBalances.senderId,
+        groupUserBalances.recipientId,
+      ],
+      set: buildConflictUpdateColumns(groupUserBalances, ['amount']),
+    });
+
   await db
     .update(transactions)
     .set({ isSimplified: true })
