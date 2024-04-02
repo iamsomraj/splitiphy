@@ -1,7 +1,8 @@
 import db from '@/db/drizzle';
-import { groupExpenses, groups } from '@/db/schema';
+import { groupExpenses, groupUserBalances, groups } from '@/db/schema';
 import { auth } from '@clerk/nextjs';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, not, sql } from 'drizzle-orm';
+import { numeric } from 'drizzle-orm/pg-core';
 import { cache } from 'react';
 
 export const getGroupDetailsById = cache(async (groupUuid: string) => {
@@ -39,6 +40,7 @@ export const getGroupDetailsById = cache(async (groupUuid: string) => {
           sender: true,
           recipient: true,
         },
+        where: not(eq(groupUserBalances.amount, '0.00')),
       },
       owner: true,
     },
