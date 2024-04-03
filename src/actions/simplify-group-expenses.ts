@@ -78,7 +78,7 @@ export async function simplifyGroupExpenses(groupUuid: string) {
     };
   }
 
-  const allTransactions = group.groupExpenses
+  const newTransactions = group.groupExpenses
     .flatMap((groupExpense) => groupExpense.expense.transactions)
     .map((transaction) => ({
       expenseId: transaction.expenseId,
@@ -87,8 +87,17 @@ export async function simplifyGroupExpenses(groupUuid: string) {
       amount: parseFloat(transaction.amount),
     }));
 
-  const splitManagerService = new SplitManagerService(allTransactions);
-  const balances = splitManagerService.settleBalances().map((bal) => {
+  const existingTransactions = group.groupUserBalances.map((balance) => ({
+    payer: balance.recipient.id,
+    receiver: balance.sender.id,
+    amount: parseFloat(balance.amount),
+  }));
+
+  const splitManagerService = new SplitManagerService([
+    ...newTransactions,
+    ...existingTransactions,
+  ]);
+  const balances = splitManagerService.settleAllBalances().map((bal) => {
     return {
       groupId: group.id,
       senderId: bal.payer,
@@ -99,21 +108,13 @@ export async function simplifyGroupExpenses(groupUuid: string) {
   });
 
   await db
-    .insert(groupUserBalances)
-    .values(balances)
-    .onConflictDoUpdate({
-      target: [
-        groupUserBalances.groupId,
-        groupUserBalances.senderId,
-        groupUserBalances.recipientId,
-      ],
-      set: {
-        amount: sql`${groupUserBalances.amount} + excluded.amount`,
-      },
-    });
+    .delete(groupUserBalances)
+    .where(eq(groupUserBalances.groupId, group.id));
+
+  await db.insert(groupUserBalances).values(balances);
 
   const uniqueExpenseIds = [
-    ...Array.from(new Set(allTransactions.map((t) => t.expenseId))),
+    ...Array.from(new Set(group.groupExpenses.map((t) => t.expenseId))),
   ];
   await db
     .update(groupExpenses)

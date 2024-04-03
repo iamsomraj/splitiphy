@@ -74,10 +74,9 @@ class SplitManagerService {
     });
   }
 
-  settleBalances(): Transaction[] {
-    let balances = this.graph.getBalances();
-    let settlement = true;
+  settleBalances(balances: Balances): Transaction[] {
     let settlements: Transaction[] = [];
+    let settlement = false;
 
     for (let source in balances) {
       for (let destination in balances) {
@@ -90,16 +89,21 @@ class SplitManagerService {
             receiver: source,
             amount,
           });
-          settlement = false;
+          settlement = true;
         }
       }
     }
 
     if (settlement) {
-      return [];
+      return settlements.concat(this.settleBalances(balances));
     }
 
     return settlements;
+  }
+
+  settleAllBalances(): Transaction[] {
+    let balances = this.graph.getBalances();
+    return this.settleBalances(balances);
   }
 }
 
