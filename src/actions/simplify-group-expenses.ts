@@ -28,12 +28,6 @@ const buildConflictUpdateColumns = <
   );
 };
 
-interface SettleGroupExpenseFormState {
-  errors: {
-    _form?: string[];
-  };
-}
-
 export async function simplifyGroupExpenses(groupUuid: string) {
   const session = await auth();
   if (!session || !session.userId) {
