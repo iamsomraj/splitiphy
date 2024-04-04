@@ -1,13 +1,13 @@
 import { relations, sql } from 'drizzle-orm';
 import {
+  boolean,
+  decimal,
+  integer,
   pgTable,
+  primaryKey,
   serial,
   text,
   timestamp,
-  boolean,
-  date,
-  decimal,
-  integer,
   uuid,
 } from 'drizzle-orm/pg-core';
 
@@ -28,7 +28,12 @@ export const users = pgTable('users', {
 export const usersRelations = relations(users, ({ many }) => ({
   groups: many(groups),
   groupMemberships: many(groupMemberships),
-  userBalances: many(userBalances),
+  senderUserBalances: many(groupUserBalances, {
+    relationName: 'sender',
+  }),
+  recipientUserBalances: many(groupUserBalances, {
+    relationName: 'recipient',
+  }),
   expenses: many(expenses),
   ownedTransactions: many(transactions, {
     relationName: 'owner',
@@ -56,7 +61,7 @@ export const groupsRelations = relations(groups, ({ many, one }) => ({
   }),
   groupMemberships: many(groupMemberships),
   groupExpenses: many(groupExpenses),
-  userBalances: many(userBalances),
+  groupUserBalances: many(groupUserBalances),
 }));
 
 export const groupMemberships = pgTable('group_memberships', {
@@ -163,6 +168,9 @@ export const groupExpenses = pgTable('group_expenses', {
   groupId: integer('group_id')
     .references(() => groups.id, { onDelete: 'cascade' })
     .notNull(),
+  isExpenseSimplified: boolean('is_expense_simplified')
+    .notNull()
+    .default(false),
   createdAt: timestamp('created_at').notNull(),
   updatedAt: timestamp('updated_at'),
   isDeleted: boolean('is_deleted').notNull().default(false),
@@ -179,36 +187,49 @@ export const groupExpensesRelations = relations(groupExpenses, ({ one }) => ({
   }),
 }));
 
-export const userBalances = pgTable('user_balances', {
-  id: serial('id').primaryKey(),
-  uuid: uuid('uuid').default(sql`gen_random_uuid()`),
-  groupId: integer('group_id')
-    .references(() => groups.id, { onDelete: 'cascade' })
-    .notNull(),
-  userId: text('user_id')
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
-  balance: decimal('balance', { precision: 10, scale: 2 }).notNull(),
-  lastExpenseId: integer('last_expense_id').references(() => expenses.id, {
-    onDelete: 'cascade',
-  }),
-  lastExpenseDate: date('last_expense_date'),
-  createdAt: timestamp('created_at').notNull(),
-  updatedAt: timestamp('updated_at'),
-  isDeleted: boolean('is_deleted').notNull().default(false),
-});
+export const groupUserBalances = pgTable(
+  'group_user_balances',
+  {
+    uuid: uuid('uuid').default(sql`gen_random_uuid()`),
+    groupId: integer('group_id')
+      .references(() => groups.id, { onDelete: 'cascade' })
+      .notNull(),
+    senderId: text('sender_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    recipientId: text('recipient_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
+    createdAt: timestamp('created_at').notNull(),
+    updatedAt: timestamp('updated_at'),
+    isDeleted: boolean('is_deleted').notNull().default(false),
+  },
+  (table) => {
+    return {
+      pk: primaryKey({
+        columns: [table.groupId, table.senderId, table.recipientId],
+      }),
+    };
+  },
+);
 
-export const userBalancesRelations = relations(userBalances, ({ one }) => ({
-  user: one(users, {
-    fields: [userBalances.userId],
-    references: [users.id],
+export const groupUserBalancesRelations = relations(
+  groupUserBalances,
+  ({ one }) => ({
+    sender: one(users, {
+      fields: [groupUserBalances.senderId],
+      references: [users.id],
+      relationName: 'sender',
+    }),
+    recipient: one(users, {
+      fields: [groupUserBalances.recipientId],
+      references: [users.id],
+      relationName: 'recipient',
+    }),
+    group: one(groups, {
+      fields: [groupUserBalances.groupId],
+      references: [groups.id],
+    }),
   }),
-  group: one(groups, {
-    fields: [userBalances.groupId],
-    references: [groups.id],
-  }),
-  lastExpense: one(expenses, {
-    fields: [userBalances.lastExpenseId],
-    references: [expenses.id],
-  }),
-}));
+);

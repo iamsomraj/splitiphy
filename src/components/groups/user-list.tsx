@@ -1,5 +1,5 @@
+import UserItem from '@/components/groups/user-item';
 import type { UserSearchResult } from '@/db/queries';
-import UserItem from './user-item';
 
 interface UserListProps {
   fetchData: () => Promise<UserSearchResult>;
