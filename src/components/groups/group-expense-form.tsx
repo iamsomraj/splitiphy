@@ -2,6 +2,7 @@
 import * as actions from '@/actions';
 import FormButton from '@/components/shared/form-button';
 import { GroupWithData } from '@/db/queries';
+import { formatNumber } from '@/lib/utils';
 import { useState } from 'react';
 import { useFormState } from 'react-dom';
 
@@ -28,40 +29,59 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
   ) => {
     const newExpenseAmount = parseFloat(event.target.value);
     const selectedUsers = formData.expenseSplitWith;
-    const evenSplitAmount = (newExpenseAmount / selectedUsers.length).toFixed(
-      2,
+    const totalSelectedUsers = selectedUsers.length;
+    const evenSplitAmount = formatNumber(newExpenseAmount / totalSelectedUsers);
+    const remainingAmount = formatNumber(
+      newExpenseAmount - evenSplitAmount * totalSelectedUsers,
     );
+
+    const updatedSplitAmounts: Record<string, number> = {};
+
+    for (let i = 0; i < totalSelectedUsers; i++) {
+      updatedSplitAmounts[selectedUsers[i]] = evenSplitAmount;
+    }
+
+    for (let i = 0; i < remainingAmount * 100; i++) {
+      updatedSplitAmounts[selectedUsers[i % totalSelectedUsers]] = formatNumber(
+        updatedSplitAmounts[selectedUsers[i % totalSelectedUsers]] + 0.01,
+      );
+    }
+
     setFormData({
       ...formData,
-      expenseAmount: parseFloat(newExpenseAmount.toFixed(2)),
-      splitAmounts: selectedUsers.reduce(
-        (acc, userId) => ({ ...acc, [userId]: parseFloat(evenSplitAmount) }),
-        {} as Record<string, number>,
-      ),
+      expenseAmount: formatNumber(newExpenseAmount),
+      splitAmounts: updatedSplitAmounts,
     });
   };
 
   const handleSplitWithChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      expenseSplitWith: Array.from(
-        e.target.selectedOptions,
-        (option) => option.value,
-      ),
-    });
     const selectedUsers = Array.from(
       e.target.selectedOptions,
       (option) => option.value,
     );
     const totalExpense = formData.expenseAmount || 0;
-    const evenSplitAmount = (totalExpense / selectedUsers.length).toFixed(2);
+    const totalSelectedUsers = selectedUsers.length;
+    const evenSplitAmount = formatNumber(totalExpense / totalSelectedUsers);
+    const remainingAmount = formatNumber(
+      totalExpense - evenSplitAmount * totalSelectedUsers,
+    );
+
+    const updatedSplitAmounts: Record<string, number> = {};
+
+    for (let i = 0; i < totalSelectedUsers; i++) {
+      updatedSplitAmounts[selectedUsers[i]] = evenSplitAmount;
+    }
+
+    for (let i = 0; i < remainingAmount * 100; i++) {
+      updatedSplitAmounts[selectedUsers[i % totalSelectedUsers]] = formatNumber(
+        updatedSplitAmounts[selectedUsers[i % totalSelectedUsers]] + 0.01,
+      );
+    }
+
     setFormData({
       ...formData,
       expenseSplitWith: selectedUsers,
-      splitAmounts: selectedUsers.reduce(
-        (acc, userId) => ({ ...acc, [userId]: parseFloat(evenSplitAmount) }),
-        {} as Record<string, number>,
-      ),
+      splitAmounts: updatedSplitAmounts,
     });
   };
 
