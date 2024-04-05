@@ -1,47 +1,11 @@
-import db from '@/db/drizzle';
-import { users } from '@/db/schema';
-import { clerkClient } from '@clerk/nextjs';
-import { ilike, or } from 'drizzle-orm';
+import UserAuthService from '@/services/auth-user-service';
 import { cache } from 'react';
 
-const getUsersBySearchTermFromDB = async (searchTerm: string) => {
-  const response = await db.query.users.findMany({
-    where: or(
-      ilike(users.username, `%${searchTerm}%`),
-      ilike(users.email, `%${searchTerm}%`),
-      ilike(users.firstName, `%${searchTerm}%`),
-      ilike(users.lastName, `%${searchTerm}%`),
-    ),
-  });
-  return response;
-};
-
-const getUsersBySearchTermFromAuth = async (searchTerm: string) => {
-  const response = await clerkClient.users.getUserList({
-    query: searchTerm,
-  });
-  return response.map((user) => ({
-    id: user.id,
-    username: user.externalAccounts?.find((a) => !!a.username)?.username || '',
-    email:
-      user.emailAddresses?.find((e) => e.id === user.primaryEmailAddressId)
-        ?.emailAddress || '',
-    phone:
-      user.phoneNumbers?.find((p) => p.id === user.primaryPhoneNumberId)
-        ?.phoneNumber || '',
-    firstName: user.firstName || '',
-    lastName: user.lastName || '',
-    profileImage: user.imageUrl || '',
-    createdAt: new Date(),
-    updatedAt: null,
-    isDeleted: false,
-  }));
-};
-
 export const getUsersBySearchTerm = cache(async (searchTerm: string) => {
+  const userAuthService = new UserAuthService();
   const [dbUsers, authUsers] = await Promise.allSettled([
-    getUsersBySearchTermFromDB(searchTerm),
-    getUsersBySearchTermFromAuth(searchTerm),
+    userAuthService.getUsersBySearchTermFromDB(searchTerm),
+    userAuthService.getUsersBySearchTermFromAuth(searchTerm),
   ]);
 
   const mergedUsers = [
