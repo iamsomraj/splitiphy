@@ -19,9 +19,16 @@ export default function IndexPage() {
     <div className="relative flex w-full flex-1 flex-col">
       <main className="container relative">
         <PageHeader>
-          <Announcement link={paths.getStarted()}>
-            Introducing Simplify Mode
-          </Announcement>
+          <SignedIn>
+            <Announcement link={paths.groups()}>
+              Introducing Simplify Mode
+            </Announcement>
+          </SignedIn>
+          <SignedOut>
+            <Announcement link={paths.getStarted()}>
+              Introducing Simplify Mode
+            </Announcement>
+          </SignedOut>
           <PageHeaderHeading>{siteConfig.header}</PageHeaderHeading>
           <PageHeaderDescription>
             {siteConfig.description}
