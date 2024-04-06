@@ -2,6 +2,12 @@ const paths = {
   home() {
     return '/';
   },
+  signIn() {
+    return '/sign-in';
+  },
+  signUp() {
+    return '/sign-up';
+  },
   groups() {
     return '/groups';
   },

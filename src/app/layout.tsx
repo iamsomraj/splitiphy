@@ -3,7 +3,6 @@ import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
 import type { Metadata } from 'next';
 import './globals.css';
-import NavBar from '@/components/shared/nav-bar';
 
 export const metadata: Metadata = {
   title: 'Splitiphy',
@@ -20,10 +19,7 @@ export default function RootLayout({
       <body
         className={`${GeistSans.className} ${GeistSans.variable} ${GeistMono.variable}`}
       >
-        <Providers>
-          <NavBar />
-          {children}
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
