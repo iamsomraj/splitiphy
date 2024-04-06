@@ -1,6 +1,7 @@
-import { CircleUser, Divide, Menu } from 'lucide-react';
+import { CircleUser, Menu } from 'lucide-react';
 import Link from 'next/link';
 
+import { Icons } from '@/components/shared/icons';
 import ThemeModeToggle from '@/components/theme-mode-toggle';
 import { Button } from '@/components/ui/button';
 import {
@@ -12,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { siteConfig } from '@/config/site';
 import paths from '@/lib/paths';
 import {
   ClerkLoaded,
@@ -29,8 +31,10 @@ const NavBar = () => {
           href={paths.home()}
           className="flex items-center gap-2 text-lg font-semibold md:text-base"
         >
-          <Divide className="h-6 w-6" />
-          <span className="sr-only">Splitiphy Inc</span>
+          <Icons.logo className="h-6 w-6" />
+          <span className="hidden font-bold sm:inline-block">
+            {siteConfig.name}
+          </span>
         </Link>
         <ClerkLoaded>
           <SignedIn>
@@ -72,8 +76,8 @@ const NavBar = () => {
               href={paths.home()}
               className="flex items-center gap-2 text-lg font-semibold"
             >
-              <Divide className="h-6 w-6" />
-              <span className="sr-only">Splitiphy Inc</span>
+              <Icons.logo className="h-6 w-6" />
+              <span className="font-bold">{siteConfig.name}</span>{' '}
             </Link>
             <ClerkLoaded>
               <SignedIn>

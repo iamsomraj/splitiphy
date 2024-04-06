@@ -13,6 +13,7 @@ export const siteConfig = {
     'flexible',
     'secure',
   ],
+  header: 'Splitiphy - Simplify Your Shared Expenses',
   description:
     'Effortlessly manage and split bills with friends and family. User-friendly. Flexible. Secure.',
   links: {

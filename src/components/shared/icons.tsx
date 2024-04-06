@@ -1,6 +1,15 @@
+import { cn } from '@/lib/utils';
+import { Divide } from 'lucide-react';
+
 type IconProps = React.HTMLAttributes<SVGElement>;
 
 export const Icons = {
+  logo: (props: IconProps) => {
+    const { className, ...rest } = props;
+    return (
+      <Divide className={cn('rotate-45 transform', className)} {...rest} />
+    );
+  },
   gitHub: (props: IconProps) => (
     <svg viewBox="0 0 438.549 438.549" {...props}>
       <path

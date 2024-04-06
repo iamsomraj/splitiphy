@@ -14,18 +14,15 @@ import Link from 'next/link';
 
 export default function IndexPage() {
   return (
-    <div className="relative flex min-h-screen w-full flex-col bg-muted/40">
+    <div className="relative flex w-full flex-1 flex-col bg-muted/40">
       <main className="container relative">
         <PageHeader>
           <Announcement link={paths.signUp()}>
-            Introducing easy-to-use features for managing your shared expenses.
+            Introducing Simplify Mode
           </Announcement>
-          <PageHeaderHeading>
-            Splitiphy - Simplify Your Shared Expenses
-          </PageHeaderHeading>
+          <PageHeaderHeading>{siteConfig.header}</PageHeaderHeading>
           <PageHeaderDescription>
-            Effortlessly manage and split bills with friends and family.
-            User-friendly. Flexible. Secure.
+            {siteConfig.description}
           </PageHeaderDescription>
           <PageActions>
             <Link href={paths.signIn()} className={cn(buttonVariants())}>

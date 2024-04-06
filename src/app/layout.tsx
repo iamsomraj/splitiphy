@@ -5,6 +5,7 @@ import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
 import type { Metadata } from 'next';
 import './globals.css';
+import NavBar from '@/components/shared/nav-bar';
 
 export const metadata: Metadata = {
   title: {
@@ -59,11 +60,14 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          'min-h-screen bg-background font-sans antialiased',
+          'flex min-h-screen flex-col bg-background font-sans antialiased',
           `${GeistSans.className} ${GeistSans.variable} ${GeistMono.variable}`,
         )}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          <NavBar />
+          {children}
+        </Providers>
       </body>
     </html>
   );
