@@ -17,7 +17,8 @@ export const siteConfig = {
   description:
     'Effortlessly manage and split bills with friends and family. User-friendly. Flexible. Secure.',
   links: {
-    github: 'https://github.com/iamsomraj/splitiphy',
+    sourceGithub: 'https://github.com/iamsomraj/splitiphy',
+    gitHub: 'https://github.com/iamsomraj',
   },
 };
 

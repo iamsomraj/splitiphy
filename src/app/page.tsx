@@ -10,6 +10,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { siteConfig } from '@/config/site';
 import paths from '@/lib/paths';
 import { cn } from '@/lib/utils';
+import { SignedIn, SignedOut } from '@clerk/nextjs';
 import Link from 'next/link';
 
 export default function IndexPage() {
@@ -17,7 +18,7 @@ export default function IndexPage() {
     <div className="relative flex w-full flex-1 flex-col bg-muted/40">
       <main className="container relative">
         <PageHeader>
-          <Announcement link={paths.signUp()}>
+          <Announcement link={paths.getStarted()}>
             Introducing Simplify Mode
           </Announcement>
           <PageHeaderHeading>{siteConfig.header}</PageHeaderHeading>
@@ -25,13 +26,20 @@ export default function IndexPage() {
             {siteConfig.description}
           </PageHeaderDescription>
           <PageActions>
-            <Link href={paths.signIn()} className={cn(buttonVariants())}>
-              Get Started
-            </Link>
+            <SignedIn>
+              <Link href={paths.groups()} className={cn(buttonVariants())}>
+                Groups
+              </Link>
+            </SignedIn>
+            <SignedOut>
+              <Link href={paths.getStarted()} className={cn(buttonVariants())}>
+                Get Started
+              </Link>
+            </SignedOut>
             <Link
               target="_blank"
               rel="noopener noreferrer"
-              href={siteConfig.links.github}
+              href={siteConfig.links.sourceGithub}
               className={cn(buttonVariants({ variant: 'outline' }))}
             >
               <Icons.gitHub className="mr-2 h-4 w-4" />

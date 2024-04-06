@@ -73,4 +73,19 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Hack for Hiding Clerk Tag */
+  div[class^='cl-internal-'] {
+    @apply border-none bg-inherit;
+  }
+
+  /* Hack for Hiding Clerk Tag */
+  div[class^='cl-internal-'] > p {
+    @apply hidden;
+  }
+
+  /* Hack for Hiding Clerk Tag */
+  div[class^='cl-internal-'] > a > svg {
+    @apply hidden;
+  }
 }

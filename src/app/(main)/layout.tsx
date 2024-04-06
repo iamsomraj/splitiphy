@@ -1,5 +1,3 @@
-import NavBar from '@/components/shared/nav-bar';
-
 type Props = {
   children: React.ReactNode;
 };
@@ -7,7 +5,6 @@ type Props = {
 const MainLayout = ({ children }: Props) => {
   return (
     <>
-      <NavBar />
       <main>{children}</main>
     </>
   );

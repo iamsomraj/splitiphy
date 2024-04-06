@@ -2,11 +2,8 @@ const paths = {
   home() {
     return '/';
   },
-  signIn() {
-    return '/sign-in';
-  },
-  signUp() {
-    return '/sign-up';
+  getStarted() {
+    return '/get-started';
   },
   groups() {
     return '/groups';

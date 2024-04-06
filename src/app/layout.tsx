@@ -1,12 +1,11 @@
 import Providers from '@/components/providers';
+import NavBar from '@/components/shared/nav-bar';
 import { siteConfig } from '@/config/site';
 import { cn } from '@/lib/utils';
 import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
 import type { Metadata } from 'next';
 import './globals.css';
-import NavBar from '@/components/shared/nav-bar';
-
 export const metadata: Metadata = {
   title: {
     default: siteConfig.name,

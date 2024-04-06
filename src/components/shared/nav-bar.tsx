@@ -47,20 +47,10 @@ const NavBar = () => {
             <SignOutButton>
               <button className="text-nowrap text-muted-foreground hover:text-foreground">
                 Sign Out
+                <span className="sr-only">Sign out of your account</span>
               </button>
             </SignOutButton>
           </SignedIn>
-          <SignedOut>
-            <SignInButton
-              mode="modal"
-              afterSignInUrl={paths.groups()}
-              afterSignUpUrl={paths.groups()}
-            >
-              <button className="text-muted-foreground hover:text-foreground">
-                Login
-              </button>
-            </SignInButton>
-          </SignedOut>
         </ClerkLoaded>
       </nav>
       <Sheet>
@@ -90,19 +80,17 @@ const NavBar = () => {
                 <SignOutButton>
                   <button className="text-muted-foreground hover:text-foreground">
                     Sign Out
+                    <span className="sr-only">Sign out of your account</span>
                   </button>
                 </SignOutButton>
               </SignedIn>
               <SignedOut>
-                <SignInButton
-                  mode="modal"
-                  afterSignInUrl={paths.groups()}
-                  afterSignUpUrl={paths.groups()}
+                <Link
+                  href={paths.getStarted()}
+                  className="text-muted-foreground hover:text-foreground"
                 >
-                  <button className="text-muted-foreground hover:text-foreground">
-                    Login
-                  </button>
-                </SignInButton>
+                  Get Started
+                </Link>
               </SignedOut>
             </ClerkLoaded>
           </nav>
@@ -121,9 +109,13 @@ const NavBar = () => {
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Support</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <SignOutButton>
+              <DropdownMenuItem>
+                Logout
+                <span className="sr-only">Sign out of your account</span>
+              </DropdownMenuItem>
+            </SignOutButton>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
