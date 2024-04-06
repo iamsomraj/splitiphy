@@ -1,9 +1,8 @@
 import Providers from '@/app/providers';
 import type { Metadata } from 'next';
-import { Nunito } from 'next/font/google';
+import { GeistSans } from 'geist/font/sans';
+import { GeistMono } from 'geist/font/mono';
 import './globals.css';
-
-const font = Nunito({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Splitiphy',
@@ -17,7 +16,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={font.className}>
+      <body
+        className={`${GeistSans.className} ${GeistSans.variable} ${GeistMono.variable}`}
+      >
         <Providers>{children}</Providers>
       </body>
     </html>
