@@ -11,11 +11,12 @@ import { siteConfig } from '@/config/site';
 import paths from '@/lib/paths';
 import { cn } from '@/lib/utils';
 import { SignedIn, SignedOut } from '@clerk/nextjs';
+import { UsersIcon } from 'lucide-react';
 import Link from 'next/link';
 
 export default function IndexPage() {
   return (
-    <div className="relative flex w-full flex-1 flex-col bg-muted/40">
+    <div className="relative flex w-full flex-1 flex-col">
       <main className="container relative">
         <PageHeader>
           <Announcement link={paths.getStarted()}>
@@ -28,6 +29,7 @@ export default function IndexPage() {
           <PageActions>
             <SignedIn>
               <Link href={paths.groups()} className={cn(buttonVariants())}>
+                <UsersIcon className="mr-2 h-4 w-4" />
                 Groups
               </Link>
             </SignedIn>

@@ -42,7 +42,8 @@ export default function Dashboard() {
                     socialButtonsBlockButtonText: cn(
                       'text-sm font-medium text-nowrap hover:text-accent-foreground',
                     ),
-                    socialButtonsProviderIcon: 'hidden dark:block',
+                    socialButtonsProviderIcon:
+                      'mix-blend-difference dark:mix-blend-normal',
                     socialButtonsBlockButton: cn(
                       buttonVariants({ variant: 'secondary' }),
                     ),
