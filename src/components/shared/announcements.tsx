@@ -14,7 +14,7 @@ export function Announcement({ children, link }: Props) {
   return (
     <Link
       href={link || paths.home()}
-      className="inline-flex items-center rounded-lg bg-muted px-3 py-1 text-sm font-medium"
+      className="inline-flex items-center rounded-lg bg-muted px-3 py-1 text-center text-sm font-medium"
     >
       <Blocks className="h-4 w-4" />{' '}
       <Separator className="mx-2 h-4" orientation="vertical" />{' '}
