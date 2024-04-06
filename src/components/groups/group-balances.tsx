@@ -1,5 +1,5 @@
+import SettleUpButton from '@/components/groups/settle-up-button';
 import { GroupWithData } from '@/db/queries';
-import SettleUpButton from './settle-up-button';
 
 type GroupBalancesProps = {
   group: GroupWithData;

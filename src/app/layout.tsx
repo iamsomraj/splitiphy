@@ -1,10 +1,10 @@
 import Providers from '@/components/providers';
+import { siteConfig } from '@/config/site';
+import { cn } from '@/lib/utils';
 import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
 import type { Metadata } from 'next';
 import './globals.css';
-import { siteConfig } from '@/config/site';
-import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
   title: {
