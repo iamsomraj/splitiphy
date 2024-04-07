@@ -98,5 +98,5 @@ export async function createGroup(
   }
 
   revalidatePath(paths.groups());
-  redirect(paths.groups());
+  redirect(paths.groupShow(insertedGroups[0].uuid));
 }

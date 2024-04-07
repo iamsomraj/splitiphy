@@ -17,19 +17,22 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { cn } from '@/lib/utils';
 import { useFormState } from 'react-dom';
 import FormButton from '../shared/form-button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 
-const GroupCreateForm = () => {
+type Props = React.HTMLAttributes<HTMLDivElement>;
+
+const GroupCreateForm = ({ className, ...rest }: Props) => {
   const [formState, action] = useFormState(actions.createGroup, {
     errors: {},
   });
 
   return (
     <>
-      <Card className="col-span-2 bg-muted/40">
+      <Card className={cn('bg-muted/40', className)} {...rest}>
         <CardHeader className="gap-2 pb-3">
           <CardTitle>Your Groups</CardTitle>
           <CardDescription className="leading-relaxed">
@@ -71,7 +74,7 @@ const GroupCreateForm = () => {
                     {formState?.errors?._form?.join(', ')}
                   </span>
                 ) : null}
-                <DialogFooter>
+                <DialogFooter className="pt-4 sm:pt-0">
                   <FormButton>Create Group</FormButton>
                 </DialogFooter>
               </form>
