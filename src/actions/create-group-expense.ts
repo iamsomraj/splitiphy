@@ -3,6 +3,7 @@
 import db from '@/db/drizzle';
 import { expenses, groupExpenses, groups, transactions } from '@/db/schema';
 import paths from '@/lib/paths';
+import { formatNumber } from '@/lib/utils';
 import { auth } from '@clerk/nextjs';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
@@ -31,6 +32,9 @@ const createGroupExpenseSchema = z.object({
   date: z.date(),
   amount: z.number().positive(),
   paidBy: z.string(),
+  isMultiplePaidBy: z.boolean(),
+  paidByList: z.array(z.string()).optional(),
+  paidByAmounts: z.record(z.number()).optional(),
   splitWith: z.array(z.string()).min(1, {
     message: 'At least one member should be selected to split with',
   }),
@@ -44,6 +48,9 @@ interface CreateGroupExpenseFormState {
     date?: string[];
     amount?: string[];
     paidBy?: string[];
+    isMultiplePaidBy?: string[];
+    paidByList?: string[];
+    paidByAmounts?: string[];
     splitWith?: string[];
     splitAmounts?: string[];
     _form?: string[];
@@ -59,8 +66,20 @@ export async function createGroupExpense(
     name: formData.get('expense-name') as string,
     description: formData.get('expense-description') as string,
     date: new Date(formData.get('expense-date') as string),
-    amount: parseFloat(formData.get('expense-amount') as string),
+    amount: formatNumber(parseFloat(formData.get('expense-amount') as string)),
     paidBy: formData.get('expense-paid-by') as string,
+    isMultiplePaidBy: formData.get('is-multiple-paid-by') === 'true',
+    paidByList: Array.from(formData.getAll('expense-paid-by')).map(
+      (id) => id as string,
+    ),
+    paidByAmounts: Object.fromEntries(
+      Array.from(formData.entries())
+        .filter(([name]) => name.startsWith('paid-amount-'))
+        .map(([name, value]) => [
+          name.split('-')[2] as string,
+          formatNumber(parseFloat(value as string)),
+        ]),
+    ),
     splitWith: Array.from(formData.getAll('expense-split-with')).map(
       (id) => id as string,
     ),
@@ -69,7 +88,7 @@ export async function createGroupExpense(
         .filter(([name]) => name.startsWith('split-amount-'))
         .map(([name, value]) => [
           name.split('-')[2] as string,
-          parseFloat(value as string),
+          formatNumber(parseFloat(value as string)),
         ]),
     ),
   });
@@ -117,9 +136,11 @@ export async function createGroupExpense(
     }
 
     const splitWith = result.data.splitWith;
-    const splitAmounts = result.data.splitAmounts;
+    const splitAmounts = result?.data?.splitAmounts || {};
+    const paidByList = result?.data?.paidByList || [];
+    const paidByAmounts = result?.data?.paidByAmounts || {};
 
-    if (splitWith.length !== Object.keys(splitAmounts || {}).length) {
+    if (splitWith.length !== Object.keys(splitAmounts).length) {
       return {
         errors: {
           _form: ['Split amount is required for each member'],
@@ -127,11 +148,8 @@ export async function createGroupExpense(
       };
     }
 
-    const totalSplitAmount = Math.round(
-      Object.values(splitAmounts || {}).reduce(
-        (acc, amount) => acc + amount,
-        0,
-      ),
+    const totalSplitAmount = formatNumber(
+      Object.values(splitAmounts).reduce((acc, amount) => acc + amount, 0),
     );
 
     if (totalSplitAmount !== result.data.amount) {
@@ -141,6 +159,7 @@ export async function createGroupExpense(
         },
       };
     }
+
     const expense = await db
       .insert(expenses)
       .values({
@@ -178,16 +197,64 @@ export async function createGroupExpense(
       };
     }
 
-    const transactionRecords = Object.entries(splitAmounts || {}).map(
-      ([userId, amount]) => ({
-        ownerId: session.userId,
-        payerId: result.data.paidBy,
-        receiverId: userId,
-        expenseId: expense[0].id,
-        createdAt: new Date(),
-        amount: `${amount}`,
-      }),
-    ) as (typeof transactions.$inferInsert)[];
+    let transactionRecords: (typeof transactions.$inferInsert)[] = [];
+
+    if (result.data.isMultiplePaidBy) {
+      const totalPaidAmount = formatNumber(
+        Object.values(paidByAmounts).reduce((acc, amount) => acc + amount, 0),
+      );
+
+      if (totalPaidAmount !== result.data.amount) {
+        return {
+          errors: {
+            _form: [
+              'Sum of amounts paid by all payers should equal the total expense amount',
+            ],
+          },
+        };
+      }
+
+      paidByList.forEach((payerId) => {
+        const paidAmountByPayer = paidByAmounts[payerId] || 0;
+
+        // Create a transaction for the payer paying themselves their share
+        transactionRecords.push({
+          ownerId: session.userId,
+          payerId,
+          receiverId: payerId,
+          expenseId: expense[0].id,
+          createdAt: new Date(),
+          amount: `${paidAmountByPayer}`,
+        });
+
+        // Create transactions for the payer paying others (excluding themselves)
+        paidByList
+          .filter((memberId) => memberId !== payerId)
+          .forEach((receiverId) => {
+            const amountToPay = paidByAmounts[receiverId] || 0;
+            transactionRecords.push({
+              ownerId: session.userId,
+              payerId,
+              receiverId,
+              expenseId: expense[0].id,
+              createdAt: new Date(),
+              amount: `${amountToPay > paidAmountByPayer ? paidAmountByPayer : amountToPay}`,
+            });
+          });
+      });
+    } else {
+      // Existing transaction creation logic for single payer
+      transactionRecords = Object.entries(splitAmounts).map(
+        ([userId, amount]) => ({
+          ownerId: session.userId,
+          payerId: result.data.paidBy,
+          receiverId: userId,
+          expenseId: expense[0].id,
+          createdAt: new Date(),
+          amount: `${amount}`,
+        }),
+      ) as (typeof transactions.$inferInsert)[];
+    }
 
     const trxs = await db
       .insert(transactions)
