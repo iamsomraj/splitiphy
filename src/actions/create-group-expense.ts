@@ -31,7 +31,7 @@ const createGroupExpenseSchema = z.object({
     .optional(),
   date: z.date(),
   amount: z.number().positive(),
-  paidBy: z.string(),
+  paidBy: z.string().optional(),
   isMultiplePaidBy: z.boolean(),
   paidByList: z.array(z.string()).optional(),
   paidByAmounts: z.record(z.number()).optional(),
