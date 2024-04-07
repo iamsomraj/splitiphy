@@ -15,13 +15,8 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { siteConfig } from '@/config/site';
 import paths from '@/lib/paths';
-import {
-  ClerkLoaded,
-  SignInButton,
-  SignOutButton,
-  SignedIn,
-  SignedOut,
-} from '@clerk/nextjs';
+import { ClerkLoaded, SignOutButton, SignedIn, SignedOut } from '@clerk/nextjs';
+import { redirect } from 'next/navigation';
 
 const NavBar = () => {
   return (
@@ -44,12 +39,12 @@ const NavBar = () => {
             >
               Groups
             </Link>
-            <SignOutButton>
-              <button className="text-nowrap text-muted-foreground hover:text-foreground">
-                Sign Out
-                <span className="sr-only">Sign out of your account</span>
-              </button>
-            </SignOutButton>
+            <Link
+              className="text-nowrap text-muted-foreground hover:text-foreground"
+              href={paths.home()}
+            >
+              <SignOutButton>Logout</SignOutButton>
+            </Link>
           </SignedIn>
         </ClerkLoaded>
       </nav>
@@ -77,12 +72,12 @@ const NavBar = () => {
                 >
                   Groups
                 </Link>
-                <SignOutButton>
-                  <button className="text-muted-foreground hover:text-foreground">
-                    Sign Out
-                    <span className="sr-only">Sign out of your account</span>
-                  </button>
-                </SignOutButton>
+                <Link
+                  className="text-nowrap text-muted-foreground hover:text-foreground"
+                  href={paths.home()}
+                >
+                  <SignOutButton>Logout</SignOutButton>
+                </Link>
               </SignedIn>
               <SignedOut>
                 <Link
@@ -107,16 +102,19 @@ const NavBar = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuLabel>
+                <Link href={paths.account()}>My Account</Link>
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href={paths.settings()}>Settings</Link>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <SignOutButton>
+              <Link href={paths.home()}>
                 <DropdownMenuItem>
-                  Logout
-                  <span className="sr-only">Sign out of your account</span>
+                  <SignOutButton>Logout</SignOutButton>
                 </DropdownMenuItem>
-              </SignOutButton>
+              </Link>
             </DropdownMenuContent>
           </DropdownMenu>
         </SignedIn>

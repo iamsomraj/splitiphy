@@ -14,6 +14,12 @@ const paths = {
   groupUserSearch(groupUuid: string | null, term: string | null) {
     return `/groups/${groupUuid}/search?term=${term}`;
   },
+  settings() {
+    return '/settings';
+  },
+  account() {
+    return '/account';
+  },
 };
 
 export default paths;
