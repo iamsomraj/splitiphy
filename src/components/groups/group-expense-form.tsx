@@ -20,6 +20,9 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
 
   const [formData, setFormData] = useState({
     expenseAmount: 0,
+    isMultiplePaidBy: false,
+    paidByList: [] as string[],
+    paidByAmounts: {} as Record<string, number>,
     expenseSplitWith: [] as string[],
     splitAmounts: {} as Record<string, number>,
   });
@@ -97,6 +100,50 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
       },
     });
   };
+  const handlePaidByListChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedUsers = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value,
+    );
+
+    const totalPaidAmount = formData.expenseAmount || 0;
+    const totalSelectedUsers = selectedUsers.length;
+    const evenPaidAmount = formatNumber(totalPaidAmount / totalSelectedUsers);
+    const remainingAmount = formatNumber(
+      totalPaidAmount - evenPaidAmount * totalSelectedUsers,
+    );
+
+    const updatedPaidAmounts: Record<string, number> = {};
+
+    for (let i = 0; i < totalSelectedUsers; i++) {
+      updatedPaidAmounts[selectedUsers[i]] = evenPaidAmount;
+    }
+
+    for (let i = 0; i < remainingAmount * 100; i++) {
+      updatedPaidAmounts[selectedUsers[i % totalSelectedUsers]] = formatNumber(
+        updatedPaidAmounts[selectedUsers[i % totalSelectedUsers]] + 0.01,
+      );
+    }
+
+    setFormData({
+      ...formData,
+      paidByList: selectedUsers,
+      paidByAmounts: updatedPaidAmounts,
+    });
+  };
+
+  const handlePaidAmountChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    userId: string,
+  ) => {
+    setFormData({
+      ...formData,
+      paidByAmounts: {
+        ...formData.paidByAmounts,
+        [userId]: parseFloat(parseFloat(e.target.value).toFixed(2)),
+      },
+    });
+  };
 
   if (!group) {
     return null;
@@ -155,19 +202,93 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
             <span>{formState.errors.amount?.join(', ')}</span>
           ) : null}
         </div>
+
         <div>
-          <label htmlFor="expense-paid-by">Paid By</label>
-          <select id="expense-paid-by" name="expense-paid-by">
-            {group?.groupMemberships.map((member) => (
-              <option key={member.user.id} value={member.user.id}>
-                {member.user.firstName + ' ' + member.user.lastName}
-              </option>
-            ))}
-          </select>
-          {formState.errors.paidBy ? (
-            <span>{formState.errors.paidBy?.join(', ')}</span>
+          <label htmlFor="is-multiple-paid-by">Multiple Paid By</label>
+          <input
+            type="checkbox"
+            id="is-multiple-paid-by"
+            name="is-multiple-paid-by"
+            checked={formData.isMultiplePaidBy}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                isMultiplePaidBy: e.target.checked,
+              })
+            }
+          />
+          {formState.errors.isMultiplePaidBy ? (
+            <span>{formState.errors.isMultiplePaidBy?.join(', ')}</span>
           ) : null}
         </div>
+
+        {formData.isMultiplePaidBy ? (
+          <div>
+            <label htmlFor="expense-paid-by">Paid By</label>
+            <select
+              id="expense-paid-by"
+              name="expense-paid-by"
+              multiple
+              size={group?.groupMemberships.length}
+              value={formData.paidByList}
+              onChange={handlePaidByListChange}
+            >
+              {group?.groupMemberships.map((member) => (
+                <option key={member.user.id} value={member.user.id}>
+                  {member.user.firstName + ' ' + member.user.lastName}
+                </option>
+              ))}
+            </select>
+            {formState.errors.paidByList ? (
+              <span>{formState.errors.paidByList?.join(', ')}</span>
+            ) : null}
+            <div>
+              {formData.paidByList.map((userID) => {
+                const member = group.groupMemberships.find(
+                  (membership) => membership.user.id === userID,
+                );
+                if (!member) {
+                  return null;
+                }
+                return (
+                  <div key={member.user.id}>
+                    <label htmlFor={`paid-amount-${member.user.id}`}>
+                      {member.user.firstName + ' ' + member.user.lastName}
+                    </label>
+                    <input
+                      type="number"
+                      id={`paid-amount-${member.user.id}`}
+                      name={`paid-amount-${member.user.id}`}
+                      placeholder="Enter Paid Amount"
+                      value={formData.paidByAmounts[member.user.id] || ''}
+                      onChange={(e) =>
+                        handlePaidAmountChange(e, member.user.id)
+                      }
+                    />
+                  </div>
+                );
+              })}
+              {formState.errors.paidByAmounts ? (
+                <span>{formState.errors.paidByAmounts?.join(', ')}</span>
+              ) : null}
+            </div>
+          </div>
+        ) : (
+          <div>
+            <label htmlFor="expense-paid-by">Paid By</label>
+            <select id="expense-paid-by" name="expense-paid-by">
+              {group?.groupMemberships.map((member) => (
+                <option key={member.user.id} value={member.user.id}>
+                  {member.user.firstName + ' ' + member.user.lastName}
+                </option>
+              ))}
+            </select>
+            {formState.errors.paidBy ? (
+              <span>{formState.errors.paidBy?.join(', ')}</span>
+            ) : null}
+          </div>
+        )}
+
         <div>
           <label htmlFor="expense-split-with">Split With</label>
           <select
@@ -208,7 +329,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
                     id={`split-amount-${member.user.id}`}
                     name={`split-amount-${member.user.id}`}
                     placeholder="Enter Split Amount"
-                    value={formData.splitAmounts[member.user.id] ?? ''}
+                    value={formData.splitAmounts[member.user.id] || ''}
                     onChange={(e) => handleSplitAmountChange(e, member.user.id)}
                   />
                 </div>
