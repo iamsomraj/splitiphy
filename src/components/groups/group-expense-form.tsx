@@ -100,14 +100,35 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
       },
     });
   };
-
   const handlePaidByListChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedUsers = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value,
+    );
+
+    const totalPaidAmount = formData.expenseAmount || 0;
+    const totalSelectedUsers = selectedUsers.length;
+    const evenPaidAmount = formatNumber(totalPaidAmount / totalSelectedUsers);
+    const remainingAmount = formatNumber(
+      totalPaidAmount - evenPaidAmount * totalSelectedUsers,
+    );
+
+    const updatedPaidAmounts: Record<string, number> = {};
+
+    for (let i = 0; i < totalSelectedUsers; i++) {
+      updatedPaidAmounts[selectedUsers[i]] = evenPaidAmount;
+    }
+
+    for (let i = 0; i < remainingAmount * 100; i++) {
+      updatedPaidAmounts[selectedUsers[i % totalSelectedUsers]] = formatNumber(
+        updatedPaidAmounts[selectedUsers[i % totalSelectedUsers]] + 0.01,
+      );
+    }
+
     setFormData({
       ...formData,
-      paidByList: Array.from(
-        e.target.selectedOptions,
-        (option) => option.value,
-      ),
+      paidByList: selectedUsers,
+      paidByAmounts: updatedPaidAmounts,
     });
   };
 
