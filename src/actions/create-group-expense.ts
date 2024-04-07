@@ -68,7 +68,7 @@ export async function createGroupExpense(
     date: new Date(formData.get('expense-date') as string),
     amount: formatNumber(parseFloat(formData.get('expense-amount') as string)),
     paidBy: formData.get('expense-paid-by') as string,
-    isMultiplePaidBy: formData.get('is-multiple-paid-by') === 'true',
+    isMultiplePaidBy: formData.get('is-multiple-paid-by') === 'on',
     paidByList: Array.from(formData.getAll('expense-paid-by')).map(
       (id) => id as string,
     ),
