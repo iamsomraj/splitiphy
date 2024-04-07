@@ -214,33 +214,54 @@ export async function createGroupExpense(
         };
       }
 
-      paidByList.forEach((payerId) => {
-        const paidAmountByPayer = paidByAmounts[payerId] || 0;
+      splitWith.forEach((memberId) => {
+        // Get the amount this member owes
+        const amountToPay = splitAmounts[memberId] || 0;
 
-        // Create a transaction for the payer paying themselves their share
-        transactionRecords.push({
-          ownerId: session.userId,
-          payerId,
-          receiverId: payerId,
-          expenseId: expense[0].id,
-          createdAt: new Date(),
-          amount: `${paidAmountByPayer}`,
+        // Find payers who have paid for this member
+        const payersForMember = paidByList.filter((payerId) => {
+          // Consider a payer has paid for this member if they have paid more than their own split amount
+          return paidByAmounts[payerId] > (splitAmounts[payerId] || 0);
         });
 
-        // Create transactions for the payer paying others (excluding themselves)
-        paidByList
-          .filter((memberId) => memberId !== payerId)
-          .forEach((receiverId) => {
-            const amountToPay = paidByAmounts[receiverId] || 0;
-            transactionRecords.push({
-              ownerId: session.userId,
-              payerId,
-              receiverId,
-              expenseId: expense[0].id,
-              createdAt: new Date(),
-              amount: `${amountToPay > paidAmountByPayer ? paidAmountByPayer : amountToPay}`,
-            });
+        // Ensure at least one payer has paid for this member
+        if (!payersForMember.length) {
+          return {
+            errors: {
+              _form: [
+                'Payment allocation is invalid. Please check the amounts paid by each person.',
+              ],
+            },
+          };
+        }
+
+        // Distribute the payment amount among payers, starting with those who have paid the most
+        payersForMember.sort((a, b) => paidByAmounts[b] - paidByAmounts[a]);
+
+        let remainingAmountToPay = amountToPay;
+        for (const payerId of payersForMember) {
+          const availableAmountFromPayer =
+            paidByAmounts[payerId] - (splitAmounts[payerId] || 0);
+          const actualPayment = Math.min(
+            remainingAmountToPay,
+            availableAmountFromPayer,
+          );
+
+          // Create the transaction record
+          transactionRecords.push({
+            ownerId: session.userId,
+            payerId,
+            receiverId: memberId,
+            expenseId: expense[0].id,
+            createdAt: new Date(),
+            amount: `${actualPayment}`,
           });
+
+          remainingAmountToPay -= actualPayment;
+          if (remainingAmountToPay === 0) {
+            break; // All payments for this member have been allocated
+          }
+        }
       });
     } else {
       // Existing transaction creation logic for single payer
