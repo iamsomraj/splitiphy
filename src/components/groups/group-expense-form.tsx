@@ -88,6 +88,19 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
     });
   };
 
+  const handleSplitAmountChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    userId: string,
+  ) => {
+    setFormData({
+      ...formData,
+      splitAmounts: {
+        ...formData.splitAmounts,
+        [userId]: parseFloat(parseFloat(e.target.value).toFixed(2)),
+      },
+    });
+  };
+
   const handlePaidByListChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFormData({
       ...formData,
@@ -106,19 +119,6 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
       ...formData,
       paidByAmounts: {
         ...formData.paidByAmounts,
-        [userId]: parseFloat(parseFloat(e.target.value).toFixed(2)),
-      },
-    });
-  };
-
-  const handleSplitAmountChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    userId: string,
-  ) => {
-    setFormData({
-      ...formData,
-      splitAmounts: {
-        ...formData.splitAmounts,
         [userId]: parseFloat(parseFloat(e.target.value).toFixed(2)),
       },
     });
