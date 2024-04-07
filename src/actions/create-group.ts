@@ -8,7 +8,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
-export const createGroupSchema = z.object({
+const createGroupSchema = z.object({
   name: z
     .string()
     .min(3, {
@@ -98,5 +98,5 @@ export async function createGroup(
   }
 
   revalidatePath(paths.groups());
-  redirect(paths.groupShow(insertedGroups[0].uuid));
+  redirect(paths.groups());
 }

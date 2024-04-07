@@ -7,17 +7,14 @@ import Link from 'next/link';
 const GroupsPage = async () => {
   const groups = await getUserGroups();
   return (
-    <div>
-      <Link href={paths.home()}>Home</Link>
-      <p>Create Group</p>
+    <main className="grid w-full flex-1 grid-cols-2 gap-6 p-12">
       <GroupCreateForm />
-      <h1>Your Groups</h1>
-      <div className="flex flex-col gap-y-4">
+      <div className="col-span-2 flex flex-col gap-y-4">
         {groups.map((group) => (
           <GroupItem key={group.id} group={group} />
         ))}
       </div>
-    </div>
+    </main>
   );
 };
 

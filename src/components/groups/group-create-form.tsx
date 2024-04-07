@@ -1,6 +1,5 @@
 'use client';
 import * as actions from '@/actions';
-import { createGroupSchema } from '@/actions/create-group';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -13,57 +12,28 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { toast } from '@/components/ui/use-toast';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useFormState } from 'react-dom';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import FormButton from '../shared/form-button';
 import { Input } from '../ui/input';
+import { Label } from '../ui/label';
 
 const GroupCreateForm = () => {
   const [formState, action] = useFormState(actions.createGroup, {
     errors: {},
   });
 
-  const form = useForm<z.infer<typeof createGroupSchema>>({
-    resolver: zodResolver(createGroupSchema),
-    defaultValues: {
-      name: '',
-    },
-  });
-
-  async function onSubmit(data: z.infer<typeof createGroupSchema>) {
-    toast({
-      title: 'You submitted the following values:',
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-  }
-
   return (
     <>
-      <Card className="col-span-2 bg-muted/40 sm:col-span-1">
-        <CardHeader className="pb-3">
+      <Card className="col-span-2 bg-muted/40">
+        <CardHeader className="gap-2 pb-3">
           <CardTitle>Your Groups</CardTitle>
-          <CardDescription className="text-balance leading-relaxed">
-            Introducing Our Dynamic Groups Dashboard for Seamless Management and
-            Insightful Analysis.
+          <CardDescription className="leading-relaxed">
+            Find existing groups or create a new one to manage your expenses
           </CardDescription>
         </CardHeader>
         <CardFooter>
@@ -78,39 +48,33 @@ const GroupCreateForm = () => {
                   Start by creating a new group to manage your expenses
                 </DialogDescription>
               </DialogHeader>
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="w-2/3 space-y-6"
-                >
-                  <FormField
-                    control={form.control}
+              <form action={action}>
+                <div className="flex flex-col gap-4">
+                  <Label htmlFor="name">Group Name</Label>
+                  <Input
+                    id="name"
+                    type="text"
                     name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Group Name</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="Enter group name"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          This is the name of your group.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                    placeholder="Enter group name"
                   />
-                  <Button type="submit" className="btn-primary">
-                    Create Group
-                  </Button>
-                  {formState.errors._form ? (
-                    <div>{formState.errors._form?.join(', ')}</div>
+                  <div className="text-sm text-muted-foreground">
+                    This is the name of your group.
+                  </div>
+                  {formState?.errors.name ? (
+                    <span className="text-sm font-medium text-destructive">
+                      {formState?.errors.name?.join(', ')}
+                    </span>
                   ) : null}
-                </form>
-              </Form>
+                </div>
+                {formState?.errors?._form ? (
+                  <span className="text-sm font-medium text-destructive">
+                    {formState?.errors?._form?.join(', ')}
+                  </span>
+                ) : null}
+                <DialogFooter>
+                  <FormButton>Create Group</FormButton>
+                </DialogFooter>
+              </form>
             </DialogContent>
           </Dialog>
         </CardFooter>
