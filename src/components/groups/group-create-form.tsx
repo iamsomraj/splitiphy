@@ -46,14 +46,23 @@ const GroupCreateForm = ({ className, ...rest }: Props) => {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
-                <DialogTitle>Create New Grouo</DialogTitle>
+                <DialogTitle>Create New Group</DialogTitle>
                 <DialogDescription>
                   Start by creating a new group to manage your expenses
                 </DialogDescription>
               </DialogHeader>
               <form action={action}>
                 <div className="flex flex-col gap-4">
-                  <Label htmlFor="name">Group Name</Label>
+                  <Label
+                    htmlFor="name"
+                    className={cn({
+                      'text-destructive': Boolean(
+                        formState?.errors?.name || false,
+                      ),
+                    })}
+                  >
+                    Name
+                  </Label>
                   <Input
                     id="name"
                     type="text"
@@ -74,7 +83,7 @@ const GroupCreateForm = ({ className, ...rest }: Props) => {
                     {formState?.errors?._form?.join(', ')}
                   </span>
                 ) : null}
-                <DialogFooter className="pt-4 sm:pt-0">
+                <DialogFooter className="pt-2">
                   <FormButton>Create Group</FormButton>
                 </DialogFooter>
               </form>
