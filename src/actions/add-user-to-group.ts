@@ -54,7 +54,7 @@ export async function addUserToGroup(
   });
 
   if (!group) {
-    redirect(paths.groups());
+    redirect(paths.dashboard());
   }
 
   try {
@@ -65,9 +65,9 @@ export async function addUserToGroup(
       createdAt: new Date(),
     });
   } catch (error) {
-    redirect(paths.groups());
+    redirect(paths.dashboard());
   }
 
-  revalidatePath(paths.groups());
+  revalidatePath(paths.dashboard());
   redirect(paths.groupShow(groupUuid));
 }

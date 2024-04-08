@@ -34,16 +34,10 @@ const NavBar = () => {
         <ClerkLoaded>
           <SignedIn>
             <Link
-              href={paths.groups()}
+              href={paths.dashboard()}
               className="text-muted-foreground transition-colors hover:text-foreground"
             >
-              Groups
-            </Link>
-            <Link
-              className="text-nowrap text-muted-foreground hover:text-foreground"
-              href={paths.home()}
-            >
-              <SignOutButton>Logout</SignOutButton>
+              Dashboard
             </Link>
           </SignedIn>
         </ClerkLoaded>
@@ -67,16 +61,10 @@ const NavBar = () => {
             <ClerkLoaded>
               <SignedIn>
                 <Link
-                  href={paths.groups()}
+                  href={paths.dashboard()}
                   className="text-muted-foreground hover:text-foreground"
                 >
-                  Groups
-                </Link>
-                <Link
-                  className="text-nowrap text-muted-foreground hover:text-foreground"
-                  href={paths.home()}
-                >
-                  <SignOutButton>Logout</SignOutButton>
+                  Dashboard
                 </Link>
               </SignedIn>
               <SignedOut>

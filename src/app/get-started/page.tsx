@@ -26,8 +26,8 @@ export default function Dashboard() {
           <div className="flex w-full items-center justify-center">
             <ClerkLoaded>
               <SignIn
-                afterSignInUrl={paths.groups()}
-                afterSignUpUrl={paths.groups()}
+                afterSignInUrl={paths.dashboard()}
+                afterSignUpUrl={paths.dashboard()}
                 appearance={{
                   layout: {
                     socialButtonsVariant: 'blockButton',

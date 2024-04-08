@@ -2,10 +2,8 @@ import GroupCreateForm from '@/components/groups/group-create-form';
 import GroupItem from '@/components/groups/group-item';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getUserGroups } from '@/db/queries';
-import paths from '@/lib/paths';
-import Link from 'next/link';
 
-const GroupsPage = async () => {
+export default async function DashboardPage() {
   const groups = await getUserGroups();
   return (
     <main className="grid w-full flex-1 grid-cols-4 gap-6 p-4 sm:p-6 lg:p-12">
@@ -63,6 +61,4 @@ const GroupsPage = async () => {
       </div>
     </main>
   );
-};
-
-export default GroupsPage;
+}

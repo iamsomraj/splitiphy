@@ -253,5 +253,5 @@ export async function createGroupExpense(
     }
   }
   revalidatePath(paths.groupShow(groupUuid));
-  redirect(paths.groups());
+  redirect(paths.dashboard());
 }

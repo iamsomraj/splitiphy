@@ -11,6 +11,7 @@ import { siteConfig } from '@/config/site';
 import paths from '@/lib/paths';
 import { cn } from '@/lib/utils';
 import { SignedIn, SignedOut } from '@clerk/nextjs';
+import { DashboardIcon } from '@radix-ui/react-icons';
 import { UsersIcon } from 'lucide-react';
 import Link from 'next/link';
 
@@ -20,7 +21,7 @@ export default function IndexPage() {
       <main className="container relative">
         <PageHeader>
           <SignedIn>
-            <Announcement link={paths.groups()}>
+            <Announcement link={paths.dashboard()}>
               Introducing Simplify Mode
             </Announcement>
           </SignedIn>
@@ -35,9 +36,9 @@ export default function IndexPage() {
           </PageHeaderDescription>
           <PageActions>
             <SignedIn>
-              <Link href={paths.groups()} className={cn(buttonVariants())}>
-                <UsersIcon className="mr-2 h-4 w-4" />
-                Groups
+              <Link href={paths.dashboard()} className={cn(buttonVariants())}>
+                <DashboardIcon className="mr-2 h-4 w-4" />
+                Dashboard
               </Link>
             </SignedIn>
             <SignedOut>

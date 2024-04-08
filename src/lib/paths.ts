@@ -5,8 +5,8 @@ const paths = {
   getStarted() {
     return '/get-started';
   },
-  groups() {
-    return '/groups';
+  dashboard() {
+    return '/dashboard';
   },
   groupShow(uuid: string | null) {
     return `/groups/${uuid}`;

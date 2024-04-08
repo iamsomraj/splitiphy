@@ -19,7 +19,7 @@ const GroupsShowPage = async ({ params }: GroupsShowPageProps) => {
 
   return group ? (
     <div className="flex flex-col gap-y-4 divide-y">
-      <Link href={paths.groups()}>Back to Groups</Link>
+      <Link href={paths.dashboard()}>Back to Groups</Link>
       <h1>{group.name}</h1>
       <GroupUserSearchForm groupUuid={params.uuid} />
       <GroupBalances group={group} />
