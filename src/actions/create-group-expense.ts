@@ -215,7 +215,6 @@ export async function createGroupExpense(
     }
 
     const transactionRecords = TransactionManagerService.createTransactions({
-      expenseAmount: result.data.amount,
       isMultiplePaidBy: result.data.isMultiplePaidBy,
       paidByAmounts,
       splitAmounts,

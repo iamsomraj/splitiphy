@@ -1,7 +1,6 @@
 import { transactions } from '@/db/schema';
 
 interface TransactionParams {
-  expenseAmount: number;
   isMultiplePaidBy: boolean;
   paidByAmounts: Record<string, number>;
   splitAmounts: Record<string, number>;
@@ -15,7 +14,6 @@ interface TransactionParams {
 class TransactionManagerService {
   static createTransactions(params: TransactionParams) {
     const {
-      expenseAmount,
       isMultiplePaidBy,
       paidByAmounts,
       splitAmounts,
