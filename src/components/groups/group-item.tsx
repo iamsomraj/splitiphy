@@ -1,6 +1,13 @@
 import { UserGroupsWithData } from '@/db/queries';
 import paths from '@/lib/paths';
 import Link from 'next/link';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 
 type GroupItemProps = {
   group: UserGroupsWithData[0];
@@ -8,14 +15,23 @@ type GroupItemProps = {
 
 const GroupItem = ({ group }: GroupItemProps) => {
   return (
-    <div>
-      <p>Group Name:{group.name}</p>
-      <p>
-        Members Count:
-        {group.groupMemberships.length}
-      </p>
-      <Link href={paths.groupShow(group.uuid)}>View</Link>
-    </div>
+    <Link href={paths.groupShow(group.uuid)}>
+      <Card className="bg-muted/40">
+        <CardHeader>
+          <CardTitle>{group.name}</CardTitle>
+          <CardDescription>
+            {new Intl.RelativeTimeFormat(undefined).format(
+              new Date(group.createdAt).getDay() - new Date().getDay(),
+              'days',
+            )}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p>Created by {group.owner.firstName + ' ' + group.owner.lastName}</p>
+          <span>{group.groupMemberships.length} members</span>
+        </CardContent>
+      </Card>
+    </Link>
   );
 };
 
