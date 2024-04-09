@@ -8,7 +8,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
@@ -21,7 +20,6 @@ import {
 import { siteConfig } from '@/config/site';
 import paths from '@/lib/paths';
 import { ClerkLoaded, SignOutButton, SignedIn, SignedOut } from '@clerk/nextjs';
-import { redirect } from 'next/navigation';
 
 const NavBar = () => {
   return (
@@ -32,8 +30,11 @@ const NavBar = () => {
           className="flex items-center gap-2 text-lg font-semibold md:text-base"
         >
           <Icons.logo className="h-6 w-6" />
-          <span className="hidden font-bold sm:inline-block">
+          <span className="hidden font-bold sm:relative sm:block">
             {siteConfig.name}
+            <span className="absolute -bottom-4 right-0 text-[10px] font-semibold">
+              (beta)
+            </span>
           </span>
         </Link>
         <ClerkLoaded>
@@ -61,7 +62,12 @@ const NavBar = () => {
               className="flex items-center gap-2 text-lg font-semibold"
             >
               <Icons.logo className="h-6 w-6" />
-              <span className="font-bold">{siteConfig.name}</span>{' '}
+              <span className="relative font-bold">
+                {siteConfig.name}
+                <span className="absolute -bottom-4 right-0 text-[10px] font-semibold">
+                  (beta)
+                </span>
+              </span>
             </Link>
             <ClerkLoaded>
               <SignedIn>
