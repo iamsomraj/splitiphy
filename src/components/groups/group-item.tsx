@@ -1,6 +1,3 @@
-import { UserGroupsWithData } from '@/db/queries';
-import paths from '@/lib/paths';
-import Link from 'next/link';
 import {
   Card,
   CardContent,
@@ -8,6 +5,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { UserGroupsWithData } from '@/db/queries';
+import paths from '@/lib/paths';
+import { formatDistanceToNow } from 'date-fns';
+import Link from 'next/link';
 
 type GroupItemProps = {
   group: UserGroupsWithData[0];
@@ -16,18 +17,17 @@ type GroupItemProps = {
 const GroupItem = ({ group }: GroupItemProps) => {
   return (
     <Link href={paths.groupShow(group.uuid)}>
-      <Card className="bg-muted/40">
+      <Card className="hover:bg-accent">
         <CardHeader>
           <CardTitle>{group.name}</CardTitle>
           <CardDescription>
-            {new Intl.RelativeTimeFormat(undefined).format(
-              new Date(group.createdAt).getDay() - new Date().getDay(),
-              'days',
-            )}
+            {formatDistanceToNow(new Date(group.createdAt), {
+              addSuffix: true,
+            })}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <p>Created by {group.owner.firstName + ' ' + group.owner.lastName}</p>
+          <p>{group.owner.firstName + ' ' + group.owner.lastName}</p>
           <span>{group.groupMemberships.length} members</span>
         </CardContent>
       </Card>

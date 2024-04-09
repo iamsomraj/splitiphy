@@ -63,15 +63,17 @@ export default async function DashboardPage() {
           </Card>
         </div>
       </div>
-      <div className="col-span-4 sm:col-span-2">
-        <ScrollArea className="sm:h-[76vh] sm:rounded-md sm:border">
-          <div className="flex flex-col gap-6 sm:m-6">
-            {groups.map((group) => (
-              <GroupItem key={group.id} group={group} />
-            ))}
-          </div>
-        </ScrollArea>
-      </div>
+      {groups.length > 0 && (
+        <div className="col-span-4 bg-muted/40 sm:col-span-2">
+          <ScrollArea className="sm:h-[76vh] sm:rounded-md sm:border">
+            <div className="flex flex-col gap-6 sm:m-6">
+              {groups.map((group) => (
+                <GroupItem key={group.id} group={group} />
+              ))}
+            </div>
+          </ScrollArea>
+        </div>
+      )}
     </main>
   );
 }
