@@ -1,5 +1,13 @@
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { UserGroupsWithData } from '@/db/queries';
 import paths from '@/lib/paths';
+import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
 
 type GroupItemProps = {
@@ -8,14 +16,22 @@ type GroupItemProps = {
 
 const GroupItem = ({ group }: GroupItemProps) => {
   return (
-    <div>
-      <p>Group Name:{group.name}</p>
-      <p>
-        Members Count:
-        {group.groupMemberships.length}
-      </p>
-      <Link href={paths.groupShow(group.uuid)}>View</Link>
-    </div>
+    <Link href={paths.groupShow(group.uuid)}>
+      <Card className="hover:bg-accent">
+        <CardHeader>
+          <CardTitle>{group.name}</CardTitle>
+          <CardDescription>
+            {formatDistanceToNow(new Date(group.createdAt), {
+              addSuffix: true,
+            })}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p>{group.owner.firstName + ' ' + group.owner.lastName}</p>
+          <span>{group.groupMemberships.length} members</span>
+        </CardContent>
+      </Card>
+    </Link>
   );
 };
 

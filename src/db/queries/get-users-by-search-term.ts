@@ -1,23 +1,49 @@
+import db from '@/db/drizzle';
+import { groups } from '@/db/schema';
 import UserAuthService from '@/services/auth-user-service';
+import { eq } from 'drizzle-orm';
 import { cache } from 'react';
 
-export const getUsersBySearchTerm = cache(async (searchTerm: string) => {
-  const userAuthService = new UserAuthService();
-  const [dbUsers, authUsers] = await Promise.allSettled([
-    userAuthService.getUsersBySearchTermFromDB(searchTerm),
-    userAuthService.getUsersBySearchTermFromAuth(searchTerm),
-  ]);
+export const getUsersBySearchTerm = cache(
+  async (searchTerm: string, groupUuid: string) => {
+    const userAuthService = new UserAuthService();
+    const [dbUsers, authUsers] = await Promise.allSettled([
+      userAuthService.getUsersBySearchTermFromDB(searchTerm),
+      userAuthService.getUsersBySearchTermFromAuth(searchTerm),
+    ]);
 
-  const mergedUsers = [
-    ...(dbUsers.status === 'fulfilled' ? dbUsers.value : []),
-    ...(authUsers.status === 'fulfilled' ? authUsers.value : []),
-  ];
+    const mergedUsers = [
+      ...(dbUsers.status === 'fulfilled' ? dbUsers.value : []),
+      ...(authUsers.status === 'fulfilled' ? authUsers.value : []),
+    ];
 
-  const uniqueUsers = Array.from(
-    new Map(mergedUsers.map((user) => [user.id, user])).values(),
-  );
+    const uniqueUsers = Array.from(
+      new Map(mergedUsers.map((user) => [user.id, user])).values(),
+    );
 
-  return uniqueUsers;
-});
+    const group = await db.query.groups.findFirst({
+      where: eq(groups.uuid, groupUuid),
+      with: {
+        groupMemberships: true,
+      },
+    });
+
+    if (!group) {
+      throw new Error('Group not found');
+    }
+
+    const existingGroupMembersIds = group.groupMemberships.map(
+      (membership) => membership.userId,
+    );
+
+    const uniqueUsersIds = uniqueUsers.map((user) => user.id);
+
+    const filteredUsers = uniqueUsers.filter(
+      (user) => !existingGroupMembersIds.includes(user.id),
+    );
+
+    return filteredUsers;
+  },
+);
 
 export type UserSearchResult = Awaited<ReturnType<typeof getUsersBySearchTerm>>;

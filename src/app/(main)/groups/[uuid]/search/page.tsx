@@ -19,11 +19,11 @@ const GroupUserSearchPage = ({
 }: GroupUserSearchPageProps) => {
   return (
     <div>
-      <Link href={paths.groups()}>Back to Groups</Link>
+      <Link href={paths.dashboard()}>Back to Groups</Link>
       <h1>GroupUserSearchPage</h1>
       <GroupUserSearchForm groupUuid={params.uuid} />
       <UserList
-        fetchData={() => getUsersBySearchTerm(searchParams.term)}
+        fetchData={() => getUsersBySearchTerm(searchParams.term, params.uuid)}
         groupUuid={params.uuid}
       />
     </div>

@@ -18,16 +18,24 @@ const GroupsShowPage = async ({ params }: GroupsShowPageProps) => {
   const group = await getGroupDetailsById(params.uuid);
 
   return group ? (
-    <div className="flex flex-col gap-y-4 divide-y">
-      <Link href={paths.groups()}>Back to Groups</Link>
-      <h1>{group.name}</h1>
-      <GroupUserSearchForm groupUuid={params.uuid} />
-      <GroupBalances group={group} />
-      <GroupMembers group={group} />
+    <main className="flex flex-1 flex-col gap-6 divide-y p-4 pt-6 sm:p-6 lg:p-12">
+      <h1 className="w-full text-center text-4xl font-bold sm:text-left">
+        {group.name}
+      </h1>
+      <GroupBalances group={group} className="pt-6" />
+      <div className="grid grid-cols-2 gap-6 pt-6">
+        <GroupUserSearchForm
+          groupUuid={params.uuid}
+          className="col-span-2 sm:col-span-1"
+        />
+        <div className="col-span-2 grid w-full place-items-center gap-6 sm:col-span-1">
+          <GroupMembers group={group} className="w-full" />
+          <GroupSimplifyForm group={group} className="w-full" />
+        </div>
+      </div>
       <GroupExpenses group={group} />
-      <GroupSimplifyForm group={group} />
       <GroupExpenseForm group={group} />
-    </div>
+    </main>
   ) : null;
 };
 

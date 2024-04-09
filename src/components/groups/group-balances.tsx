@@ -1,13 +1,14 @@
+import SettleUpButton from '@/components/groups/settle-up-button';
 import { GroupWithData } from '@/db/queries';
-import SettleUpButton from './settle-up-button';
+import { cn } from '@/lib/utils';
 
 type GroupBalancesProps = {
   group: GroupWithData;
-};
+} & React.HTMLAttributes<HTMLDivElement>;
 
-const GroupBalances = ({ group }: GroupBalancesProps) => {
+const GroupBalances = ({ group, className, ...rest }: GroupBalancesProps) => {
   return group ? (
-    <div>
+    <div className={cn(className)} {...rest}>
       <h2>Group Balances</h2>
       <ul className="flex flex-col">
         {group.groupUserBalances.map((balance) => (

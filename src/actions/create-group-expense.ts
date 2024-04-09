@@ -4,6 +4,7 @@ import db from '@/db/drizzle';
 import { expenses, groupExpenses, groups, transactions } from '@/db/schema';
 import paths from '@/lib/paths';
 import { formatNumber } from '@/lib/utils';
+import TransactionManagerService from '@/services/transaction-manager-service';
 import { auth } from '@clerk/nextjs';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
@@ -197,8 +198,6 @@ export async function createGroupExpense(
       };
     }
 
-    let transactionRecords: (typeof transactions.$inferInsert)[] = [];
-
     if (result.data.isMultiplePaidBy) {
       const totalPaidAmount = formatNumber(
         Object.values(paidByAmounts).reduce((acc, amount) => acc + amount, 0),
@@ -213,74 +212,22 @@ export async function createGroupExpense(
           },
         };
       }
-
-      // Iterate through paidByList and paidByAmounts
-      for (const payerId of paidByList) {
-        let amountPaidByPayer = paidByAmounts[payerId];
-
-        // Check if the payer owes money to themselves
-        if (splitWith.includes(payerId) && splitAmounts[payerId] > 0) {
-          const amountToPaySelf = Math.min(
-            amountPaidByPayer,
-            splitAmounts[payerId],
-          );
-
-          transactionRecords.push({
-            ownerId: session.userId,
-            payerId,
-            receiverId: payerId,
-            expenseId: expense[0].id,
-            createdAt: new Date(),
-            amount: `${amountToPaySelf}`,
-          });
-
-          splitAmounts[payerId] -= amountToPaySelf;
-          amountPaidByPayer -= amountToPaySelf;
-        }
-
-        // Distribute remaining amount paid by the payer to other members
-        for (const receiverId of splitWith) {
-          if (amountPaidByPayer <= 0) {
-            break; // Payer has no more money to distribute
-          }
-
-          if (splitAmounts[receiverId] > 0 && receiverId !== payerId) {
-            const amountToPayReceiver = Math.min(
-              amountPaidByPayer,
-              splitAmounts[receiverId],
-            );
-
-            transactionRecords.push({
-              ownerId: session.userId,
-              payerId,
-              receiverId,
-              expenseId: expense[0].id,
-              createdAt: new Date(),
-              amount: `${amountToPayReceiver}`,
-            });
-
-            splitAmounts[receiverId] -= amountToPayReceiver;
-            amountPaidByPayer -= amountToPayReceiver;
-          }
-        }
-      }
-    } else {
-      // Existing transaction creation logic for single payer
-      transactionRecords = Object.entries(splitAmounts).map(
-        ([userId, amount]) => ({
-          ownerId: session.userId,
-          payerId: result.data.paidBy,
-          receiverId: userId,
-          expenseId: expense[0].id,
-          createdAt: new Date(),
-          amount: `${amount}`,
-        }),
-      ) as (typeof transactions.$inferInsert)[];
     }
+
+    const transactionRecords = TransactionManagerService.createTransactions({
+      isMultiplePaidBy: result.data.isMultiplePaidBy,
+      paidByAmounts,
+      splitAmounts,
+      sessionUserId: session.userId,
+      expenseId: expense[0].id,
+      paidBy: result?.data?.paidBy || '',
+      paidByList,
+      splitWith,
+    });
 
     const trxs = await db
       .insert(transactions)
-      .values(transactionRecords)
+      .values(transactionRecords as (typeof transactions.$inferInsert)[])
       .returning();
 
     if (!trxs.length) {
@@ -306,5 +253,5 @@ export async function createGroupExpense(
     }
   }
   revalidatePath(paths.groupShow(groupUuid));
-  redirect(paths.groups());
+  redirect(paths.dashboard());
 }
