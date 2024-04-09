@@ -14,6 +14,9 @@ const paths = {
   groupUserSearch(groupUuid: string | null, term: string | null) {
     return `/groups/${groupUuid}/search?term=${term}`;
   },
+  groupAddNewExpense(groupUuid: string | null) {
+    return `/groups/${groupUuid}/expenses/new`;
+  },
   settings() {
     return '/settings';
   },
