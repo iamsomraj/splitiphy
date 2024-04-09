@@ -113,11 +113,11 @@ const NavBar = () => {
                 <Link href={paths.settings()}>Settings</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <Link href={paths.home()}>
-                <DropdownMenuItem asChild>
+              <DropdownMenuItem asChild>
+                <Link href={paths.home()}>
                   <SignOutButton>Logout</SignOutButton>
-                </DropdownMenuItem>
-              </Link>
+                </Link>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </SignedIn>
