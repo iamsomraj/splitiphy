@@ -23,7 +23,7 @@ const GroupUserSearchPage = ({
       <h1>GroupUserSearchPage</h1>
       <GroupUserSearchForm groupUuid={params.uuid} />
       <UserList
-        fetchData={() => getUsersBySearchTerm(searchParams.term)}
+        fetchData={() => getUsersBySearchTerm(searchParams.term, params.uuid)}
         groupUuid={params.uuid}
       />
     </div>
