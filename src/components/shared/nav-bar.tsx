@@ -12,7 +12,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { siteConfig } from '@/config/site';
 import paths from '@/lib/paths';
 import { ClerkLoaded, SignOutButton, SignedIn, SignedOut } from '@clerk/nextjs';
@@ -60,20 +65,24 @@ const NavBar = () => {
             </Link>
             <ClerkLoaded>
               <SignedIn>
-                <Link
-                  href={paths.dashboard()}
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  Dashboard
-                </Link>
+                <SheetClose asChild>
+                  <Link
+                    href={paths.dashboard()}
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    Dashboard
+                  </Link>
+                </SheetClose>
               </SignedIn>
               <SignedOut>
-                <Link
-                  href={paths.getStarted()}
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  Get Started
-                </Link>
+                <SheetClose asChild>
+                  <Link
+                    href={paths.getStarted()}
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    Get Started
+                  </Link>
+                </SheetClose>
               </SignedOut>
             </ClerkLoaded>
           </nav>
@@ -90,16 +99,16 @@ const NavBar = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>
+              <DropdownMenuItem asChild>
                 <Link href={paths.account()}>My Account</Link>
-              </DropdownMenuLabel>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
+              <DropdownMenuItem asChild>
                 <Link href={paths.settings()}>Settings</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <Link href={paths.home()}>
-                <DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   <SignOutButton>Logout</SignOutButton>
                 </DropdownMenuItem>
               </Link>
