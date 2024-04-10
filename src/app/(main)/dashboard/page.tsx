@@ -9,7 +9,7 @@ export default async function DashboardPage() {
   return (
     <main className="grid w-full flex-1 grid-cols-4 gap-6 p-4 sm:p-6 lg:p-12">
       <div className="col-span-4 sm:col-span-2">
-        <div className="grid grid-cols-2 gap-6 ">
+        <div className="static top-[7rem] z-10 grid grid-cols-2 gap-6 sm:sticky ">
           <GroupCreateForm className="col-span-2" />
           <Card className="hidden bg-muted/40 sm:col-span-1 sm:block">
             <CardHeader className="flex flex-row items-center justify-between gap-2 pb-2">
@@ -64,14 +64,12 @@ export default async function DashboardPage() {
         </div>
       </div>
       {groups.length > 0 && (
-        <div className="col-span-4 bg-muted/40 sm:col-span-2">
-          <ScrollArea className="sm:h-[76vh] sm:rounded-md sm:border">
-            <div className="flex flex-col gap-6 sm:m-6">
-              {groups.map((group) => (
-                <GroupItem key={group.id} group={group} />
-              ))}
-            </div>
-          </ScrollArea>
+        <div className="col-span-4 overflow-y-auto sm:col-span-2">
+          <div className="flex flex-col gap-6">
+            {groups.map((group) => (
+              <GroupItem key={group.id} group={group} />
+            ))}
+          </div>
         </div>
       )}
     </main>
