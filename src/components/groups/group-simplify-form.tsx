@@ -17,9 +17,8 @@ const GroupSimplifyForm = ({
   return group && group.uuid ? (
     <div className={cn(className)} {...rest}>
       <FormButton
+        variant={'secondary'}
         disabled={group.groupExpenses.length === 0}
-        className="w-full"
-        size="lg"
         onClick={async () => actions.simplifyGroupExpenses(group?.uuid || '')}
       >
         Simplify Expenses

@@ -4,6 +4,7 @@ import GroupExpenses from '@/components/groups/group-expenses';
 import GroupMembers from '@/components/groups/group-members';
 import GroupSimplifyForm from '@/components/groups/group-simplify-form';
 import GroupUserSearchForm from '@/components/groups/group-user-search-form';
+import SettleUpButton from '@/components/groups/settle-up-button';
 import { getGroupDetailsById } from '@/db/queries';
 
 type GroupsShowPageProps = {
@@ -16,10 +17,21 @@ const GroupsShowPage = async ({ params }: GroupsShowPageProps) => {
   const group = await getGroupDetailsById(params.uuid);
 
   return group ? (
-    <main className="flex flex-1 flex-col gap-6 divide-y p-4 pt-6 sm:p-6 lg:p-12">
-      <div>
+    <main className="flex flex-1 flex-col gap-6 divide-y py-4 pt-6 sm:py-6 lg:py-12">
+      <div className="px-4">
         <h1 className="w-full text-4xl font-bold">{group.name}</h1>
         <GroupBalances group={group} className="pt-6" />
+      </div>
+      <div className="scrollbar-none flex max-w-full gap-6 overflow-x-auto px-4 pt-6">
+        <GroupSimplifyForm group={group} />
+        {group.groupUserBalances.length > 0 &&
+          group.groupUserBalances.map((balance) => (
+            <SettleUpButton
+              key={balance.uuid}
+              balance={balance}
+              groupUuid={group?.uuid || ''}
+            />
+          ))}
       </div>
       <div className="grid grid-cols-2 gap-6 pt-6">
         <GroupUserSearchForm

@@ -10,7 +10,7 @@ const GroupBalances = ({ group, className, ...rest }: GroupBalancesProps) => {
   return group ? (
     <div className={cn(className)} {...rest}>
       {group.groupUserBalances.length === 0 ? (
-        <h2 className="w-full text-center text-2xl font-bold text-accent-foreground/40 sm:text-left">
+        <h2 className="w-full text-2xl font-bold text-accent-foreground/40 ">
           No balances to display
         </h2>
       ) : (
@@ -18,7 +18,7 @@ const GroupBalances = ({ group, className, ...rest }: GroupBalancesProps) => {
           {group.groupUserBalances.map((balance) => (
             <li
               key={balance.uuid}
-              className="flex items-center gap-2 text-sm font-medium"
+              className="flex items-center gap-2 text-xs font-medium sm:text-sm"
             >
               {balance.sender.firstName} {balance.sender.lastName} owes{' '}
               {balance.recipient.firstName} {balance.recipient.lastName}{' '}
