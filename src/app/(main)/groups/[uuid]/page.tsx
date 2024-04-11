@@ -18,11 +18,11 @@ const GroupsShowPage = async ({ params }: GroupsShowPageProps) => {
 
   return group ? (
     <main className="flex flex-1 flex-col gap-6 divide-y py-4 pt-6 sm:py-6 lg:py-12">
-      <div className="px-4">
+      <div className="flex flex-col gap-6 px-6 sm:px-12">
         <h1 className="w-full text-4xl font-bold">{group.name}</h1>
-        <GroupBalances group={group} className="pt-6" />
+        <GroupBalances group={group} />
       </div>
-      <div className="scrollbar-none flex max-w-full gap-6 overflow-x-auto px-4 pt-6">
+      <div className="scrollbar-none flex max-w-full gap-6 overflow-x-auto px-6 pt-6 sm:px-12">
         <GroupSimplifyForm group={group} />
         {group.groupUserBalances.length > 0 &&
           group.groupUserBalances.map((balance) => (
