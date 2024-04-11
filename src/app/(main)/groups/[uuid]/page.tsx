@@ -5,8 +5,6 @@ import GroupMembers from '@/components/groups/group-members';
 import GroupSimplifyForm from '@/components/groups/group-simplify-form';
 import GroupUserSearchForm from '@/components/groups/group-user-search-form';
 import { getGroupDetailsById } from '@/db/queries';
-import paths from '@/lib/paths';
-import Link from 'next/link';
 
 type GroupsShowPageProps = {
   params: {
@@ -19,10 +17,10 @@ const GroupsShowPage = async ({ params }: GroupsShowPageProps) => {
 
   return group ? (
     <main className="flex flex-1 flex-col gap-6 divide-y p-4 pt-6 sm:p-6 lg:p-12">
-      <h1 className="w-full text-center text-4xl font-bold sm:text-left">
-        {group.name}
-      </h1>
-      <GroupBalances group={group} className="pt-6" />
+      <div>
+        <h1 className="w-full text-4xl font-bold">{group.name}</h1>
+        <GroupBalances group={group} className="pt-6" />
+      </div>
       <div className="grid grid-cols-2 gap-6 pt-6">
         <GroupUserSearchForm
           groupUuid={params.uuid}
