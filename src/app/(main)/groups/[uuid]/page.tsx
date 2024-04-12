@@ -43,7 +43,10 @@ const GroupsShowPage = async ({ params }: GroupsShowPageProps) => {
           <GroupSimplifyButton group={group} className="w-full" />
         </div>
       </div>
-      <GroupExpenses group={group} />
+      <div className="flex flex-col gap-6 px-6 pt-6 sm:px-12">
+        <h1 className="w-full text-xl font-bold">Expenses</h1>
+        <GroupExpenses group={group} />
+      </div>
       <GroupExpenseForm group={group} />
     </main>
   ) : null;

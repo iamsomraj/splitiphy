@@ -1,38 +1,87 @@
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { GroupWithData } from '@/db/queries';
+import { formatNumber } from '@/lib/utils';
 
 type GroupMembersProps = {
   group: GroupWithData;
 };
 
 const GroupExpenses = ({ group }: GroupMembersProps) => {
-  return group ? (
-    <div>
-      <h2>Expenses</h2>
-      <ul className="flex flex-col gap-y-4">
+  if (!group) return null;
+
+  let totalAmount = 0;
+  group.groupExpenses.forEach((groupExpense) => {
+    totalAmount += formatNumber(groupExpense.expense.amount);
+  });
+  return (
+    <Table>
+      <TableCaption>Group Expenses</TableCaption>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Expense Date</TableHead>
+          <TableHead>Expense Name</TableHead>
+          <TableHead>Expense Description</TableHead>
+          <TableHead>Amount</TableHead>
+          <TableHead>Payer</TableHead>
+          <TableHead>Receiver</TableHead>
+          <TableHead>Transaction Amount</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
         {group.groupExpenses.map((groupExpense) => (
-          <li key={groupExpense.uuid}>
-            <h3>Expense Name {groupExpense.expense.name}</h3>
-            <p>Expense Description {groupExpense.expense.description}</p>
-            <div>Expense Amount {groupExpense.expense.amount}</div>
-            <div>
+          <TableRow key={groupExpense.uuid}>
+            <TableCell>
+              {groupExpense.expense.createdAt.toDateString()}
+            </TableCell>
+            <TableCell>{groupExpense.expense.name}</TableCell>
+            <TableCell>{groupExpense.expense.description}</TableCell>
+            <TableCell>{groupExpense.expense.amount}</TableCell>
+            <TableCell>
               {groupExpense.expense.transactions.map((transaction) => (
                 <div key={transaction.uuid}>
                   {transaction.payer.firstName +
                     ' ' +
-                    transaction.payer.lastName}{' '}
-                  paid{' '}
-                  {transaction.receiver.firstName +
-                    ' ' +
-                    transaction.receiver.lastName}{' '}
-                  {transaction.amount}
+                    transaction.payer.lastName}
                 </div>
               ))}
-            </div>
-          </li>
+            </TableCell>
+            <TableCell>
+              {groupExpense.expense.transactions.map((transaction) => (
+                <div key={transaction.uuid}>
+                  {transaction.receiver.firstName +
+                    ' ' +
+                    transaction.receiver.lastName}
+                </div>
+              ))}
+            </TableCell>
+            <TableCell>
+              {groupExpense.expense.transactions.map((transaction) => (
+                <div key={transaction.uuid}>{transaction.amount}</div>
+              ))}
+            </TableCell>
+          </TableRow>
         ))}
-      </ul>
-    </div>
-  ) : null;
+      </TableBody>
+      <TableFooter>
+        <TableRow>
+          <TableCell colSpan={3}>Total</TableCell>
+          <TableCell>{totalAmount}</TableCell>
+          <TableCell></TableCell>
+          <TableCell></TableCell>
+          <TableCell></TableCell>
+        </TableRow>
+      </TableFooter>
+    </Table>
+  );
 };
 
 export default GroupExpenses;
