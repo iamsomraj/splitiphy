@@ -2,7 +2,7 @@ import GroupBalances from '@/components/groups/group-balances';
 import GroupExpenseForm from '@/components/groups/group-expense-form';
 import GroupExpenses from '@/components/groups/group-expenses';
 import GroupMembers from '@/components/groups/group-members';
-import GroupSimplifyForm from '@/components/groups/group-simplify-form';
+import GroupSimplifyButton from '@/components/groups/group-simplify-button';
 import GroupUserSearchForm from '@/components/groups/group-user-search-form';
 import SettleUpButton from '@/components/groups/settle-up-button';
 import { getGroupDetailsById } from '@/db/queries';
@@ -23,7 +23,7 @@ const GroupsShowPage = async ({ params }: GroupsShowPageProps) => {
         <GroupBalances group={group} />
       </div>
       <div className="scrollbar-none flex max-w-full gap-6 overflow-x-auto px-6 pt-6 sm:px-12">
-        <GroupSimplifyForm group={group} />
+        <GroupSimplifyButton group={group} />
         {group.groupUserBalances.length > 0 &&
           group.groupUserBalances.map((balance) => (
             <SettleUpButton
@@ -40,7 +40,7 @@ const GroupsShowPage = async ({ params }: GroupsShowPageProps) => {
         />
         <div className="col-span-2 grid w-full place-items-center gap-6 sm:col-span-1">
           <GroupMembers group={group} className="w-full" />
-          <GroupSimplifyForm group={group} className="w-full" />
+          <GroupSimplifyButton group={group} className="w-full" />
         </div>
       </div>
       <GroupExpenses group={group} />
