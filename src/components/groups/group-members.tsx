@@ -12,6 +12,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
+import GroupUserSearchForm from './group-user-search-form';
 
 type GroupMembersProps = {
   group: GroupWithData;
@@ -26,12 +27,13 @@ const GroupMembers = ({ group, className, ...rest }: GroupMembersProps) => {
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Members</DialogTitle>
+            <DialogTitle className="text-2xl">{group.name} Members</DialogTitle>
             <DialogDescription>
               These are the users that are part of this group
             </DialogDescription>
           </DialogHeader>
-          <ul className="flex flex-col gap-2 text-center text-sm">
+          <GroupUserSearchForm group={group} />
+          <ul className="flex max-h-48 flex-col gap-2 overflow-y-auto font-bold scrollbar-thin">
             {group.groupMemberships.map((member) => (
               <li key={member.uuid}>
                 <div>{member.user.firstName + ' ' + member.user.lastName}</div>

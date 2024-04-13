@@ -3,7 +3,6 @@ import GroupExpenseForm from '@/components/groups/group-expense-form';
 import ExpenseList from '@/components/groups/expense-list';
 import GroupMembers from '@/components/groups/group-members';
 import GroupSimplifyButton from '@/components/groups/group-simplify-button';
-import GroupUserSearchForm from '@/components/groups/group-user-search-form';
 import SettleUpButton from '@/components/groups/settle-up-button';
 import { getGroupDetailsById } from '@/db/queries';
 
