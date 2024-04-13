@@ -1,12 +1,13 @@
-import GroupBalances from '@/components/groups/group-balances';
-import GroupExpenseForm from '@/components/groups/group-expense-form';
 import ExpenseList from '@/components/groups/expense-list';
+import GroupBalances from '@/components/groups/group-balances';
 import GroupMembers from '@/components/groups/group-members';
 import GroupSimplifyButton from '@/components/groups/group-simplify-button';
 import SettleUpButton from '@/components/groups/settle-up-button';
-import { getGroupDetailsById } from '@/db/queries';
-import { PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { getGroupDetailsById } from '@/db/queries';
+import paths from '@/lib/paths';
+import { PlusCircle } from 'lucide-react';
+import Link from 'next/link';
 
 type GroupsShowPageProps = {
   params: {
@@ -44,14 +45,15 @@ const GroupsShowPage = async ({ params }: GroupsShowPageProps) => {
       <div className="flex flex-col gap-6 px-6 pt-6 sm:px-12">
         <div className="flex flex-col  justify-between gap-4 sm:flex-row sm:items-center">
           <span className="text-2xl font-bold">Expenses</span>
-          <Button className="gap-1">
-            <PlusCircle className="h-3.5 w-3.5" />
-            <span>Add Expense</span>
-          </Button>
+          <Link href={paths.groupAddNewExpense(group.uuid)}>
+            <Button className="gap-1">
+              <PlusCircle className="h-3.5 w-3.5" />
+              <span>Add Expense</span>
+            </Button>
+          </Link>
         </div>
         <ExpenseList group={group} />
       </div>
-      <GroupExpenseForm group={group} />
     </main>
   ) : null;
 };
