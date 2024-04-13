@@ -19,7 +19,13 @@ const GroupsShowPage = async ({ params }: GroupsShowPageProps) => {
   return group ? (
     <main className="flex flex-1 flex-col gap-6 divide-y py-4 pt-6 sm:py-6 lg:py-12">
       <div className="flex flex-col gap-6 px-6 sm:px-12">
-        <h1 className="w-full text-4xl font-bold">{group.name}</h1>
+        <div className="flex flex-row items-end gap-2">
+          <span className="text-4xl font-bold">{group.name}</span>
+          <span className="font-medium text-accent-foreground/40">
+            {group.groupMemberships.length}{' '}
+            {group.groupMemberships.length > 1 ? 'members' : 'member'}
+          </span>
+        </div>
         <GroupBalances group={group} />
       </div>
       <div className="flex max-w-full gap-6 overflow-x-auto px-6 pt-6 scrollbar-none sm:px-12">
@@ -32,16 +38,7 @@ const GroupsShowPage = async ({ params }: GroupsShowPageProps) => {
               groupUuid={group?.uuid || ''}
             />
           ))}
-      </div>
-      <div className="grid grid-cols-2 gap-6 pt-6">
-        <GroupUserSearchForm
-          groupUuid={params.uuid}
-          className="col-span-2 sm:col-span-1"
-        />
-        <div className="col-span-2 grid w-full place-items-center gap-6 sm:col-span-1">
-          <GroupMembers group={group} className="w-full" />
-          <GroupSimplifyButton group={group} className="w-full" />
-        </div>
+        <GroupMembers group={group} className="w-full" />
       </div>
       <div className="flex flex-col gap-6 px-6 pt-6 sm:px-12">
         <h1 className="w-full text-xl font-bold">Expenses</h1>

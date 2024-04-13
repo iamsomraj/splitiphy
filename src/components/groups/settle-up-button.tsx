@@ -16,7 +16,7 @@ type SettleUpButtonProps = {
 const SettleUpButton = ({ groupUuid, balance }: SettleUpButtonProps) => {
   return balance.uuid && groupUuid ? (
     <Button
-      variant={'secondary'}
+      variant={'outline'}
       onClick={async () => {
         await actions.settleBalance(groupUuid, balance?.uuid || '');
       }}

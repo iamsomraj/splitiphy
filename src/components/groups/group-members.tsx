@@ -22,9 +22,7 @@ const GroupMembers = ({ group, className, ...rest }: GroupMembersProps) => {
     <div className={cn(className)} {...rest}>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="outline" size="lg" className="w-full">
-            Show {group.groupMemberships.length} Group Members
-          </Button>
+          <Button variant="outline">Manage Members</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>

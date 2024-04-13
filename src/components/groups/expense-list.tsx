@@ -83,12 +83,18 @@ const ExpenseList = ({ group }: ExpenseListProps) => {
               </span>
             </div>
             <div>Total {groupExpense.expense.amount}</div>
-            <div>
+            <div className="flex flex-col gap-4 pt-2">
               {groupExpense.expense.transactions.map((transaction) => (
-                <div key={transaction.uuid}>
-                  {transaction.payer.firstName} {transaction.payer.lastName}{' '}
-                  paid {transaction.receiver.firstName}{' '}
-                  {transaction.receiver.lastName} {transaction.amount}
+                <div
+                  key={transaction.uuid}
+                  className="grid w-full grid-cols-3 gap-6"
+                >
+                  <span className="col-span-2">
+                    {transaction.payer.firstName} {transaction.payer.lastName}{' '}
+                    paid {transaction.receiver.firstName}{' '}
+                    {transaction.receiver.lastName}
+                  </span>
+                  <span className="col-span-1">{transaction.amount}</span>
                 </div>
               ))}
             </div>
