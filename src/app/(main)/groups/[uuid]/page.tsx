@@ -5,6 +5,8 @@ import GroupMembers from '@/components/groups/group-members';
 import GroupSimplifyButton from '@/components/groups/group-simplify-button';
 import SettleUpButton from '@/components/groups/settle-up-button';
 import { getGroupDetailsById } from '@/db/queries';
+import { PlusCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 type GroupsShowPageProps = {
   params: {
@@ -40,7 +42,13 @@ const GroupsShowPage = async ({ params }: GroupsShowPageProps) => {
         <GroupMembers group={group} className="w-full" />
       </div>
       <div className="flex flex-col gap-6 px-6 pt-6 sm:px-12">
-        <h1 className="w-full text-xl font-bold">Expenses</h1>
+        <div className="flex flex-col  justify-between gap-4 sm:flex-row sm:items-center">
+          <span className="text-2xl font-bold">Expenses</span>
+          <Button className="gap-1">
+            <PlusCircle className="h-3.5 w-3.5" />
+            <span>Add Expense</span>
+          </Button>
+        </div>
         <ExpenseList group={group} />
       </div>
       <GroupExpenseForm group={group} />
