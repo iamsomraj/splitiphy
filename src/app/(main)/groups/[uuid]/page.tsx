@@ -22,7 +22,7 @@ const GroupsShowPage = async ({ params }: GroupsShowPageProps) => {
         <h1 className="w-full text-4xl font-bold">{group.name}</h1>
         <GroupBalances group={group} />
       </div>
-      <div className="scrollbar-none flex max-w-full gap-6 overflow-x-auto px-6 pt-6 sm:px-12">
+      <div className="flex max-w-full gap-6 overflow-x-auto px-6 pt-6 scrollbar-none sm:px-12">
         <GroupSimplifyButton group={group} />
         {group.groupUserBalances.length > 0 &&
           group.groupUserBalances.map((balance) => (
