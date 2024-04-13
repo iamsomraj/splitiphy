@@ -1,6 +1,6 @@
 import GroupBalances from '@/components/groups/group-balances';
 import GroupExpenseForm from '@/components/groups/group-expense-form';
-import GroupExpenses from '@/components/groups/group-expenses';
+import ExpenseList from '@/components/groups/expense-list';
 import GroupMembers from '@/components/groups/group-members';
 import GroupSimplifyButton from '@/components/groups/group-simplify-button';
 import GroupUserSearchForm from '@/components/groups/group-user-search-form';
@@ -45,7 +45,7 @@ const GroupsShowPage = async ({ params }: GroupsShowPageProps) => {
       </div>
       <div className="flex flex-col gap-6 px-6 pt-6 sm:px-12">
         <h1 className="w-full text-xl font-bold">Expenses</h1>
-        <GroupExpenses group={group} />
+        <ExpenseList group={group} />
       </div>
       <GroupExpenseForm group={group} />
     </main>
