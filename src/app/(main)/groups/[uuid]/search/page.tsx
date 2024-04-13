@@ -1,6 +1,6 @@
 import GroupUserSearchForm from '@/components/groups/group-user-search-form';
 import UserList from '@/components/groups/user-list';
-import { getUsersBySearchTerm } from '@/db/queries';
+import { getGroupDetailsById, getUsersBySearchTerm } from '@/db/queries';
 import paths from '@/lib/paths';
 import Link from 'next/link';
 
@@ -13,15 +13,16 @@ type GroupUserSearchPageProps = {
   };
 };
 
-const GroupUserSearchPage = ({
+const GroupUserSearchPage = async ({
   params,
   searchParams,
 }: GroupUserSearchPageProps) => {
+  const group = await getGroupDetailsById(params.uuid);
   return (
     <div>
       <Link href={paths.dashboard()}>Back to Groups</Link>
       <h1>GroupUserSearchPage</h1>
-      <GroupUserSearchForm groupUuid={params.uuid} />
+      <GroupUserSearchForm group={group} />
       <UserList
         fetchData={() => getUsersBySearchTerm(searchParams.term, params.uuid)}
         groupUuid={params.uuid}

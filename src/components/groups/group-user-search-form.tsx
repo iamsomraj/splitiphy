@@ -6,8 +6,6 @@ import { Label } from '@/components/ui/label';
 import { GroupWithData } from '@/db/queries';
 import { useSearchParams } from 'next/navigation';
 
-type DivProps = React.HTMLAttributes<HTMLDivElement>;
-
 type GroupUserSearchFormProps = {
   group: GroupWithData;
 };
