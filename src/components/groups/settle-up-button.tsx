@@ -25,7 +25,7 @@ const SettleUpButton = ({ groupUuid, balance }: SettleUpButtonProps) => {
   return balance.uuid && groupUuid ? (
     <Button variant={'outline'} disabled={isPending} onClick={onClick}>
       {isPending ? (
-        'Settling...'
+        'Settling Up...'
       ) : (
         <span>
           Settle Up {balance.sender.firstName} & {balance.recipient.firstName}
