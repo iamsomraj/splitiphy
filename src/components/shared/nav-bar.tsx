@@ -18,10 +18,14 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { siteConfig } from '@/config/site';
+import { getLoggedInUser } from '@/db/queries';
 import paths from '@/lib/paths';
 import { ClerkLoaded, SignOutButton, SignedIn, SignedOut } from '@clerk/nextjs';
+import { AvatarFallback } from '@radix-ui/react-avatar';
+import { Avatar, AvatarImage } from '../ui/avatar';
 
-const NavBar = () => {
+const NavBar = async () => {
+  const user = await getLoggedInUser();
   return (
     <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:px-6">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
@@ -99,10 +103,24 @@ const NavBar = () => {
         <SignedIn>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="secondary" size="icon" className="rounded-full">
-                <CircleUser className="h-5 w-5" />
-                <span className="sr-only">Toggle user menu</span>
-              </Button>
+              {user?.profileImage ? (
+                <Avatar className="h-9 w-9">
+                  <AvatarImage
+                    src={user.profileImage}
+                    alt={user.firstName + '' + user.lastName}
+                    className="object-cover"
+                  />
+                </Avatar>
+              ) : (
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  className="rounded-full"
+                >
+                  <CircleUser className="h-5 w-5" />
+                  <span className="sr-only">Toggle user menu</span>
+                </Button>
+              )}
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem asChild>
