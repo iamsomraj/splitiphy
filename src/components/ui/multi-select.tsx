@@ -43,12 +43,17 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     onChange(updatedSelectedValues);
   };
 
+  const selectedLabels = selectedValues
+    .map((val) => options.find((option) => option.value === val)?.label)
+    .filter(Boolean)
+    .join(', ');
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline">
           <span className="w-full text-left text-muted-foreground">
-            {placeholder}
+            {selectedValues.length ? selectedLabels : placeholder}
           </span>
         </Button>
       </DropdownMenuTrigger>
