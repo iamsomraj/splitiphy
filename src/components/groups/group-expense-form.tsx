@@ -266,6 +266,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
         ) : null}
       </div>
       {/* EXPENSE NAME */}
+
       {/* EXPENSE DESCRIPTION */}
       <div className="flex flex-col gap-4">
         <Label
@@ -281,7 +282,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
         <Textarea
           id="expense-description"
           name="expense-description"
-          placeholder="For the party"
+          placeholder="Weekly household grocery"
           className="resize-none"
         ></Textarea>
         <div className="text-sm text-muted-foreground">
@@ -294,6 +295,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
         ) : null}
       </div>
       {/* EXPENSE DESCRIPTION */}
+
       {/* EXPENSE DATE */}
       <div className="flex flex-col gap-4">
         <Label
@@ -349,6 +351,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
         />
       </div>
       {/* EXPENSE DATE */}
+
       {/* EXPENSE AMOUNT */}
       <div className="flex flex-col gap-4">
         <Label
@@ -628,6 +631,8 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
           {formState.errors._form?.join(', ')}
         </span>
       ) : null}
+      {/* SPLIT WITH */}
+
       <div className="flex w-full flex-col gap-4 sm:flex-row">
         <FormButton className="w-full">Add</FormButton>
         <Button variant="outline" type="reset" className="w-full">
