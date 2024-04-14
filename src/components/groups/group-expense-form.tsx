@@ -19,6 +19,13 @@ import { CalendarIcon } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { SelectSingleEventHandler } from 'react-day-picker';
 import { useFormState } from 'react-dom';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 type GroupExpenseFormProps = {
   group: GroupWithData;
@@ -26,6 +33,8 @@ type GroupExpenseFormProps = {
 
 const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
   const hiddenExpenseDateInputRef = useRef<HTMLInputElement>(null);
+  const hiddenExpensePaidByRef = useRef<HTMLSelectElement>(null);
+
   const [formState, action] = useFormState(
     actions.createGroupExpense.bind(null, group?.uuid || ''),
     {
@@ -52,6 +61,13 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
       expenseDate: date,
     });
     hiddenExpenseDateInputRef.current.value = format(date, 'yyyy-MM-dd');
+  };
+
+  const handleExpenseSinglePaidByChange = (value: string) => {
+    if (!hiddenExpensePaidByRef.current) {
+      return;
+    }
+    hiddenExpensePaidByRef.current.value = value;
   };
 
   const handleExpenseAmountChange = (
@@ -351,8 +367,17 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
         ) : null}
       </div>
       {formData.isMultiplePaidBy ? (
-        <div>
-          <label htmlFor="expense-paid-by">Paid By</label>
+        <div className="flex flex-col gap-4">
+          <Label
+            htmlFor="expense-paid-by"
+            className={cn({
+              'text-destructive': Boolean(
+                formState?.errors?.paidByList || false,
+              ),
+            })}
+          >
+            Members Paid By
+          </Label>
           <select
             id="expense-paid-by"
             name="expense-paid-by"
@@ -367,10 +392,15 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
               </option>
             ))}
           </select>
+          <div className="text-sm text-muted-foreground">
+            This is the selection of members who paid for the expense.
+          </div>
           {formState.errors.paidByList ? (
-            <span>{formState.errors.paidByList?.join(', ')}</span>
+            <span className="text-sm font-medium text-destructive">
+              {formState.errors.paidByList?.join(', ')}
+            </span>
           ) : null}
-          <div>
+          <div className="flex flex-col gap-4">
             {formData.paidByList.map((userID) => {
               const member = group.groupMemberships.find(
                 (membership) => membership.user.id === userID,
@@ -379,11 +409,11 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
                 return null;
               }
               return (
-                <div key={member.user.id}>
-                  <label htmlFor={`paid-amount-${member.user.id}`}>
+                <div key={member.user.id} className="flex flex-col gap-4">
+                  <Label htmlFor={`paid-amount-${member.user.id}`}>
                     {member.user.firstName + ' ' + member.user.lastName}
-                  </label>
-                  <input
+                  </Label>
+                  <Input
                     type="number"
                     id={`paid-amount-${member.user.id}`}
                     name={`paid-amount-${member.user.id}`}
@@ -394,30 +424,75 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
                 </div>
               );
             })}
+            <div className="text-sm text-muted-foreground">
+              This is the amount paid by each member.
+            </div>
             {formState.errors.paidByAmounts ? (
-              <span>{formState.errors.paidByAmounts?.join(', ')}</span>
+              <span className="text-sm font-medium text-destructive">
+                {formState.errors.paidByAmounts?.join(', ')}
+              </span>
             ) : null}
           </div>
         </div>
       ) : (
-        <div>
-          <label htmlFor="expense-paid-by">Paid By</label>
-          <select id="expense-paid-by" name="expense-paid-by">
+        <div className="flex flex-col gap-4">
+          <Label
+            htmlFor="expense-paid-by"
+            className={cn({
+              'text-destructive': Boolean(formState?.errors?.paidBy || false),
+            })}
+          >
+            Paid By
+          </Label>
+          <Select
+            name="expense-paid-by"
+            onValueChange={handleExpenseSinglePaidByChange}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select a member" />
+            </SelectTrigger>
+            <SelectContent>
+              {group?.groupMemberships.map((member) => (
+                <SelectItem key={member.user.id} value={member.user.id}>
+                  {member.user.firstName + ' ' + member.user.lastName}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <select
+            ref={hiddenExpensePaidByRef}
+            id="expense-paid-by"
+            className="hidden"
+            name="expense-paid-by"
+          >
             {group?.groupMemberships.map((member) => (
               <option key={member.user.id} value={member.user.id}>
                 {member.user.firstName + ' ' + member.user.lastName}
               </option>
             ))}
           </select>
+          <div className="text-sm text-muted-foreground">
+            This is the member who paid for the expense.
+          </div>
           {formState.errors.paidBy ? (
-            <span>{formState.errors.paidBy?.join(', ')}</span>
+            <span className="text-sm font-medium text-destructive">
+              {formState.errors.paidBy?.join(', ')}
+            </span>
           ) : null}
         </div>
       )}
       {/* PAID BY */}
 
-      <div>
-        <label htmlFor="expense-split-with">Split With</label>
+      {/* SPLIT WITH */}
+      <div className="flex flex-col gap-4">
+        <Label
+          htmlFor="expense-split-with"
+          className={cn({
+            'text-destructive': Boolean(formState?.errors?.splitWith || false),
+          })}
+        >
+          Split With
+        </Label>
         <select
           id="expense-split-with"
           name="expense-split-with"
@@ -432,43 +507,58 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
             </option>
           ))}
         </select>
+        <div className="text-sm text-muted-foreground">
+          This is the selection of members with whom the expense is split.
+        </div>
         {formState.errors.splitWith ? (
-          <span>{formState.errors.splitWith?.join(', ')}</span>
+          <span className="text-sm font-medium text-destructive">
+            {formState.errors.splitWith?.join(', ')}
+          </span>
         ) : null}
       </div>
-      <div>
-        <label htmlFor="expense-split-amount">Split Amount</label>
-        <div>
-          {formData.expenseSplitWith.map((userID) => {
-            const member = group.groupMemberships.find(
-              (membership) => membership.user.id === userID,
-            );
-            if (!member) {
-              return null;
-            }
-            return (
-              <div key={member.user.id}>
-                <label htmlFor={`split-amount-${member.user.id}`}>
-                  {member.user.firstName + ' ' + member.user.lastName}
-                </label>
-                <input
-                  type="number"
-                  id={`split-amount-${member.user.id}`}
-                  name={`split-amount-${member.user.id}`}
-                  placeholder="Enter Split Amount"
-                  value={formData.splitAmounts[member.user.id] || ''}
-                  onChange={(e) => handleSplitAmountChange(e, member.user.id)}
-                />
-              </div>
-            );
-          })}
-          {formState.errors.splitAmounts ? (
-            <span>{formState.errors.splitAmounts?.join(', ')}</span>
-          ) : null}
+      {formData.expenseSplitWith.length > 0 && (
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4">
+            {formData.expenseSplitWith.map((userID) => {
+              const member = group.groupMemberships.find(
+                (membership) => membership.user.id === userID,
+              );
+              if (!member) {
+                return null;
+              }
+              return (
+                <div key={member.user.id} className="flex flex-col gap-4">
+                  <Label htmlFor={`split-amount-${member.user.id}`}>
+                    {member.user.firstName + ' ' + member.user.lastName}
+                  </Label>
+                  <Input
+                    type="number"
+                    id={`split-amount-${member.user.id}`}
+                    name={`split-amount-${member.user.id}`}
+                    placeholder={`Enter Split Amount for ${
+                      member.user.firstName + ' ' + member.user.lastName
+                    }`}
+                    value={formData.splitAmounts[member.user.id] || ''}
+                    onChange={(e) => handleSplitAmountChange(e, member.user.id)}
+                  />
+                </div>
+              );
+            })}
+            {formState.errors.splitAmounts ? (
+              <span className="text-sm font-medium text-destructive">
+                {formState.errors.splitAmounts?.join(', ')}
+              </span>
+            ) : null}
+          </div>
+          <div className="text-sm text-muted-foreground">
+            This is the amount split with each member.
+          </div>
         </div>
-      </div>
+      )}
       {formState.errors._form ? (
-        <div>{formState.errors._form?.join(', ')}</div>
+        <span className="text-sm font-medium text-destructive">
+          {formState.errors._form?.join(', ')}
+        </span>
       ) : null}
       <FormButton>Create Expense</FormButton>
     </form>
