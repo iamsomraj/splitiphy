@@ -1,7 +1,6 @@
 import GroupCreateForm from '@/components/groups/group-create-form';
 import GroupItem from '@/components/groups/group-item';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { getUserGroups } from '@/db/queries';
 
 export default async function DashboardPage() {
