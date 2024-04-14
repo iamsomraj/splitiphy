@@ -107,14 +107,20 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
     if (!hiddenExpenseSplitWithRef.current) {
       return;
     }
+
     const selectedUsers = options;
+
     Array.from(hiddenExpenseSplitWithRef.current.options).forEach((option) => {
       option.selected = options.includes(option.value);
     });
+
     const totalExpense = formData.expenseAmount || 0;
     const totalSelectedUsers = selectedUsers.length;
-    const evenSplitAmount = formatNumber(totalExpense / totalSelectedUsers);
-    const remainingAmount = formatNumber(
+
+    let evenSplitAmount =
+      Math.floor((totalExpense / totalSelectedUsers) * 100) / 100;
+
+    let remainingAmount = formatNumber(
       totalExpense - evenSplitAmount * totalSelectedUsers,
     );
 
@@ -124,11 +130,9 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
       updatedSplitAmounts[selectedUsers[i]] = evenSplitAmount;
     }
 
-    for (let i = 0; i < remainingAmount * 100; i++) {
-      updatedSplitAmounts[selectedUsers[i % totalSelectedUsers]] = formatNumber(
-        updatedSplitAmounts[selectedUsers[i % totalSelectedUsers]] + 0.01,
-      );
-    }
+    updatedSplitAmounts[selectedUsers[0]] = formatNumber(
+      updatedSplitAmounts[selectedUsers[0]] + remainingAmount,
+    );
 
     setFormData({
       ...formData,
@@ -154,7 +158,9 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
     if (!hiddenExpensePaidByMultipleRef.current) {
       return;
     }
+
     const selectedUsers = options;
+
     Array.from(hiddenExpensePaidByMultipleRef.current.options).forEach(
       (option) => {
         option.selected = options.includes(option.value);
@@ -163,8 +169,11 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
 
     const totalPaidAmount = formData.expenseAmount || 0;
     const totalSelectedUsers = selectedUsers.length;
-    const evenPaidAmount = formatNumber(totalPaidAmount / totalSelectedUsers);
-    const remainingAmount = formatNumber(
+
+    let evenPaidAmount =
+      Math.floor((totalPaidAmount / totalSelectedUsers) * 100) / 100;
+
+    let remainingAmount = formatNumber(
       totalPaidAmount - evenPaidAmount * totalSelectedUsers,
     );
 
@@ -174,11 +183,9 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
       updatedPaidAmounts[selectedUsers[i]] = evenPaidAmount;
     }
 
-    for (let i = 0; i < remainingAmount * 100; i++) {
-      updatedPaidAmounts[selectedUsers[i % totalSelectedUsers]] = formatNumber(
-        updatedPaidAmounts[selectedUsers[i % totalSelectedUsers]] + 0.01,
-      );
-    }
+    updatedPaidAmounts[selectedUsers[0]] = formatNumber(
+      updatedPaidAmounts[selectedUsers[0]] + remainingAmount,
+    );
 
     setFormData({
       ...formData,
@@ -195,7 +202,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
       ...formData,
       paidByAmounts: {
         ...formData.paidByAmounts,
-        [userId]: parseFloat(parseFloat(e.target.value).toFixed(2)),
+        [userId]: formatNumber(e.target.value),
       },
     });
   };
