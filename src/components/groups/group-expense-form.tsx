@@ -35,7 +35,8 @@ type GroupExpenseFormProps = {
 const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
   const hiddenExpenseSplitWithRef = useRef<HTMLSelectElement>(null);
   const hiddenExpenseDateInputRef = useRef<HTMLInputElement>(null);
-  const hiddenExpensePaidByRef = useRef<HTMLSelectElement>(null);
+  const hiddenExpensePaidBySingleRef = useRef<HTMLSelectElement>(null);
+  const hiddenExpensePaidByMultipleRef = useRef<HTMLSelectElement>(null);
 
   const [formState, action] = useFormState(
     actions.createGroupExpense.bind(null, group?.uuid || ''),
@@ -66,10 +67,10 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
   };
 
   const handleExpenseSinglePaidByChange = (value: string) => {
-    if (!hiddenExpensePaidByRef.current) {
+    if (!hiddenExpensePaidBySingleRef.current) {
       return;
     }
-    hiddenExpensePaidByRef.current.value = value;
+    hiddenExpensePaidBySingleRef.current.value = value;
   };
 
   const handleExpenseAmountChange = (
@@ -149,7 +150,15 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
     });
   };
   const handlePaidByListChange = (options: string[]) => {
+    if (!hiddenExpensePaidByMultipleRef.current) {
+      return;
+    }
     const selectedUsers = options;
+    Array.from(hiddenExpensePaidByMultipleRef.current.options).forEach(
+      (option) => {
+        option.selected = options.includes(option.value);
+      },
+    );
 
     const totalPaidAmount = formData.expenseAmount || 0;
     const totalSelectedUsers = selectedUsers.length;
@@ -392,6 +401,19 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
             value={formData.paidByList}
             onChange={handlePaidByListChange}
           />
+          <select
+            className="hidden"
+            ref={hiddenExpensePaidByMultipleRef}
+            id="expense-paid-by"
+            name="expense-paid-by"
+            multiple
+          >
+            {group?.groupMemberships.map((member) => (
+              <option key={member.user.id} value={member.user.id}>
+                {member.user.firstName + ' ' + member.user.lastName}
+              </option>
+            ))}
+          </select>
           <div className="text-sm text-muted-foreground">
             This is the selection of members who paid for the expense.
           </div>
@@ -460,7 +482,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
             </SelectContent>
           </Select>
           <select
-            ref={hiddenExpensePaidByRef}
+            ref={hiddenExpensePaidBySingleRef}
             id="expense-paid-by"
             className="hidden"
             name="expense-paid-by"
