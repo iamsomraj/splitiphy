@@ -15,7 +15,9 @@ const UserItem = ({ user, groupUuid }: UserItemProps) => {
       key={user.id}
       className="flex items-center justify-between rounded-md border bg-muted/40 p-6 hover:bg-muted/20"
     >
-      <p>{user.firstName + ' ' + user.lastName}</p>
+      <p className="text-lg font-bold">
+        {user.firstName + ' ' + user.lastName}
+      </p>
       <Button
         onClick={async () => {
           await actions.addUserToGroup(user, groupUuid);
