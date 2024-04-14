@@ -1,5 +1,6 @@
 import { GroupWithData } from '@/db/queries';
 
+import GroupUserSearchForm from '@/components/groups/group-user-search-form';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -22,18 +23,17 @@ const GroupMembers = ({ group, className, ...rest }: GroupMembersProps) => {
     <div className={cn(className)} {...rest}>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="outline" size="lg" className="w-full">
-            Show {group.groupMemberships.length} Group Members
-          </Button>
+          <Button variant="outline">Manage Members</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Members</DialogTitle>
+            <DialogTitle className="text-2xl">{group.name} Members</DialogTitle>
             <DialogDescription>
               These are the users that are part of this group
             </DialogDescription>
           </DialogHeader>
-          <ul className="flex flex-col gap-2 text-center text-sm">
+          <GroupUserSearchForm group={group} />
+          <ul className="flex max-h-48 flex-col gap-2 overflow-y-auto font-bold scrollbar-thin">
             {group.groupMemberships.map((member) => (
               <li key={member.uuid}>
                 <div>{member.user.firstName + ' ' + member.user.lastName}</div>

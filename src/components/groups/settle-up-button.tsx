@@ -2,21 +2,26 @@
 
 import { Button } from '@/components/ui/button';
 import * as actions from '@/actions';
+import { groupUserBalances, users } from '@/db/schema';
 
 type SettleUpButtonProps = {
   groupUuid: string;
-  balanceUuid: string;
+  balance: typeof groupUserBalances.$inferSelect & {
+    sender: typeof users.$inferSelect;
+  } & {
+    recipient: typeof users.$inferSelect;
+  };
 };
 
-const SettleUpButton = ({ groupUuid, balanceUuid }: SettleUpButtonProps) => {
-  return balanceUuid && groupUuid ? (
+const SettleUpButton = ({ groupUuid, balance }: SettleUpButtonProps) => {
+  return balance.uuid && groupUuid ? (
     <Button
-      variant={'secondary'}
+      variant={'outline'}
       onClick={async () => {
-        await actions.settleBalance(groupUuid, balanceUuid);
+        await actions.settleBalance(groupUuid, balance?.uuid || '');
       }}
     >
-      Settle
+      Settle Up {balance.sender.firstName} & {balance.recipient.firstName}
     </Button>
   ) : null;
 };

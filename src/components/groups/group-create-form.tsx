@@ -42,7 +42,7 @@ const GroupCreateForm = ({ className, ...rest }: Props) => {
         <CardFooter>
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline">Create New Group</Button>
+              <Button>Add Group</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>

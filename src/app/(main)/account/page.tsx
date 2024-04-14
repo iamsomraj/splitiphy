@@ -1,3 +1,5 @@
+import UnderDevelopment from '@/components/shared/under-development';
+
 export default function AccountPage() {
-  return <div>Account Page</div>;
+  return <UnderDevelopment />;
 }

@@ -1,16 +1,41 @@
 'use client';
 import * as actions from '@/actions';
 import FormButton from '@/components/shared/form-button';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
 import { GroupWithData } from '@/db/queries';
-import { formatNumber } from '@/lib/utils';
-import { useState } from 'react';
+import { cn, formatNumber } from '@/lib/utils';
+import { format } from 'date-fns';
+import { CalendarIcon } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { SelectSingleEventHandler } from 'react-day-picker';
 import { useFormState } from 'react-dom';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { MultiSelect } from '../ui/multi-select';
 
 type GroupExpenseFormProps = {
   group: GroupWithData;
 };
 
 const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
+  const hiddenExpenseDateInputRef = useRef<HTMLInputElement>(null);
+  const hiddenExpensePaidByRef = useRef<HTMLSelectElement>(null);
+
   const [formState, action] = useFormState(
     actions.createGroupExpense.bind(null, group?.uuid || ''),
     {
@@ -19,6 +44,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
   );
 
   const [formData, setFormData] = useState({
+    expenseDate: undefined as Date | undefined,
     expenseAmount: 0,
     isMultiplePaidBy: false,
     paidByList: [] as string[],
@@ -26,6 +52,24 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
     expenseSplitWith: [] as string[],
     splitAmounts: {} as Record<string, number>,
   });
+
+  const handleExpenseDateChange: SelectSingleEventHandler = (date) => {
+    if (!hiddenExpenseDateInputRef.current || !date) {
+      return;
+    }
+    setFormData({
+      ...formData,
+      expenseDate: date,
+    });
+    hiddenExpenseDateInputRef.current.value = format(date, 'yyyy-MM-dd');
+  };
+
+  const handleExpenseSinglePaidByChange = (value: string) => {
+    if (!hiddenExpensePaidByRef.current) {
+      return;
+    }
+    hiddenExpensePaidByRef.current.value = value;
+  };
 
   const handleExpenseAmountChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -57,11 +101,8 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
     });
   };
 
-  const handleSplitWithChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedUsers = Array.from(
-      e.target.selectedOptions,
-      (option) => option.value,
-    );
+  const handleSplitWithChange = (options: string[]) => {
+    const selectedUsers = options;
     const totalExpense = formData.expenseAmount || 0;
     const totalSelectedUsers = selectedUsers.length;
     const evenSplitAmount = formatNumber(totalExpense / totalSelectedUsers);
@@ -100,11 +141,8 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
       },
     });
   };
-  const handlePaidByListChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedUsers = Array.from(
-      e.target.selectedOptions,
-      (option) => option.value,
-    );
+  const handlePaidByListChange = (options: string[]) => {
+    const selectedUsers = options;
 
     const totalPaidAmount = formData.expenseAmount || 0;
     const totalSelectedUsers = selectedUsers.length;
@@ -150,154 +188,275 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
   }
 
   return (
-    <div>
-      <h2>Group Expense Form</h2>
-      <form action={action}>
-        <div>
-          <label htmlFor="expense-name">Expense Name</label>
-          <input
-            type="text"
-            id="expense-name"
-            name="expense-name"
-            placeholder="Enter Expense Name"
-          />
-          {formState.errors.name ? (
-            <span>{formState.errors.name?.join(', ')}</span>
-          ) : null}
+    <form action={action} className="flex flex-col gap-4">
+      {/* EXPENSE NAME */}
+      <div className="flex flex-col gap-4">
+        <Label
+          htmlFor="expense-name"
+          className={cn({
+            'text-destructive': Boolean(formState?.errors?.name || false),
+          })}
+        >
+          Name
+        </Label>
+        <Input
+          type="text"
+          id="expense-name"
+          name="expense-name"
+          placeholder="Grocery"
+        />
+        <div className="text-sm text-muted-foreground">
+          This is the name of your expense.
         </div>
-        <div>
-          <label htmlFor="expense-description">Expense Description</label>
-          <textarea
-            id="expense-description"
-            name="expense-description"
-            placeholder="Enter Expense Description"
-          ></textarea>
-          {formState.errors.description ? (
-            <span>{formState.errors.description?.join(', ')}</span>
-          ) : null}
+        {formState.errors.name ? (
+          <span className="text-sm font-medium text-destructive">
+            {formState.errors.name?.join(', ')}
+          </span>
+        ) : null}
+      </div>
+      {/* EXPENSE NAME */}
+      {/* EXPENSE DESCRIPTION */}
+      <div className="flex flex-col gap-4">
+        <Label
+          htmlFor="expense-description"
+          className={cn({
+            'text-destructive': Boolean(
+              formState?.errors?.description || false,
+            ),
+          })}
+        >
+          Description
+        </Label>
+        <Textarea
+          id="expense-description"
+          name="expense-description"
+          placeholder="For the party"
+          className="resize-none"
+        ></Textarea>
+        <div className="text-sm text-muted-foreground">
+          This is the description of your expense.
         </div>
-        <div>
-          <label htmlFor="expense-date">Expense Date</label>
-          <input
-            type="date"
-            id="expense-date"
-            name="expense-date"
-            placeholder="Enter Expense Date"
-          />
-          {formState.errors.date ? (
-            <span>{formState.errors.date?.join(', ')}</span>
-          ) : null}
+        {formState.errors.description ? (
+          <span className="text-sm font-medium text-destructive">
+            {formState.errors.description?.join(', ')}
+          </span>
+        ) : null}
+      </div>
+      {/* EXPENSE DESCRIPTION */}
+      {/* EXPENSE DATE */}
+      <div className="flex flex-col gap-4">
+        <Label
+          className={cn({
+            'text-destructive': Boolean(formState?.errors?.date || false),
+          })}
+        >
+          Date
+        </Label>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={'outline'}
+              className={cn(
+                'justify-start text-left font-normal',
+                !formData.expenseDate && 'text-muted-foreground',
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {formData.expenseDate ? (
+                format(formData.expenseDate, 'PPP')
+              ) : (
+                <span>Pick a date</span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={formData.expenseDate}
+              onSelect={handleExpenseDateChange}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
+        <div className="text-sm text-muted-foreground">
+          This is the date of your expense.
         </div>
-        <div>
-          <label htmlFor="expense-amount">Expense Amount</label>
-          <input
-            type="number"
-            id="expense-amount"
-            name="expense-amount"
-            placeholder="Enter Expense Amount"
-            value={formData.expenseAmount}
-            onChange={handleExpenseAmountChange}
-          />
-          {formState.errors.amount ? (
-            <span>{formState.errors.amount?.join(', ')}</span>
-          ) : null}
+        {formState.errors.date ? (
+          <span className="text-sm font-medium text-destructive">
+            {formState.errors.date?.join(', ')}
+          </span>
+        ) : null}
+      </div>
+      <div className="hidden">
+        <label htmlFor="expense-date">Expense Date</label>
+        <input
+          ref={hiddenExpenseDateInputRef}
+          type="date"
+          id="expense-date"
+          name="expense-date"
+          placeholder="Enter Expense Date"
+        />
+      </div>
+      {/* EXPENSE DATE */}
+      {/* EXPENSE AMOUNT */}
+      <div className="flex flex-col gap-4">
+        <Label
+          htmlFor="expense-amount"
+          className={cn({
+            'text-destructive': Boolean(formState?.errors?.amount || false),
+          })}
+        >
+          Amount
+        </Label>
+        <Input
+          type="number"
+          id="expense-amount"
+          name="expense-amount"
+          placeholder="Enter Expense Amount"
+          value={formData.expenseAmount}
+          onChange={handleExpenseAmountChange}
+        />
+        <div className="text-sm text-muted-foreground">
+          This is the total amount of your expense.
         </div>
+        {formState.errors.amount ? (
+          <span className="text-sm font-medium text-destructive">
+            {formState.errors.amount?.join(', ')}
+          </span>
+        ) : null}
+      </div>
+      {/* EXPENSE AMOUNT */}
 
-        <div>
-          <label htmlFor="is-multiple-paid-by">Multiple Paid By</label>
-          <input
-            type="checkbox"
+      {/* PAID BY */}
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-4">
+          <Switch
             id="is-multiple-paid-by"
             name="is-multiple-paid-by"
             checked={formData.isMultiplePaidBy}
-            onChange={(e) =>
+            onCheckedChange={(checked) =>
               setFormData({
                 ...formData,
-                isMultiplePaidBy: e.target.checked,
+                isMultiplePaidBy: checked,
               })
             }
           />
-          {formState.errors.isMultiplePaidBy ? (
-            <span>{formState.errors.isMultiplePaidBy?.join(', ')}</span>
-          ) : null}
+          <Label
+            htmlFor="is-multiple-paid-by"
+            className={cn({
+              'text-destructive': Boolean(
+                formState?.errors?.isMultiplePaidBy || false,
+              ),
+            })}
+          >
+            Multi Payment Mode
+          </Label>
         </div>
-
-        {formData.isMultiplePaidBy ? (
-          <div>
-            <label htmlFor="expense-paid-by">Paid By</label>
-            <select
-              id="expense-paid-by"
-              name="expense-paid-by"
-              multiple
-              size={group?.groupMemberships.length}
-              value={formData.paidByList}
-              onChange={handlePaidByListChange}
-            >
-              {group?.groupMemberships.map((member) => (
-                <option key={member.user.id} value={member.user.id}>
-                  {member.user.firstName + ' ' + member.user.lastName}
-                </option>
-              ))}
-            </select>
-            {formState.errors.paidByList ? (
-              <span>{formState.errors.paidByList?.join(', ')}</span>
-            ) : null}
-            <div>
-              {formData.paidByList.map((userID) => {
-                const member = group.groupMemberships.find(
-                  (membership) => membership.user.id === userID,
-                );
-                if (!member) {
-                  return null;
-                }
-                return (
-                  <div key={member.user.id}>
-                    <label htmlFor={`paid-amount-${member.user.id}`}>
-                      {member.user.firstName + ' ' + member.user.lastName}
-                    </label>
-                    <input
-                      type="number"
-                      id={`paid-amount-${member.user.id}`}
-                      name={`paid-amount-${member.user.id}`}
-                      placeholder="Enter Paid Amount"
-                      value={formData.paidByAmounts[member.user.id] || ''}
-                      onChange={(e) =>
-                        handlePaidAmountChange(e, member.user.id)
-                      }
-                    />
-                  </div>
-                );
-              })}
-              {formState.errors.paidByAmounts ? (
-                <span>{formState.errors.paidByAmounts?.join(', ')}</span>
-              ) : null}
+        <div className="text-sm text-muted-foreground">
+          This is the selection whether the expense is paid by multiple members
+        </div>
+        {formState.errors.isMultiplePaidBy ? (
+          <span className="text-sm font-medium text-destructive">
+            {formState.errors.isMultiplePaidBy?.join(', ')}
+          </span>
+        ) : null}
+      </div>
+      {formData.isMultiplePaidBy ? (
+        <div className="flex flex-col gap-4">
+          <Label
+            htmlFor="expense-paid-by"
+            className={cn({
+              'text-destructive': Boolean(
+                formState?.errors?.paidByList || false,
+              ),
+            })}
+          >
+            Members Paid By
+          </Label>
+          <MultiSelect
+            placeholder="Select members who paid"
+            options={[
+              ...group.groupMemberships.map((membership) => ({
+                label:
+                  membership.user.firstName + ' ' + membership.user.lastName,
+                value: membership.user.id,
+              })),
+            ]}
+            value={formData.paidByList}
+            onChange={handlePaidByListChange}
+          />
+          <div className="text-sm text-muted-foreground">
+            This is the selection of members who paid for the expense.
+          </div>
+          {formState.errors.paidByList ? (
+            <span className="text-sm font-medium text-destructive">
+              {formState.errors.paidByList?.join(', ')}
+            </span>
+          ) : null}
+          <div className="flex flex-col gap-4">
+            {formData.paidByList.map((userID) => {
+              const member = group.groupMemberships.find(
+                (membership) => membership.user.id === userID,
+              );
+              if (!member) {
+                return null;
+              }
+              return (
+                <div key={member.user.id} className="flex flex-col gap-4">
+                  <Label htmlFor={`paid-amount-${member.user.id}`}>
+                    {member.user.firstName + ' ' + member.user.lastName}
+                  </Label>
+                  <Input
+                    type="number"
+                    id={`paid-amount-${member.user.id}`}
+                    name={`paid-amount-${member.user.id}`}
+                    placeholder="Enter Paid Amount"
+                    value={formData.paidByAmounts[member.user.id] || ''}
+                    onChange={(e) => handlePaidAmountChange(e, member.user.id)}
+                  />
+                </div>
+              );
+            })}
+            <div className="text-sm text-muted-foreground">
+              This is the amount paid by each member.
             </div>
-          </div>
-        ) : (
-          <div>
-            <label htmlFor="expense-paid-by">Paid By</label>
-            <select id="expense-paid-by" name="expense-paid-by">
-              {group?.groupMemberships.map((member) => (
-                <option key={member.user.id} value={member.user.id}>
-                  {member.user.firstName + ' ' + member.user.lastName}
-                </option>
-              ))}
-            </select>
-            {formState.errors.paidBy ? (
-              <span>{formState.errors.paidBy?.join(', ')}</span>
+            {formState.errors.paidByAmounts ? (
+              <span className="text-sm font-medium text-destructive">
+                {formState.errors.paidByAmounts?.join(', ')}
+              </span>
             ) : null}
           </div>
-        )}
-
-        <div>
-          <label htmlFor="expense-split-with">Split With</label>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-4">
+          <Label
+            htmlFor="expense-paid-by"
+            className={cn({
+              'text-destructive': Boolean(formState?.errors?.paidBy || false),
+            })}
+          >
+            Paid By
+          </Label>
+          <Select
+            name="expense-paid-by"
+            onValueChange={handleExpenseSinglePaidByChange}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select a member" />
+            </SelectTrigger>
+            <SelectContent>
+              {group?.groupMemberships.map((member) => (
+                <SelectItem key={member.user.id} value={member.user.id}>
+                  {member.user.firstName + ' ' + member.user.lastName}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <select
-            id="expense-split-with"
-            name="expense-split-with"
-            multiple
-            size={group?.groupMemberships.length}
-            value={formData.expenseSplitWith}
-            onChange={handleSplitWithChange}
+            ref={hiddenExpensePaidByRef}
+            id="expense-paid-by"
+            className="hidden"
+            name="expense-paid-by"
           >
             {group?.groupMemberships.map((member) => (
               <option key={member.user.id} value={member.user.id}>
@@ -305,13 +464,52 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
               </option>
             ))}
           </select>
-          {formState.errors.splitWith ? (
-            <span>{formState.errors.splitWith?.join(', ')}</span>
+          <div className="text-sm text-muted-foreground">
+            This is the member who paid for the expense.
+          </div>
+          {formState.errors.paidBy ? (
+            <span className="text-sm font-medium text-destructive">
+              {formState.errors.paidBy?.join(', ')}
+            </span>
           ) : null}
         </div>
-        <div>
-          <label htmlFor="expense-split-amount">Split Amount</label>
-          <div>
+      )}
+      {/* PAID BY */}
+
+      {/* SPLIT WITH */}
+      <div className="flex flex-col gap-4">
+        <Label
+          htmlFor="expense-split-with"
+          className={cn({
+            'text-destructive': Boolean(formState?.errors?.splitWith || false),
+          })}
+        >
+          Split With
+        </Label>
+        <MultiSelect
+          placeholder="Select members to split with"
+          options={[
+            ...group.groupMemberships.map((membership) => ({
+              label: membership.user.firstName + ' ' + membership.user.lastName,
+              value: membership.user.id,
+            })),
+          ]}
+          value={formData.expenseSplitWith}
+          onChange={handleSplitWithChange}
+        />
+
+        <div className="text-sm text-muted-foreground">
+          This is the selection of members with whom the expense is split.
+        </div>
+        {formState.errors.splitWith ? (
+          <span className="text-sm font-medium text-destructive">
+            {formState.errors.splitWith?.join(', ')}
+          </span>
+        ) : null}
+      </div>
+      {formData.expenseSplitWith.length > 0 && (
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4">
             {formData.expenseSplitWith.map((userID) => {
               const member = group.groupMemberships.find(
                 (membership) => membership.user.id === userID,
@@ -320,15 +518,17 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
                 return null;
               }
               return (
-                <div key={member.user.id}>
-                  <label htmlFor={`split-amount-${member.user.id}`}>
+                <div key={member.user.id} className="flex flex-col gap-4">
+                  <Label htmlFor={`split-amount-${member.user.id}`}>
                     {member.user.firstName + ' ' + member.user.lastName}
-                  </label>
-                  <input
+                  </Label>
+                  <Input
                     type="number"
                     id={`split-amount-${member.user.id}`}
                     name={`split-amount-${member.user.id}`}
-                    placeholder="Enter Split Amount"
+                    placeholder={`Enter Split Amount for ${
+                      member.user.firstName + ' ' + member.user.lastName
+                    }`}
                     value={formData.splitAmounts[member.user.id] || ''}
                     onChange={(e) => handleSplitAmountChange(e, member.user.id)}
                   />
@@ -336,16 +536,28 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
               );
             })}
             {formState.errors.splitAmounts ? (
-              <span>{formState.errors.splitAmounts?.join(', ')}</span>
+              <span className="text-sm font-medium text-destructive">
+                {formState.errors.splitAmounts?.join(', ')}
+              </span>
             ) : null}
           </div>
+          <div className="text-sm text-muted-foreground">
+            This is the amount split with each member.
+          </div>
         </div>
-        {formState.errors._form ? (
-          <div>{formState.errors._form?.join(', ')}</div>
-        ) : null}
-        <FormButton>Create Expense</FormButton>
-      </form>
-    </div>
+      )}
+      {formState.errors._form ? (
+        <span className="text-sm font-medium text-destructive">
+          {formState.errors._form?.join(', ')}
+        </span>
+      ) : null}
+      <div className="flex w-full flex-col gap-4 sm:flex-row">
+        <FormButton className="w-full">Add</FormButton>
+        <Button variant="outline" type="reset" className="w-full">
+          Reset
+        </Button>
+      </div>
+    </form>
   );
 };
 

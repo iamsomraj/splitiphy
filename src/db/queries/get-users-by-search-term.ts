@@ -36,8 +36,6 @@ export const getUsersBySearchTerm = cache(
       (membership) => membership.userId,
     );
 
-    const uniqueUsersIds = uniqueUsers.map((user) => user.id);
-
     const filteredUsers = uniqueUsers.filter(
       (user) => !existingGroupMembersIds.includes(user.id),
     );
