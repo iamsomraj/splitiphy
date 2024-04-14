@@ -1,5 +1,10 @@
 import db from '@/db/drizzle';
-import { groupExpenses, groupUserBalances, groups } from '@/db/schema';
+import {
+  groupExpenses,
+  groupMemberships,
+  groupUserBalances,
+  groups,
+} from '@/db/schema';
 import { auth } from '@clerk/nextjs';
 import { and, eq, not } from 'drizzle-orm';
 import { cache } from 'react';
@@ -11,8 +16,27 @@ export const getGroupDetailsById = cache(async (groupUuid: string) => {
     return null;
   }
 
+  const groupDetail = await db.query.groups.findFirst({
+    where: and(eq(groups.uuid, groupUuid)),
+  });
+
+  if (!groupDetail) {
+    return null;
+  }
+
+  const groupMember = await db.query.groupMemberships.findFirst({
+    where: and(
+      eq(groupMemberships.userId, session.userId),
+      eq(groupMemberships.groupId, groupDetail.id),
+    ),
+  });
+
+  if (!groupMember) {
+    return null;
+  }
+
   const group = await db.query.groups.findFirst({
-    where: and(eq(groups.uuid, groupUuid), eq(groups.ownerId, session.userId)),
+    where: and(eq(groups.uuid, groupUuid)),
     with: {
       groupExpenses: {
         with: {
