@@ -111,7 +111,9 @@ export async function simplifyGroupExpenses(groupUuid: string) {
     .delete(groupUserBalances)
     .where(eq(groupUserBalances.groupId, group.id));
 
-  await db.insert(groupUserBalances).values(balances);
+  if (balances.length) {
+    await db.insert(groupUserBalances).values(balances);
+  }
 
   const uniqueExpenseIds = [
     ...Array.from(new Set(group.groupExpenses.map((t) => t.expenseId))),
