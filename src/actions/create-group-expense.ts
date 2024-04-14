@@ -1,7 +1,13 @@
 'use server';
 
 import db from '@/db/drizzle';
-import { expenses, groupExpenses, groups, transactions } from '@/db/schema';
+import {
+  expenses,
+  groupExpenses,
+  groupMemberships,
+  groups,
+  transactions,
+} from '@/db/schema';
 import paths from '@/lib/paths';
 import { formatNumber } from '@/lib/utils';
 import TransactionManagerService from '@/services/transaction-manager-service';
@@ -123,7 +129,7 @@ export async function createGroupExpense(
     }
 
     const groupMembers = await db.query.groupMemberships.findMany({
-      where: eq(groups.id, group.id),
+      where: eq(groupMemberships.groupId, group.id),
     });
 
     const groupMemberIds = groupMembers.map((member) => member.userId);
