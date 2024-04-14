@@ -3,6 +3,7 @@
 import * as actions from '@/actions';
 import { Button } from '@/components/ui/button';
 import { UserSearchResult } from '@/db/queries';
+import { useTransition } from 'react';
 
 type UserItemProps = {
   user: UserSearchResult[0];
@@ -10,6 +11,14 @@ type UserItemProps = {
 };
 
 const UserItem = ({ user, groupUuid }: UserItemProps) => {
+  const [isPending, startTransition] = useTransition();
+
+  const onClick = () => {
+    startTransition(async () => {
+      await actions.addUserToGroup(user, groupUuid);
+    });
+  };
+
   return (
     <div
       key={user.id}
@@ -18,12 +27,8 @@ const UserItem = ({ user, groupUuid }: UserItemProps) => {
       <p className="text-lg font-bold">
         {user.firstName + ' ' + user.lastName}
       </p>
-      <Button
-        onClick={async () => {
-          await actions.addUserToGroup(user, groupUuid);
-        }}
-      >
-        Add to Group
+      <Button disabled={isPending} onClick={onClick}>
+        {isPending ? 'Adding...' : 'Add user'}
       </Button>
     </div>
   );
