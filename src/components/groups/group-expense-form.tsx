@@ -145,10 +145,11 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
       ...formData,
       splitAmounts: {
         ...formData.splitAmounts,
-        [userId]: parseFloat(parseFloat(e.target.value).toFixed(2)),
+        [userId]: formatNumber(e.target.value),
       },
     });
   };
+
   const handlePaidByListChange = (options: string[]) => {
     if (!hiddenExpensePaidByMultipleRef.current) {
       return;
