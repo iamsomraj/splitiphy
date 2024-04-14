@@ -72,15 +72,17 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
     }
     hiddenExpensePaidBySingleRef.current.value = value;
   };
-
   const handleExpenseAmountChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const newExpenseAmount = formatNumber(event.target.value);
     const selectedUsers = formData.expenseSplitWith;
     const totalSelectedUsers = selectedUsers.length;
-    const evenSplitAmount = formatNumber(newExpenseAmount / totalSelectedUsers);
-    const remainingAmount = formatNumber(
+
+    let evenSplitAmount =
+      Math.floor((newExpenseAmount / totalSelectedUsers) * 100) / 100;
+
+    let remainingAmount = formatNumber(
       newExpenseAmount - evenSplitAmount * totalSelectedUsers,
     );
 
@@ -90,11 +92,9 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
       updatedSplitAmounts[selectedUsers[i]] = evenSplitAmount;
     }
 
-    for (let i = 0; i < remainingAmount * 100; i++) {
-      updatedSplitAmounts[selectedUsers[i % totalSelectedUsers]] = formatNumber(
-        updatedSplitAmounts[selectedUsers[i % totalSelectedUsers]] + 0.01,
-      );
-    }
+    updatedSplitAmounts[selectedUsers[0]] = formatNumber(
+      updatedSplitAmounts[selectedUsers[0]] + remainingAmount,
+    );
 
     setFormData({
       ...formData,
