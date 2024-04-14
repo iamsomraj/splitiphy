@@ -25,6 +25,7 @@ const GroupUserSearchForm = ({ group }: GroupUserSearchFormProps) => {
             name="term"
             placeholder="John Doe"
             defaultValue={searchParams.get('term') || ''}
+            autoFocus={false}
           />
           <div className="text-sm text-muted-foreground">
             Search the name of the user you want to add to the group

@@ -33,10 +33,22 @@ const GroupMembers = ({ group, className, ...rest }: GroupMembersProps) => {
             </DialogDescription>
           </DialogHeader>
           <GroupUserSearchForm group={group} />
-          <ul className="flex max-h-48 flex-col gap-2 overflow-y-auto font-bold scrollbar-thin">
+          <ul className="flex max-h-48 flex-col gap-2 overflow-y-auto font-bold scrollbar-none">
             {group.groupMemberships.map((member) => (
-              <li key={member.uuid}>
-                <div>{member.user.firstName + ' ' + member.user.lastName}</div>
+              <li
+                key={member.uuid}
+                className="rounded-md p-2 hover:bg-muted/40"
+              >
+                <div className="flex items-center gap-2 font-medium">
+                  <span>
+                    {member.user.firstName + ' ' + member.user.lastName}
+                  </span>
+                  {member.user.email.length > 0 && (
+                    <span className="text-sm text-muted-foreground">
+                      {member.user.email}
+                    </span>
+                  )}
+                </div>
               </li>
             ))}
           </ul>
