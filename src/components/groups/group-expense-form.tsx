@@ -6,14 +6,15 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { GroupWithData } from '@/db/queries';
 import { cn, formatNumber } from '@/lib/utils';
-import { useRef, useState } from 'react';
-import { useFormState } from 'react-dom';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { Button } from '../ui/button';
-import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
-import { Calendar } from '../ui/calendar';
+import { CalendarIcon } from 'lucide-react';
+import { useRef, useState } from 'react';
 import { SelectSingleEventHandler } from 'react-day-picker';
+import { useFormState } from 'react-dom';
+import { Button } from '../ui/button';
+import { Calendar } from '../ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { Switch } from '../ui/switch';
 
 type GroupExpenseFormProps = {
   group: GroupWithData;
@@ -313,21 +314,33 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
 
       {/* PAID BY */}
       <div className="flex flex-col gap-4">
-        <label htmlFor="is-multiple-paid-by">Multiple Paid By</label>
-        <input
-          type="checkbox"
-          id="is-multiple-paid-by"
-          name="is-multiple-paid-by"
-          checked={formData.isMultiplePaidBy}
-          onChange={(e) =>
-            setFormData({
-              ...formData,
-              isMultiplePaidBy: e.target.checked,
-            })
-          }
-        />
+        <div className="flex items-center gap-4">
+          <Switch
+            id="is-multiple-paid-by"
+            name="is-multiple-paid-by"
+            checked={formData.isMultiplePaidBy}
+            onCheckedChange={(checked) =>
+              setFormData({
+                ...formData,
+                isMultiplePaidBy: checked,
+              })
+            }
+          />
+          <Label
+            htmlFor="is-multiple-paid-by"
+            className={cn({
+              'text-destructive': Boolean(
+                formState?.errors?.isMultiplePaidBy || false,
+              ),
+            })}
+          >
+            Multi Payment Mode
+          </Label>
+        </div>
         {formState.errors.isMultiplePaidBy ? (
-          <span>{formState.errors.isMultiplePaidBy?.join(', ')}</span>
+          <span className="text-sm font-medium text-destructive">
+            {formState.errors.isMultiplePaidBy?.join(', ')}
+          </span>
         ) : null}
       </div>
       {formData.isMultiplePaidBy ? (
