@@ -118,6 +118,15 @@ export async function simplifyGroupExpenses(groupUuid: string) {
   const uniqueExpenseIds = [
     ...Array.from(new Set(group.groupExpenses.map((t) => t.expenseId))),
   ];
+
+  if (!uniqueExpenseIds.length) {
+    return {
+      errors: {
+        _form: ['No expenses found to simplify.'],
+      },
+    };
+  }
+
   await db
     .update(groupExpenses)
     .set({

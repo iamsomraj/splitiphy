@@ -26,7 +26,10 @@ export const getUserGroups = cache(async () => {
   const groupIds = groupMemberRecords.map((record) => record.groupId);
 
   const allGroups = await db.query.groups.findMany({
-    where: or(eq(groups.ownerId, session[0].id), inArray(groups.id, groupIds)),
+    where: or(
+      eq(groups.ownerId, session[0].id),
+      groupIds.length > 0 ? inArray(groups.id, groupIds) : undefined,
+    ),
     with: {
       groupExpenses: {
         with: {
