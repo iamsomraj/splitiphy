@@ -9,7 +9,7 @@ interface UserListProps {
 const UserList = async ({ fetchData, groupUuid }: UserListProps) => {
   const users = await fetchData();
   return (
-    <div className="flex flex-col gap-y-4">
+    <div className="grid gap-4 sm:grid-cols-3">
       {users.map((user) => (
         <UserItem key={user.id} user={user} groupUuid={groupUuid} />
       ))}

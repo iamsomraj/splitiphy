@@ -1,7 +1,8 @@
 'use client';
 
-import { UserSearchResult } from '@/db/queries';
 import * as actions from '@/actions';
+import { Button } from '@/components/ui/button';
+import { UserSearchResult } from '@/db/queries';
 
 type UserItemProps = {
   user: UserSearchResult[0];
@@ -10,15 +11,18 @@ type UserItemProps = {
 
 const UserItem = ({ user, groupUuid }: UserItemProps) => {
   return (
-    <div key={user.id}>
+    <div
+      key={user.id}
+      className="flex items-center justify-between rounded-md border bg-muted/40 p-6 hover:bg-muted/20"
+    >
       <p>{user.firstName + ' ' + user.lastName}</p>
-      <button
+      <Button
         onClick={async () => {
           await actions.addUserToGroup(user, groupUuid);
         }}
       >
         Add to Group
-      </button>
+      </Button>
     </div>
   );
 };
