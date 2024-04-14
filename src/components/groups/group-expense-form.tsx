@@ -79,6 +79,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
     const newExpenseAmount = formatNumber(event.target.value);
     const selectedUsers = formData.expenseSplitWith;
     const totalSelectedUsers = selectedUsers.length;
+    const isMultiplePaidBy = formData.isMultiplePaidBy;
 
     let evenSplitAmount =
       Math.floor((newExpenseAmount / totalSelectedUsers) * 100) / 100;
@@ -88,6 +89,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
     );
 
     const updatedSplitAmounts: Record<string, number> = {};
+    const updatedPaidAmounts: Record<string, number> = {};
 
     for (let i = 0; i < totalSelectedUsers; i++) {
       updatedSplitAmounts[selectedUsers[i]] = evenSplitAmount;
@@ -97,10 +99,34 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
       updatedSplitAmounts[selectedUsers[0]] + remainingAmount,
     );
 
+    if (isMultiplePaidBy) {
+      const totalPaidAmount = newExpenseAmount;
+      const selectedPaidByUsers = formData.paidByList;
+      const totalSelectedPaidByUsers = selectedPaidByUsers.length;
+
+      let evenPaidAmount =
+        Math.floor((totalPaidAmount / totalSelectedPaidByUsers) * 100) / 100;
+
+      let remainingPaidAmount = formatNumber(
+        totalPaidAmount - evenPaidAmount * totalSelectedPaidByUsers,
+      );
+
+      for (let i = 0; i < totalSelectedPaidByUsers; i++) {
+        updatedPaidAmounts[selectedPaidByUsers[i]] = evenPaidAmount;
+      }
+
+      updatedPaidAmounts[selectedPaidByUsers[0]] = formatNumber(
+        updatedPaidAmounts[selectedPaidByUsers[0]] + remainingPaidAmount,
+      );
+    }
+
     setFormData({
       ...formData,
       expenseAmount: formatNumber(newExpenseAmount),
       splitAmounts: updatedSplitAmounts,
+      paidByAmounts: isMultiplePaidBy
+        ? updatedPaidAmounts
+        : formData.paidByAmounts,
     });
   };
 
