@@ -76,7 +76,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
   const handleExpenseAmountChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    const newExpenseAmount = parseFloat(event.target.value);
+    const newExpenseAmount = formatNumber(event.target.value);
     const selectedUsers = formData.expenseSplitWith;
     const totalSelectedUsers = selectedUsers.length;
     const evenSplitAmount = formatNumber(newExpenseAmount / totalSelectedUsers);
