@@ -52,7 +52,13 @@ const GroupsShowPage = async ({ params }: GroupsShowPageProps) => {
             </Button>
           </Link>
         </div>
-        <ExpenseList group={group} />
+        {group.groupExpenses.length === 0 ? (
+          <span className="py-8 text-center text-accent-foreground/40">
+            No expenses have been added yet.
+          </span>
+        ) : (
+          <ExpenseList group={group} />
+        )}
       </div>
     </main>
   ) : null;
