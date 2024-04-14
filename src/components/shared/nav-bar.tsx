@@ -132,9 +132,9 @@ const NavBar = async () => {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href={paths.home()}>
-                  <SignOutButton>Logout</SignOutButton>
-                </Link>
+                <SignOutButton>
+                  <Link href={paths.home()}>Logout</Link>
+                </SignOutButton>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
