@@ -560,7 +560,12 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
           {formState.errors._form?.join(', ')}
         </span>
       ) : null}
-      <FormButton>Create Expense</FormButton>
+      <div className="flex w-full flex-col gap-4 sm:flex-row">
+        <FormButton className="w-full">Add</FormButton>
+        <Button variant="outline" type="reset" className="w-full">
+          Reset
+        </Button>
+      </div>
     </form>
   );
 };

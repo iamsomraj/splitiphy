@@ -16,7 +16,7 @@ export default async function NewExpensePage({ params }: NewExpensePageProps) {
   if (!group) return null;
 
   return (
-    <main className="flex flex-1 flex-col gap-6 p-4 pt-6 sm:p-6 lg:p-12">
+    <main className="flex flex-1 flex-col gap-6 p-4 pb-8 pt-6 sm:p-6 lg:p-12 lg:pb-16">
       <div className="flex items-center justify-start gap-2">
         <Link href={paths.groupShow(group?.uuid || '')}>
           <Button variant="outline" size="icon" className="h-7 w-7">
@@ -25,7 +25,7 @@ export default async function NewExpensePage({ params }: NewExpensePageProps) {
           </Button>
         </Link>
         <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-          New Expense
+          New Expense for {group.name}
         </h1>
       </div>
       <GroupExpenseForm group={group} />
