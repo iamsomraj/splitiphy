@@ -44,7 +44,7 @@ const GroupMembers = ({ group, className, ...rest }: GroupMembersProps) => {
                     {member.user.firstName + ' ' + member.user.lastName}
                   </span>
                   {member.user.email.length > 0 && (
-                    <span className="text-sm text-muted-foreground">
+                    <span className="hidden text-sm text-muted-foreground sm:block">
                       {member.user.email}
                     </span>
                   )}
