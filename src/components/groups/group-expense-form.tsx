@@ -341,6 +341,9 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
             Multi Payment Mode
           </Label>
         </div>
+        <div className="text-sm text-muted-foreground">
+          This is the selection whether the expense is paid by multiple members
+        </div>
         {formState.errors.isMultiplePaidBy ? (
           <span className="text-sm font-medium text-destructive">
             {formState.errors.isMultiplePaidBy?.join(', ')}
