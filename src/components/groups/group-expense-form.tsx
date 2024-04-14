@@ -72,6 +72,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
     }
     hiddenExpensePaidBySingleRef.current.value = value;
   };
+
   const handleExpenseAmountChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
