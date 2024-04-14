@@ -101,11 +101,8 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
     });
   };
 
-  const handleSplitWithChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedUsers = Array.from(
-      e.target.selectedOptions,
-      (option) => option.value,
-    );
+  const handleSplitWithChange = (options: string[]) => {
+    const selectedUsers = options;
     const totalExpense = formData.expenseAmount || 0;
     const totalSelectedUsers = selectedUsers.length;
     const evenSplitAmount = formatNumber(totalExpense / totalSelectedUsers);
@@ -377,7 +374,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
             Members Paid By
           </Label>
           <MultiSelect
-            placeholder="Select members"
+            placeholder="Select members who paid"
             options={[
               ...group.groupMemberships.map((membership) => ({
                 label:
@@ -489,20 +486,18 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
         >
           Split With
         </Label>
-        <select
-          id="expense-split-with"
-          name="expense-split-with"
-          multiple
-          size={group?.groupMemberships.length}
+        <MultiSelect
+          placeholder="Select members to split with"
+          options={[
+            ...group.groupMemberships.map((membership) => ({
+              label: membership.user.firstName + ' ' + membership.user.lastName,
+              value: membership.user.id,
+            })),
+          ]}
           value={formData.expenseSplitWith}
           onChange={handleSplitWithChange}
-        >
-          {group?.groupMemberships.map((member) => (
-            <option key={member.user.id} value={member.user.id}>
-              {member.user.firstName + ' ' + member.user.lastName}
-            </option>
-          ))}
-        </select>
+        />
+
         <div className="text-sm text-muted-foreground">
           This is the selection of members with whom the expense is split.
         </div>

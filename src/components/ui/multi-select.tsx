@@ -46,7 +46,11 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline">{placeholder}</Button>
+        <Button variant="outline">
+          <span className="w-full text-left text-muted-foreground">
+            {placeholder}
+          </span>
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         {options.map((option) => (
