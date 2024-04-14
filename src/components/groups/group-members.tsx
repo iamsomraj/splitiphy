@@ -1,5 +1,6 @@
 import { GroupWithData } from '@/db/queries';
 
+import GroupUserSearchForm from '@/components/groups/group-user-search-form';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -12,7 +13,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
-import GroupUserSearchForm from './group-user-search-form';
 
 type GroupMembersProps = {
   group: GroupWithData;
