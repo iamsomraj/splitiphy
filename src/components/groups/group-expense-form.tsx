@@ -6,14 +6,21 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { GroupWithData } from '@/db/queries';
 import { cn, formatNumber } from '@/lib/utils';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useFormState } from 'react-dom';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { Button } from '../ui/button';
+import { CalendarIcon } from 'lucide-react';
+import { format } from 'date-fns';
+import { Calendar } from '../ui/calendar';
+import { SelectSingleEventHandler } from 'react-day-picker';
 
 type GroupExpenseFormProps = {
   group: GroupWithData;
 };
 
 const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
+  const hiddenExpenseDateInputRef = useRef<HTMLInputElement>(null);
   const [formState, action] = useFormState(
     actions.createGroupExpense.bind(null, group?.uuid || ''),
     {
@@ -22,6 +29,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
   );
 
   const [formData, setFormData] = useState({
+    expenseDate: undefined as Date | undefined,
     expenseAmount: 0,
     isMultiplePaidBy: false,
     paidByList: [] as string[],
@@ -29,6 +37,17 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
     expenseSplitWith: [] as string[],
     splitAmounts: {} as Record<string, number>,
   });
+
+  const handleExpenseDateChange: SelectSingleEventHandler = (date) => {
+    if (!hiddenExpenseDateInputRef.current || !date) {
+      return;
+    }
+    setFormData({
+      ...formData,
+      expenseDate: date,
+    });
+    hiddenExpenseDateInputRef.current.value = format(date, 'yyyy-MM-dd');
+  };
 
   const handleExpenseAmountChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -203,17 +222,58 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
           </span>
         ) : null}
       </div>
-      <div>
+      <div className="flex flex-col gap-4">
+        <Label
+          className={cn({
+            'text-destructive': Boolean(formState?.errors?.date || false),
+          })}
+        >
+          Date
+        </Label>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={'outline'}
+              className={cn(
+                'w-[240px] justify-start text-left font-normal',
+                !formData.expenseDate && 'text-muted-foreground',
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {formData.expenseDate ? (
+                format(formData.expenseDate, 'PPP')
+              ) : (
+                <span>Pick a date</span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={formData.expenseDate}
+              onSelect={handleExpenseDateChange}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
+        <div className="text-sm text-muted-foreground">
+          This is the date of your expense.
+        </div>
+        {formState.errors.date ? (
+          <span className="text-sm font-medium text-destructive">
+            {formState.errors.date?.join(', ')}
+          </span>
+        ) : null}
+      </div>
+      <div className="hidden">
         <label htmlFor="expense-date">Expense Date</label>
         <input
+          ref={hiddenExpenseDateInputRef}
           type="date"
           id="expense-date"
           name="expense-date"
           placeholder="Enter Expense Date"
         />
-        {formState.errors.date ? (
-          <span>{formState.errors.date?.join(', ')}</span>
-        ) : null}
       </div>
       <div>
         <label htmlFor="expense-amount">Expense Amount</label>
