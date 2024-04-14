@@ -310,7 +310,9 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
         ) : null}
       </div>
       {/* EXPENSE AMOUNT */}
-      <div>
+
+      {/* PAID BY */}
+      <div className="flex flex-col gap-4">
         <label htmlFor="is-multiple-paid-by">Multiple Paid By</label>
         <input
           type="checkbox"
@@ -392,6 +394,8 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
           ) : null}
         </div>
       )}
+      {/* PAID BY */}
+
       <div>
         <label htmlFor="expense-split-with">Split With</label>
         <select
