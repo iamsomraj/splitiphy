@@ -173,6 +173,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
 
   return (
     <form action={action} className="flex flex-col gap-4">
+      {/* EXPENSE NAME */}
       <div className="flex flex-col gap-4">
         <Label
           htmlFor="expense-name"
@@ -197,6 +198,8 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
           </span>
         ) : null}
       </div>
+      {/* EXPENSE NAME */}
+      {/* EXPENSE DESCRIPTION */}
       <div className="flex flex-col gap-4">
         <Label
           htmlFor="expense-description"
@@ -212,6 +215,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
           id="expense-description"
           name="expense-description"
           placeholder="For the party"
+          className="resize-none"
         ></Textarea>
         <div className="text-sm text-muted-foreground">
           This is the description of your expense.
@@ -222,6 +226,8 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
           </span>
         ) : null}
       </div>
+      {/* EXPENSE DESCRIPTION */}
+      {/* EXPENSE DATE */}
       <div className="flex flex-col gap-4">
         <Label
           className={cn({
@@ -275,9 +281,18 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
           placeholder="Enter Expense Date"
         />
       </div>
-      <div>
-        <label htmlFor="expense-amount">Expense Amount</label>
-        <input
+      {/* EXPENSE DATE */}
+      {/* EXPENSE AMOUNT */}
+      <div className="flex flex-col gap-4">
+        <Label
+          htmlFor="expense-amount"
+          className={cn({
+            'text-destructive': Boolean(formState?.errors?.amount || false),
+          })}
+        >
+          Amount
+        </Label>
+        <Input
           type="number"
           id="expense-amount"
           name="expense-amount"
@@ -285,11 +300,16 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
           value={formData.expenseAmount}
           onChange={handleExpenseAmountChange}
         />
+        <div className="text-sm text-muted-foreground">
+          This is the total amount of your expense.
+        </div>
         {formState.errors.amount ? (
-          <span>{formState.errors.amount?.join(', ')}</span>
+          <span className="text-sm font-medium text-destructive">
+            {formState.errors.amount?.join(', ')}
+          </span>
         ) : null}
       </div>
-
+      {/* EXPENSE AMOUNT */}
       <div>
         <label htmlFor="is-multiple-paid-by">Multiple Paid By</label>
         <input
@@ -308,7 +328,6 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
           <span>{formState.errors.isMultiplePaidBy?.join(', ')}</span>
         ) : null}
       </div>
-
       {formData.isMultiplePaidBy ? (
         <div>
           <label htmlFor="expense-paid-by">Paid By</label>
@@ -373,7 +392,6 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
           ) : null}
         </div>
       )}
-
       <div>
         <label htmlFor="expense-split-with">Split With</label>
         <select
