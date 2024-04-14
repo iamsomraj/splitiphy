@@ -1,8 +1,8 @@
 import db from '@/db/drizzle';
-import { groups } from '@/db/schema';
+import { groupMemberships, groups } from '@/db/schema';
 import UserAuthService from '@/services/auth-user-service';
 import { auth } from '@clerk/nextjs';
-import { eq } from 'drizzle-orm';
+import { eq, inArray, or } from 'drizzle-orm';
 import { cache } from 'react';
 
 export const getUserGroups = cache(async () => {
@@ -19,8 +19,14 @@ export const getUserGroups = cache(async () => {
     return [];
   }
 
-  const ownedGroups = await db.query.groups.findMany({
-    where: eq(groups.ownerId, session[0].id),
+  const groupMemberRecords = await db.query.groupMemberships.findMany({
+    where: eq(groupMemberships.userId, session[0].id),
+  });
+
+  const groupIds = groupMemberRecords.map((record) => record.groupId);
+
+  const allGroups = await db.query.groups.findMany({
+    where: or(eq(groups.ownerId, session[0].id), inArray(groups.id, groupIds)),
     with: {
       groupExpenses: {
         with: {
@@ -50,7 +56,7 @@ export const getUserGroups = cache(async () => {
       owner: true,
     },
   });
-  return ownedGroups;
+  return allGroups;
 });
 
 export type UserGroupsWithData = Awaited<ReturnType<typeof getUserGroups>>;
