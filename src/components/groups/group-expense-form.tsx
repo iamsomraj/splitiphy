@@ -33,6 +33,7 @@ type GroupExpenseFormProps = {
 };
 
 const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
+  const hiddenExpenseSplitWithRef = useRef<HTMLSelectElement>(null);
   const hiddenExpenseDateInputRef = useRef<HTMLInputElement>(null);
   const hiddenExpensePaidByRef = useRef<HTMLSelectElement>(null);
 
@@ -102,7 +103,13 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
   };
 
   const handleSplitWithChange = (options: string[]) => {
+    if (!hiddenExpenseSplitWithRef.current) {
+      return;
+    }
     const selectedUsers = options;
+    Array.from(hiddenExpenseSplitWithRef.current.options).forEach((option) => {
+      option.selected = options.includes(option.value);
+    });
     const totalExpense = formData.expenseAmount || 0;
     const totalSelectedUsers = selectedUsers.length;
     const evenSplitAmount = formatNumber(totalExpense / totalSelectedUsers);
@@ -497,6 +504,19 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
           value={formData.expenseSplitWith}
           onChange={handleSplitWithChange}
         />
+        <select
+          className="hidden"
+          ref={hiddenExpenseSplitWithRef}
+          id="expense-split-with"
+          name="expense-split-with"
+          multiple
+        >
+          {group?.groupMemberships.map((member) => (
+            <option key={member.user.id} value={member.user.id}>
+              {member.user.firstName + ' ' + member.user.lastName}
+            </option>
+          ))}
+        </select>
 
         <div className="text-sm text-muted-foreground">
           This is the selection of members with whom the expense is split.
