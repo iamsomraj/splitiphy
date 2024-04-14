@@ -11,7 +11,7 @@ const GroupBalances = ({ group, className, ...rest }: GroupBalancesProps) => {
     <div className={cn(className)} {...rest}>
       {group.groupUserBalances.length === 0 ? (
         <h2 className="w-full text-2xl font-bold text-accent-foreground/40 ">
-          No simplified balances to display
+          No simplified balances to display.
         </h2>
       ) : (
         <ul className="flex flex-col gap-4">

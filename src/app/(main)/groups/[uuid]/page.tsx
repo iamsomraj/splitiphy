@@ -53,7 +53,7 @@ const GroupsShowPage = async ({ params }: GroupsShowPageProps) => {
           </Link>
         </div>
         {group.groupExpenses.length === 0 ? (
-          <span className="py-8 text-center text-accent-foreground/40">
+          <span className="py-8 text-center text-xl font-bold text-accent-foreground/40">
             No expenses have been added yet.
           </span>
         ) : (
