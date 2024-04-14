@@ -1,8 +1,9 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import * as actions from '@/actions';
+import { Button } from '@/components/ui/button';
 import { groupUserBalances, users } from '@/db/schema';
+import { useTransition } from 'react';
 
 type SettleUpButtonProps = {
   groupUuid: string;
@@ -14,14 +15,22 @@ type SettleUpButtonProps = {
 };
 
 const SettleUpButton = ({ groupUuid, balance }: SettleUpButtonProps) => {
+  const [isPending, startTransition] = useTransition();
+  const onClick = () => {
+    startTransition(async () => {
+      await actions.settleBalance(groupUuid, balance?.uuid || '');
+    });
+  };
+
   return balance.uuid && groupUuid ? (
-    <Button
-      variant={'outline'}
-      onClick={async () => {
-        await actions.settleBalance(groupUuid, balance?.uuid || '');
-      }}
-    >
-      Settle Up {balance.sender.firstName} & {balance.recipient.firstName}
+    <Button variant={'outline'} disabled={isPending} onClick={onClick}>
+      {isPending ? (
+        'Settling...'
+      ) : (
+        <span>
+          Settle Up {balance.sender.firstName} & {balance.recipient.firstName}
+        </span>
+      )}
     </Button>
   ) : null;
 };

@@ -4,6 +4,7 @@ import * as actions from '@/actions';
 import { Button, ButtonProps } from '@/components/ui/button';
 import { GroupWithData } from '@/db/queries';
 import { cn } from '@/lib/utils';
+import { useTransition } from 'react';
 
 type GroupMembersProps = {
   group: GroupWithData;
@@ -14,15 +15,22 @@ const GroupSimplifyButton = ({
   className,
   ...rest
 }: GroupMembersProps) => {
+  const [isPending, startTransition] = useTransition();
+
+  const onClick = () => {
+    startTransition(async () => {
+      await actions.simplifyGroupExpenses(group?.uuid || '');
+    });
+  };
   return group && group.uuid ? (
     <Button
       variant={'secondary'}
-      disabled={group.groupExpenses.length === 0}
+      disabled={isPending || group.groupExpenses.length === 0}
       className={cn(className)}
-      onClick={async () => actions.simplifyGroupExpenses(group?.uuid || '')}
+      onClick={onClick}
       {...rest}
     >
-      Simplify Expenses
+      {isPending ? 'Simplifying...' : 'Simplify Group Expenses'}
     </Button>
   ) : null;
 };
