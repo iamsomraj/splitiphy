@@ -5,6 +5,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 
 type Option = {
@@ -52,7 +53,12 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline">
-          <span className="w-full text-left text-muted-foreground">
+          <span
+            className={cn(
+              'w-full text-left',
+              selectedValues.length === 0 && 'text-muted-foreground',
+            )}
+          >
             {selectedValues.length ? selectedLabels : placeholder}
           </span>
         </Button>
