@@ -26,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { MultiSelect } from '../ui/multi-select';
 
 type GroupExpenseFormProps = {
   group: GroupWithData;
@@ -143,11 +144,8 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
       },
     });
   };
-  const handlePaidByListChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedUsers = Array.from(
-      e.target.selectedOptions,
-      (option) => option.value,
-    );
+  const handlePaidByListChange = (options: string[]) => {
+    const selectedUsers = options;
 
     const totalPaidAmount = formData.expenseAmount || 0;
     const totalSelectedUsers = selectedUsers.length;
@@ -378,20 +376,18 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
           >
             Members Paid By
           </Label>
-          <select
-            id="expense-paid-by"
-            name="expense-paid-by"
-            multiple
-            size={group?.groupMemberships.length}
+          <MultiSelect
+            placeholder="Select members"
+            options={[
+              ...group.groupMemberships.map((membership) => ({
+                label:
+                  membership.user.firstName + ' ' + membership.user.lastName,
+                value: membership.user.id,
+              })),
+            ]}
             value={formData.paidByList}
             onChange={handlePaidByListChange}
-          >
-            {group?.groupMemberships.map((member) => (
-              <option key={member.user.id} value={member.user.id}>
-                {member.user.firstName + ' ' + member.user.lastName}
-              </option>
-            ))}
-          </select>
+          />
           <div className="text-sm text-muted-foreground">
             This is the selection of members who paid for the expense.
           </div>
