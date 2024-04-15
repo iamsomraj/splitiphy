@@ -2,6 +2,7 @@
 
 import * as actions from '@/actions';
 import { Button, ButtonProps } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
 import { GroupWithData } from '@/db/queries';
 import { cn } from '@/lib/utils';
 import { useTransition } from 'react';
@@ -15,11 +16,21 @@ const GroupSimplifyButton = ({
   className,
   ...rest
 }: GroupMembersProps) => {
+  const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
 
   const onClick = () => {
     startTransition(async () => {
-      await actions.simplifyGroupExpenses(group?.uuid || '');
+      const { state, message } = await actions.simplifyGroupExpenses(
+        group?.uuid || '',
+      );
+      if (!state) {
+        toast({
+          title: 'Uh oh! Something went wrong.',
+          description:
+            message || 'An error occurred while simplifying expenses.',
+        });
+      }
     });
   };
   return group && group.uuid ? (

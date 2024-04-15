@@ -1,5 +1,6 @@
 'use client';
 import * as actions from '@/actions';
+import FormButton from '@/components/shared/form-button';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -17,11 +18,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { useFormState } from 'react-dom';
-import FormButton from '../shared/form-button';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
 
 type Props = React.HTMLAttributes<HTMLDivElement>;
 

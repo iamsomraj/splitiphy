@@ -65,7 +65,9 @@ export async function addUserToGroup(
       createdAt: new Date(),
     });
   } catch (error) {
-    redirect(paths.dashboard());
+    return {
+      state: false,
+    };
   }
 
   revalidatePath(paths.dashboard());
