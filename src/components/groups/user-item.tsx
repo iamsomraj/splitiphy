@@ -2,6 +2,7 @@
 
 import * as actions from '@/actions';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
 import { UserSearchResult } from '@/db/queries';
 import { useTransition } from 'react';
 
@@ -11,11 +12,18 @@ type UserItemProps = {
 };
 
 const UserItem = ({ user, groupUuid }: UserItemProps) => {
+  const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
 
   const onClick = () => {
     startTransition(async () => {
-      await actions.addUserToGroup(user, groupUuid);
+      const { state } = await actions.addUserToGroup(user, groupUuid);
+      if (!state) {
+        toast({
+          title: 'Uh oh! Something went wrong.',
+          description: 'An error occurred while adding the user to the group.',
+        });
+      }
     });
   };
 
