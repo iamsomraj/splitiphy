@@ -35,6 +35,7 @@ const ExpenseList = ({ group }: ExpenseListProps) => {
               <TableHead>Expense Description</TableHead>
               <TableHead>Amount</TableHead>
               <TableHead>Details</TableHead>
+              <TableHead>Is Simplified</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -61,6 +62,9 @@ const ExpenseList = ({ group }: ExpenseListProps) => {
                       <span className="col-span-1">{transaction.amount}</span>
                     </div>
                   ))}
+                </TableCell>
+                <TableCell>
+                  {groupExpense.isExpenseSimplified ? 'Yes' : 'No'}
                 </TableCell>
               </TableRow>
             ))}
@@ -90,7 +94,8 @@ const ExpenseList = ({ group }: ExpenseListProps) => {
               </span>
             </div>
             <div className="font-medium">
-              Total {groupExpense.expense.amount}
+              Total {groupExpense.expense.amount}{' '}
+              {groupExpense.isExpenseSimplified ? '(Simplified)' : ''}
             </div>
             <div className="flex flex-col gap-4 pt-2">
               {groupExpense.expense.transactions.map((transaction) => (

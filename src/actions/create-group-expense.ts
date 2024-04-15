@@ -41,11 +41,15 @@ const createGroupExpenseSchema = z.object({
   paidBy: z.string().optional(),
   isMultiplePaidBy: z.boolean(),
   paidByList: z.array(z.string()).optional(),
-  paidByAmounts: z.record(z.number()).optional(),
+  paidByAmounts: z
+    .record(z.number().positive('Amount should be a positive number'))
+    .optional(),
   splitWith: z.array(z.string()).min(1, {
     message: 'At least one member should be selected to split with',
   }),
-  splitAmounts: z.record(z.number()).optional(),
+  splitAmounts: z
+    .record(z.number().positive('Amount should be a positive number'))
+    .optional(),
 });
 
 interface CreateGroupExpenseFormState {

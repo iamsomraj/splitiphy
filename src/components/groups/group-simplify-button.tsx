@@ -21,14 +21,24 @@ const GroupSimplifyButton = ({
 
   const onClick = () => {
     startTransition(async () => {
-      const { state, message } = await actions.simplifyGroupExpenses(
-        group?.uuid || '',
-      );
+      const response = await actions.simplifyGroupExpenses(group?.uuid || '');
+      /**
+       * Default value for state is true, so if the state is false, it means there was an error.
+       * In that case, we show the error message.
+       */
+      const state = response?.state || true;
+      const message =
+        response?.message || `Expenses simplified for group ${group?.name}.`;
       if (!state) {
         toast({
           title: 'Uh oh! Something went wrong.',
           description:
             message || 'An error occurred while simplifying expenses.',
+        });
+      } else {
+        toast({
+          title: 'Great! Your expenses have been simplified.',
+          description: message,
         });
       }
     });

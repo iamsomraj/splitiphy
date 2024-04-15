@@ -51,7 +51,6 @@ export const getGroupDetailsById = cache(async (groupUuid: string) => {
             },
           },
         },
-        where: eq(groupExpenses.isExpenseSimplified, false),
       },
       groupMemberships: {
         with: {
