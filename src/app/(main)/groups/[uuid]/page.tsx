@@ -6,7 +6,7 @@ import SettleUpButton from '@/components/groups/settle-up-button';
 import { Button } from '@/components/ui/button';
 import { getGroupDetailsById } from '@/db/queries';
 import paths from '@/lib/paths';
-import { PlusCircle } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import Link from 'next/link';
 
 type GroupsShowPageProps = {
@@ -46,9 +46,9 @@ const GroupsShowPage = async ({ params }: GroupsShowPageProps) => {
         <div className="flex flex-col  justify-between gap-4 sm:flex-row sm:items-center">
           <span className="text-2xl font-bold">Expenses</span>
           <Link href={paths.groupAddNewExpense(group.uuid)}>
-            <Button className="gap-1">
-              <PlusCircle className="h-3.5 w-3.5" />
-              <span>Add Expense</span>
+            <Button className="fixed bottom-5 right-5 h-16 w-16 gap-1 rounded-full sm:static sm:h-auto sm:w-auto sm:rounded-md">
+              <Plus className="h-10 w-10 sm:h-3.5 sm:w-3.5" />
+              <span className="hidden sm:block">Add Expense</span>
             </Button>
           </Link>
         </div>
