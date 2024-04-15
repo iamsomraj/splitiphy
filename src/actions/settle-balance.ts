@@ -8,12 +8,18 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 export async function settleBalance(groupUuid: string, balanceUuid: string) {
-  await db
-    .update(groupUserBalances)
-    .set({
-      amount: '0.00',
-    })
-    .where(eq(groupUserBalances.uuid, balanceUuid));
+  try {
+    await db
+      .update(groupUserBalances)
+      .set({
+        amount: '0.00',
+      })
+      .where(eq(groupUserBalances.uuid, balanceUuid));
+  } catch (error) {
+    return {
+      state: false,
+    };
+  }
 
   revalidatePath(paths.groupShow(groupUuid));
   redirect(paths.groupShow(groupUuid));
