@@ -95,7 +95,9 @@ const ExpenseList = ({ group }: ExpenseListProps) => {
             </div>
             <div className="font-medium">
               Total {groupExpense.expense.amount}{' '}
-              {groupExpense.isExpenseSimplified ? '(Simplified)' : ''}
+              <span className="text-xs font-bold text-accent-foreground/40">
+                {groupExpense.isExpenseSimplified ? 'simplified' : ''}
+              </span>
             </div>
             <div className="flex flex-col gap-4 pt-2">
               {groupExpense.expense.transactions.map((transaction) => (
