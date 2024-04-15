@@ -5,36 +5,17 @@ import { groupExpenses, groupUserBalances, groups } from '@/db/schema';
 import paths from '@/lib/paths';
 import SplitManagerService from '@/services/split-manager-service';
 import { auth } from '@clerk/nextjs';
-import { SQL, eq, getTableColumns, inArray, sql } from 'drizzle-orm';
-import { PgTable } from 'drizzle-orm/pg-core';
+import { eq, inArray } from 'drizzle-orm';
+import { stat } from 'fs';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-
-const buildConflictUpdateColumns = <
-  T extends PgTable,
-  Q extends keyof T['_']['columns'],
->(
-  table: T,
-  columns: Q[],
-) => {
-  const cls = getTableColumns(table);
-  return columns.reduce(
-    (acc, column) => {
-      const colName = cls[column].name;
-      acc[column] = sql.raw(`excluded.${colName}`);
-      return acc;
-    },
-    {} as Record<Q, SQL>,
-  );
-};
 
 export async function simplifyGroupExpenses(groupUuid: string) {
   const session = await auth();
   if (!session || !session.userId) {
     return {
-      errors: {
-        _form: ['You must be signed in to do this.'],
-      },
+      state: false,
+      message: 'You must be logged in to simplify group expenses.',
     };
   }
 
@@ -72,9 +53,8 @@ export async function simplifyGroupExpenses(groupUuid: string) {
   });
   if (!group) {
     return {
-      errors: {
-        _form: ['Invalid group provided.'],
-      },
+      state: false,
+      message: 'Group not found.',
     };
   }
 
@@ -121,9 +101,8 @@ export async function simplifyGroupExpenses(groupUuid: string) {
 
   if (!uniqueExpenseIds.length) {
     return {
-      errors: {
-        _form: ['No expenses found to simplify.'],
-      },
+      state: false,
+      message: 'No expenses found to simplify.',
     };
   }
 
