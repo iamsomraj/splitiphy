@@ -20,7 +20,7 @@ const GroupItem = ({ group }: GroupItemProps) => {
       <Card className="hover:bg-accent">
         <CardHeader>
           <CardTitle>{group.name}</CardTitle>
-          <CardDescription>
+          <CardDescription className="text-sm font-semibold text-accent-foreground/40">
             {formatDistanceToNow(new Date(group.createdAt), {
               addSuffix: true,
             })}
