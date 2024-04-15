@@ -5,11 +5,19 @@ import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { MultiSelect } from '@/components/ui/multi-select';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { GroupWithData } from '@/db/queries';
@@ -19,14 +27,6 @@ import { CalendarIcon } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { SelectSingleEventHandler } from 'react-day-picker';
 import { useFormState } from 'react-dom';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { MultiSelect } from '../ui/multi-select';
 
 type GroupExpenseFormProps = {
   group: GroupWithData;

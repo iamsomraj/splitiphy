@@ -3,6 +3,7 @@ import Link from 'next/link';
 
 import { Icons } from '@/components/shared/icons';
 import ThemeModeToggle from '@/components/theme-mode-toggle';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -21,8 +22,6 @@ import { siteConfig } from '@/config/site';
 import { getLoggedInUser } from '@/db/queries';
 import paths from '@/lib/paths';
 import { ClerkLoaded, SignOutButton, SignedIn, SignedOut } from '@clerk/nextjs';
-import { AvatarFallback } from '@radix-ui/react-avatar';
-import { Avatar, AvatarImage } from '../ui/avatar';
 
 const NavBar = async () => {
   const user = await getLoggedInUser();
