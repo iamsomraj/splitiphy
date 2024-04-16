@@ -18,6 +18,11 @@ const GroupSimplifyButton = ({
 }: GroupMembersProps) => {
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
+  const allExpensesSimplified = group?.groupExpenses?.every(
+    (expense) => expense.isExpenseSimplified,
+  );
+  const disabled =
+    isPending || allExpensesSimplified || group?.groupExpenses.length === 0;
 
   const onClick = () => {
     startTransition(async () => {
@@ -47,7 +52,7 @@ const GroupSimplifyButton = ({
   return group && group.uuid ? (
     <Button
       variant={'secondary'}
-      disabled={isPending || group.groupExpenses.length === 0}
+      disabled={disabled}
       className={cn(className)}
       onClick={onClick}
       {...rest}

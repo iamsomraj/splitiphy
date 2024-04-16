@@ -48,6 +48,7 @@ export const getGroupDetailsById = cache(async (groupUuid: string) => {
                   receiver: true,
                 },
               },
+              owner: true,
             },
           },
         },
