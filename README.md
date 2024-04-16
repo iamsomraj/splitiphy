@@ -64,4 +64,4 @@ Please make sure to update tests as appropriate. ✌
 
 ## License
 
-[GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.html) © [Somraj Mukherjee](2024)
+[GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.html) © [Somraj Mukherjee](https://www.linkedin.com/in/iamsomraj/)
