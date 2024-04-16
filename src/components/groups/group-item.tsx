@@ -27,7 +27,11 @@ const GroupItem = ({ group }: GroupItemProps) => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <p>{group.owner.firstName + ' ' + group.owner.lastName}</p>
+          {group.groupExpenses.length > 0 ? (
+            <p>{group.groupExpenses[0].expense.name}</p>
+          ) : (
+            <p>{group.owner.firstName + ' ' + group.owner.lastName}</p>
+          )}
           <span>{group.groupMemberships.length} members</span>
         </CardContent>
       </Card>

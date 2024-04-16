@@ -51,6 +51,7 @@ export const getGroupDetailsById = cache(async (groupUuid: string) => {
             },
           },
         },
+        orderBy: (groupExpenses, { desc }) => [desc(groupExpenses.createdAt)],
       },
       groupMemberships: {
         with: {

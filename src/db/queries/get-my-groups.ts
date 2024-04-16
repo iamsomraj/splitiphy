@@ -5,7 +5,7 @@ import { auth } from '@clerk/nextjs';
 import { eq, inArray, or } from 'drizzle-orm';
 import { cache } from 'react';
 
-export const getUserGroups = cache(async () => {
+export const getMyGroups = cache(async () => {
   const authUser = await auth();
 
   if (!authUser || !authUser.userId) {
@@ -62,4 +62,4 @@ export const getUserGroups = cache(async () => {
   return allGroups;
 });
 
-export type UserGroupsWithData = Awaited<ReturnType<typeof getUserGroups>>;
+export type UserGroupsWithData = Awaited<ReturnType<typeof getMyGroups>>;

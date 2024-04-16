@@ -1,5 +1,5 @@
-export { getUserGroups } from '@/db/queries/get-user-groups';
-export type { UserGroupsWithData } from '@/db/queries/get-user-groups';
+export { getMyGroups as getUserGroups } from '@/db/queries/get-my-groups';
+export type { UserGroupsWithData } from '@/db/queries/get-my-groups';
 
 export { getUsersBySearchTerm } from '@/db/queries/get-users-by-search-term';
 export type { UserSearchResult } from '@/db/queries/get-users-by-search-term';
