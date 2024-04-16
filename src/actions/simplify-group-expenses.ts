@@ -6,7 +6,6 @@ import paths from '@/lib/paths';
 import SplitManagerService from '@/services/split-manager-service';
 import { auth } from '@clerk/nextjs';
 import { eq, inArray } from 'drizzle-orm';
-import { stat } from 'fs';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
@@ -15,6 +14,7 @@ export async function simplifyGroupExpenses(groupUuid: string) {
   if (!session || !session.userId) {
     return {
       state: false,
+      title: 'Uh oh! Something went wrong 😕',
       message: 'You must be logged in to simplify group expenses.',
     };
   }
@@ -54,6 +54,7 @@ export async function simplifyGroupExpenses(groupUuid: string) {
   if (!group) {
     return {
       state: false,
+      title: 'Uh oh! Something went wrong 😕',
       message: 'Group not found.',
     };
   }
@@ -102,7 +103,8 @@ export async function simplifyGroupExpenses(groupUuid: string) {
   if (!uniqueExpenseIds.length) {
     return {
       state: false,
-      message: 'No expenses found to simplify.',
+      title: 'Uh oh! Nothing to simplify 😕',
+      message: 'No expenses are available to simplify.',
     };
   }
 

@@ -27,18 +27,19 @@ const GroupSimplifyButton = ({
        * In that case, we show the error message.
        */
       const state = response?.state || true;
-      const message =
+      const title =
+        response?.title || 'Great! Your expenses have been simplified.';
+      const description =
         response?.message || `Expenses simplified for group ${group?.name}.`;
       if (!state) {
         toast({
-          title: 'Uh oh! Something went wrong.',
-          description:
-            message || 'An error occurred while simplifying expenses.',
+          title,
+          description,
         });
       } else {
         toast({
-          title: 'Great! Your expenses have been simplified.',
-          description: message,
+          title,
+          description,
         });
       }
     });
