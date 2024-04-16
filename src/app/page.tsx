@@ -12,7 +12,6 @@ import paths from '@/lib/paths';
 import { cn } from '@/lib/utils';
 import { SignedIn, SignedOut } from '@clerk/nextjs';
 import { DashboardIcon } from '@radix-ui/react-icons';
-import { UsersIcon } from 'lucide-react';
 import Link from 'next/link';
 
 export default function IndexPage() {
