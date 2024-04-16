@@ -17,7 +17,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
-const createGroupExpenseSchema = z.object({
+const addGroupExpenseSchema = z.object({
   name: z
     .string()
     .min(3, {
@@ -52,7 +52,7 @@ const createGroupExpenseSchema = z.object({
     .optional(),
 });
 
-interface CreateGroupExpenseFormState {
+interface AddGroupExpenseFormState {
   errors: {
     name?: string[];
     description?: string[];
@@ -68,12 +68,12 @@ interface CreateGroupExpenseFormState {
   };
 }
 
-export async function createGroupExpense(
+export async function addGroupExpense(
   groupUuid: string,
-  _formState: CreateGroupExpenseFormState,
+  _formState: AddGroupExpenseFormState,
   formData: FormData,
-): Promise<CreateGroupExpenseFormState> {
-  const result = createGroupExpenseSchema.safeParse({
+): Promise<AddGroupExpenseFormState> {
+  const result = addGroupExpenseSchema.safeParse({
     name: formData.get('expense-name') as string,
     description: formData.get('expense-description') as string,
     date: new Date(formData.get('expense-date') as string),

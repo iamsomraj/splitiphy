@@ -39,7 +39,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
   const hiddenExpensePaidByMultipleRef = useRef<HTMLSelectElement>(null);
 
   const [formState, action] = useFormState(
-    actions.createGroupExpense.bind(null, group?.uuid || ''),
+    actions.addGroupExpense.bind(null, group?.uuid || ''),
     {
       errors: {},
     },
