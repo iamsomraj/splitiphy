@@ -31,7 +31,7 @@ interface CreateGroupFormState {
 }
 
 export async function createGroup(
-  formState: CreateGroupFormState,
+  _formState: CreateGroupFormState,
   formData: FormData,
 ): Promise<CreateGroupFormState> {
   const result = createGroupSchema.safeParse({

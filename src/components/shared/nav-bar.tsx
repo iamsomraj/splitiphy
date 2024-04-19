@@ -122,7 +122,6 @@ const NavBar = async () => {
               )}
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link href={paths.settings()}>Settings</Link>
               </DropdownMenuItem>

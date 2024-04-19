@@ -626,12 +626,13 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
           </div>
         </div>
       )}
+      {/* SPLIT WITH */}
+
       {formState.errors._form ? (
         <span className="text-sm font-medium text-destructive">
           {formState.errors._form?.join(', ')}
         </span>
       ) : null}
-      {/* SPLIT WITH */}
 
       <div className="flex w-full flex-col gap-4 sm:flex-row">
         <FormButton className="w-full">Add</FormButton>

@@ -20,6 +20,7 @@ export const users = pgTable('users', {
   firstName: text('first_name').notNull(),
   lastName: text('last_name').notNull(),
   profileImage: text('profile_image'),
+  currency: text('currency').notNull().default('INR'),
   createdAt: timestamp('created_at').notNull(),
   updatedAt: timestamp('updated_at'),
   isDeleted: boolean('is_deleted').notNull().default(false),
