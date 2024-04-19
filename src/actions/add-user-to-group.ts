@@ -24,7 +24,6 @@ const createOrUpdateUser = async (currUser: UserSearchResult[0]) => {
         firstName: currUser.firstName || '',
         lastName: currUser.lastName || '',
         profileImage: currUser.profileImage || '',
-        createdAt: new Date(),
         updatedAt: null,
         isDeleted: false,
       })
@@ -39,6 +38,7 @@ const createOrUpdateUser = async (currUser: UserSearchResult[0]) => {
         firstName: currUser.firstName || '',
         lastName: currUser.lastName || '',
         profileImage: currUser.profileImage || '',
+        updatedAt: new Date(),
       })
       .where(eq(users.id, currUser.id))
       .returning();
@@ -62,7 +62,6 @@ export async function addUserToGroup(
     await db.insert(groupMemberships).values({
       userId: groupUser[0].id,
       groupId: group.id,
-      createdAt: new Date(),
     });
   } catch (error) {
     return {

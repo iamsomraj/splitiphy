@@ -21,7 +21,7 @@ export const users = pgTable('users', {
   lastName: text('last_name').notNull(),
   profileImage: text('profile_image'),
   currency: text('currency').notNull().default('INR'),
-  createdAt: timestamp('created_at').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at'),
   isDeleted: boolean('is_deleted').notNull().default(false),
 });
@@ -50,7 +50,7 @@ export const groups = pgTable('groups', {
   ownerId: text('owner_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-  createdAt: timestamp('created_at').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at'),
   isDeleted: boolean('is_deleted').notNull().default(false),
 });
@@ -74,7 +74,7 @@ export const groupMemberships = pgTable('group_memberships', {
   userId: text('user_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-  createdAt: timestamp('created_at').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at'),
   isDeleted: boolean('is_deleted').notNull().default(false),
 });
@@ -103,7 +103,7 @@ export const expenses = pgTable('expenses', {
   ownerId: text('owner_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-  createdAt: timestamp('created_at').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at'),
   isDeleted: boolean('is_deleted').notNull().default(false),
 });
@@ -133,7 +133,7 @@ export const transactions = pgTable('transactions', {
   expenseId: integer('expense_id')
     .references(() => expenses.id, { onDelete: 'cascade' })
     .notNull(),
-  createdAt: timestamp('created_at').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at'),
   isDeleted: boolean('is_deleted').notNull().default(false),
 });
@@ -172,7 +172,7 @@ export const groupExpenses = pgTable('group_expenses', {
   isExpenseSimplified: boolean('is_expense_simplified')
     .notNull()
     .default(false),
-  createdAt: timestamp('created_at').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at'),
   isDeleted: boolean('is_deleted').notNull().default(false),
 });
@@ -202,7 +202,7 @@ export const groupUserBalances = pgTable(
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
     amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
-    createdAt: timestamp('created_at').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at'),
     isDeleted: boolean('is_deleted').notNull().default(false),
   },

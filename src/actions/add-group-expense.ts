@@ -179,7 +179,6 @@ export async function addGroupExpense(
         amount: `${result.data.amount}`,
         date: new Date(result.data.date),
         ownerId: session.userId,
-        createdAt: new Date(),
       } as typeof expenses.$inferInsert)
       .returning();
 
@@ -196,7 +195,6 @@ export async function addGroupExpense(
       .values({
         groupId: group.id,
         expenseId: expense[0].id,
-        createdAt: new Date(),
       })
       .returning();
 

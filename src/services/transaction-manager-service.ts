@@ -43,7 +43,6 @@ class TransactionManagerService {
             payerId,
             receiverId: payerId,
             expenseId: expenseId,
-            createdAt: new Date(),
             amount: `${amountToPaySelf}`,
           });
 
@@ -68,7 +67,6 @@ class TransactionManagerService {
               payerId,
               receiverId,
               expenseId: expenseId,
-              createdAt: new Date(),
               amount: `${amountToPayReceiver}`,
             });
 
@@ -85,7 +83,6 @@ class TransactionManagerService {
           payerId: paidBy,
           receiverId: userId,
           expenseId: expenseId,
-          createdAt: new Date(),
           amount: `${amount}`,
         }),
       ) as (typeof transactions.$inferInsert)[];

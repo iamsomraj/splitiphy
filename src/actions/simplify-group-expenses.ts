@@ -84,7 +84,6 @@ export async function simplifyGroupExpenses(groupUuid: string) {
       senderId: bal.payer,
       recipientId: bal.receiver,
       amount: `${bal.amount.toFixed(2)}`,
-      createdAt: new Date(),
     } as typeof groupUserBalances.$inferSelect;
   });
 

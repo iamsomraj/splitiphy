@@ -60,7 +60,6 @@ export async function createGroup(
       .values({
         name: result.data.name,
         ownerId: session.userId,
-        createdAt: new Date(),
       })
       .returning();
 
@@ -79,7 +78,6 @@ export async function createGroup(
     await db.insert(groupMemberships).values({
       userId: session.userId,
       groupId: insertedGroups[0].id,
-      createdAt: new Date(),
     });
   } catch (err: unknown) {
     if (err instanceof Error) {

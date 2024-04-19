@@ -35,7 +35,6 @@ class UserAuthService {
       firstName: user.firstName || '',
       lastName: user.lastName || '',
       profileImage: user.imageUrl || '',
-      createdAt: new Date(),
       updatedAt: null,
       isDeleted: false,
     };
