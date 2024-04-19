@@ -122,9 +122,6 @@ const NavBar = async () => {
               )}
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem asChild>
-                <Link href={paths.account()}>My Account</Link>
-              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link href={paths.settings()}>Settings</Link>

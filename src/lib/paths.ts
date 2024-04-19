@@ -20,9 +20,6 @@ const paths = {
   settings() {
     return '/settings';
   },
-  account() {
-    return '/account';
-  },
 };
 
 export default paths;
