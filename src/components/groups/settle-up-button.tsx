@@ -4,6 +4,7 @@ import * as actions from '@/actions';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { groupUserBalances, users } from '@/db/schema';
+import { Equal } from 'lucide-react';
 import { useTransition } from 'react';
 
 type SettleUpButtonProps = {
@@ -35,11 +36,12 @@ const SettleUpButton = ({ groupUuid, balance }: SettleUpButtonProps) => {
 
   return balance.uuid && groupUuid ? (
     <Button variant={'outline'} disabled={isPending} onClick={onClick}>
+      <Equal className="mr-2 h-3.5 w-3.5" />
       {isPending ? (
-        'Settling Up...'
+        'Settling...'
       ) : (
         <span>
-          Settle Up {balance.sender.firstName} & {balance.recipient.firstName}
+          Settle {balance.sender.firstName} & {balance.recipient.firstName}
         </span>
       )}
     </Button>

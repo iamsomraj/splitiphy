@@ -5,6 +5,7 @@ import { Button, ButtonProps } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { GroupWithData } from '@/db/queries';
 import { cn } from '@/lib/utils';
+import { Divide } from 'lucide-react';
 import { useTransition } from 'react';
 
 type GroupMembersProps = {
@@ -57,7 +58,8 @@ const GroupSimplifyButton = ({
       onClick={onClick}
       {...rest}
     >
-      {isPending ? 'Simplifying...' : 'Simplify Group Expenses'}
+      <Divide className="mr-2 h-3.5 w-3.5" />
+      {isPending ? 'Simplifying...' : 'Simplify'}
     </Button>
   ) : null;
 };

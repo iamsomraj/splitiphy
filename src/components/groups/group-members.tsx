@@ -13,6 +13,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
+import { Settings } from 'lucide-react';
 
 type GroupMembersProps = {
   group: GroupWithData;
@@ -23,7 +24,10 @@ const GroupMembers = ({ group, className, ...rest }: GroupMembersProps) => {
     <div className={cn(className)} {...rest}>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="outline">Manage Members</Button>
+          <Button variant="outline">
+            <Settings className="mr-2 h-3.5 w-3.5" />
+            Manage
+          </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
