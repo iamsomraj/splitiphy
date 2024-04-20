@@ -42,7 +42,7 @@ const ExpenseList = ({ group }: ExpenseListProps) => {
             {group.groupExpenses.map((groupExpense) => (
               <TableRow key={groupExpense.uuid}>
                 <TableCell>
-                  {groupExpense.expense.createdAt.toDateString()}
+                  {groupExpense.expense.date.toDateString()}
                 </TableCell>
                 <TableCell>{groupExpense.expense.name}</TableCell>
                 <TableCell>{groupExpense.expense.description}</TableCell>
@@ -73,7 +73,7 @@ const ExpenseList = ({ group }: ExpenseListProps) => {
             <TableRow>
               <TableCell colSpan={3}>Total</TableCell>
               <TableCell>{totalAmount}</TableCell>
-              <TableCell></TableCell>
+              <TableCell colSpan={2}></TableCell>
             </TableRow>
           </TableFooter>
         </Table>
@@ -84,7 +84,7 @@ const ExpenseList = ({ group }: ExpenseListProps) => {
             key={groupExpense.uuid}
             className="flex flex-col gap-2 rounded-md border bg-muted/40 p-6 hover:bg-muted/20"
           >
-            <div>{groupExpense.expense.createdAt.toDateString()}</div>
+            <div>{groupExpense.expense.date.toDateString()}</div>
             <div className="flex flex-col">
               <span className="text-lg font-bold">
                 {groupExpense.expense.name}

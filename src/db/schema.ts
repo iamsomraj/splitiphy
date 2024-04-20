@@ -21,8 +21,18 @@ export const users = pgTable('users', {
   lastName: text('last_name').notNull(),
   profileImage: text('profile_image'),
   currency: text('currency').notNull().default('INR'),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at'),
+  createdAt: timestamp('created_at', {
+    precision: 6,
+    withTimezone: true,
+    mode: 'date',
+  })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp('updated_at', {
+    precision: 6,
+    withTimezone: true,
+    mode: 'date',
+  }),
   isDeleted: boolean('is_deleted').notNull().default(false),
 });
 
@@ -50,8 +60,18 @@ export const groups = pgTable('groups', {
   ownerId: text('owner_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at'),
+  createdAt: timestamp('created_at', {
+    precision: 6,
+    withTimezone: true,
+    mode: 'date',
+  })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp('updated_at', {
+    precision: 6,
+    withTimezone: true,
+    mode: 'date',
+  }),
   isDeleted: boolean('is_deleted').notNull().default(false),
 });
 
@@ -74,8 +94,18 @@ export const groupMemberships = pgTable('group_memberships', {
   userId: text('user_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at'),
+  createdAt: timestamp('created_at', {
+    precision: 6,
+    withTimezone: true,
+    mode: 'date',
+  })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp('updated_at', {
+    precision: 6,
+    withTimezone: true,
+    mode: 'date',
+  }),
   isDeleted: boolean('is_deleted').notNull().default(false),
 });
 
@@ -98,13 +128,27 @@ export const expenses = pgTable('expenses', {
   uuid: uuid('uuid').default(sql`gen_random_uuid()`),
   name: text('name').notNull(),
   description: text('description').notNull(),
-  date: timestamp('expense_date').notNull(),
+  date: timestamp('date', {
+    precision: 6,
+    withTimezone: true,
+    mode: 'date',
+  }).notNull(),
   amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
   ownerId: text('owner_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at'),
+  createdAt: timestamp('created_at', {
+    precision: 6,
+    withTimezone: true,
+    mode: 'date',
+  })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp('updated_at', {
+    precision: 6,
+    withTimezone: true,
+    mode: 'date',
+  }),
   isDeleted: boolean('is_deleted').notNull().default(false),
 });
 
@@ -133,8 +177,18 @@ export const transactions = pgTable('transactions', {
   expenseId: integer('expense_id')
     .references(() => expenses.id, { onDelete: 'cascade' })
     .notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at'),
+  createdAt: timestamp('created_at', {
+    precision: 6,
+    withTimezone: true,
+    mode: 'date',
+  })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp('updated_at', {
+    precision: 6,
+    withTimezone: true,
+    mode: 'date',
+  }),
   isDeleted: boolean('is_deleted').notNull().default(false),
 });
 
@@ -172,8 +226,18 @@ export const groupExpenses = pgTable('group_expenses', {
   isExpenseSimplified: boolean('is_expense_simplified')
     .notNull()
     .default(false),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at'),
+  createdAt: timestamp('created_at', {
+    precision: 6,
+    withTimezone: true,
+    mode: 'date',
+  })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp('updated_at', {
+    precision: 6,
+    withTimezone: true,
+    mode: 'date',
+  }),
   isDeleted: boolean('is_deleted').notNull().default(false),
 });
 
@@ -202,8 +266,18 @@ export const groupUserBalances = pgTable(
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
     amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
-    createdAt: timestamp('created_at').defaultNow().notNull(),
-    updatedAt: timestamp('updated_at'),
+    createdAt: timestamp('created_at', {
+      precision: 6,
+      withTimezone: true,
+      mode: 'date',
+    })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', {
+      precision: 6,
+      withTimezone: true,
+      mode: 'date',
+    }),
     isDeleted: boolean('is_deleted').notNull().default(false),
   },
   (table) => {
