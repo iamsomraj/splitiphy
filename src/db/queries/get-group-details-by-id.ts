@@ -1,9 +1,5 @@
 import db from '@/db/drizzle';
-import {
-    groupMemberships,
-    groupUserBalances,
-    groups
-} from '@/db/schema';
+import { groupMemberships, groupUserBalances, groups } from '@/db/schema';
 import { auth } from '@clerk/nextjs';
 import { and, eq, not } from 'drizzle-orm';
 import { cache } from 'react';
