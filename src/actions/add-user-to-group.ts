@@ -1,14 +1,14 @@
 'use server';
 
 import db from '@/db/drizzle';
-import { UserSearchResult } from '@/db/queries';
+import { UserListWithData } from '@/db/queries';
 import { groupMemberships, groups, users } from '@/db/schema';
 import paths from '@/lib/paths';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-const createOrUpdateUser = async (currUser: UserSearchResult[0]) => {
+const createOrUpdateUser = async (currUser: UserListWithData[0]) => {
   const user = await db.query.users.findFirst({
     where: eq(users.id, currUser.id),
   });
@@ -46,7 +46,7 @@ const createOrUpdateUser = async (currUser: UserSearchResult[0]) => {
 };
 
 export async function addUserToGroup(
-  user: UserSearchResult[0],
+  user: UserListWithData[0],
   groupUuid: string,
 ) {
   const group = await db.query.groups.findFirst({

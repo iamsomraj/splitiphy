@@ -3,11 +3,11 @@
 import * as actions from '@/actions';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
-import { UserSearchResult } from '@/db/queries';
+import { UserListWithData } from '@/db/queries';
 import { useTransition } from 'react';
 
 type UserItemProps = {
-  user: UserSearchResult[0];
+  user: UserListWithData[0];
   groupUuid: string;
 };
 

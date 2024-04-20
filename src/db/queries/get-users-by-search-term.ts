@@ -44,4 +44,4 @@ export const getUsersBySearchTerm = cache(
   },
 );
 
-export type UserSearchResult = Awaited<ReturnType<typeof getUsersBySearchTerm>>;
+export type UserListWithData = Awaited<ReturnType<typeof getUsersBySearchTerm>>;

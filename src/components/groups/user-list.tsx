@@ -1,8 +1,8 @@
 import UserItem from '@/components/groups/user-item';
-import type { UserSearchResult } from '@/db/queries';
+import type { UserListWithData } from '@/db/queries';
 
 interface UserListProps {
-  fetchData: () => Promise<UserSearchResult>;
+  fetchData: () => Promise<UserListWithData>;
   groupUuid: string;
 }
 
