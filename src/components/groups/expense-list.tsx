@@ -1,18 +1,18 @@
 import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableFooter,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from '@/components/ui/table';
-import { GroupWithData } from '@/db/queries';
+import { SingleGroupWithData } from '@/db/queries';
 import { formatNumber } from '@/lib/utils';
 
 type ExpenseListProps = {
-  group: GroupWithData;
+  group: SingleGroupWithData;
 };
 
 const ExpenseList = ({ group }: ExpenseListProps) => {

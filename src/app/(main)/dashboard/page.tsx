@@ -1,9 +1,26 @@
 import GroupCreateForm from '@/components/groups/group-create-form';
 import GroupItem from '@/components/groups/group-item';
-import { getUserGroups } from '@/db/queries';
+import { ManyGroupWithData, getMyGroups } from '@/db/queries';
+
+type Props = {
+  groups: ManyGroupWithData;
+};
+
+function GroupList({ groups }: Props) {
+  return (
+    <div className="col-span-4 overflow-y-auto sm:col-span-2">
+      <div className="flex flex-col gap-6">
+        {groups.map((group) => (
+          <GroupItem key={group.id} group={group} />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default async function DashboardPage() {
-  const groups = await getUserGroups();
+  const groups = await getMyGroups();
+
   return (
     <main className="grid w-full flex-1 grid-cols-4 gap-6 p-4 sm:p-6 lg:p-12">
       <div className="col-span-4 sm:col-span-2">
@@ -11,15 +28,7 @@ export default async function DashboardPage() {
           <GroupCreateForm className="col-span-2 " />
         </div>
       </div>
-      {groups.length > 0 && (
-        <div className="col-span-4 overflow-y-auto sm:col-span-2">
-          <div className="flex flex-col gap-6">
-            {groups.map((group) => (
-              <GroupItem key={group.id} group={group} />
-            ))}
-          </div>
-        </div>
-      )}
+      {groups.length > 0 && <GroupList groups={groups} />}
     </main>
   );
 }

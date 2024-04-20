@@ -1,9 +1,8 @@
 import db from '@/db/drizzle';
 import {
-  groupExpenses,
-  groupMemberships,
-  groupUserBalances,
-  groups,
+    groupMemberships,
+    groupUserBalances,
+    groups
 } from '@/db/schema';
 import { auth } from '@clerk/nextjs';
 import { and, eq, not } from 'drizzle-orm';
@@ -77,4 +76,6 @@ export const getGroupDetailsById = cache(async (groupUuid: string) => {
   return group;
 });
 
-export type GroupWithData = Awaited<ReturnType<typeof getGroupDetailsById>>;
+export type SingleGroupWithData = Awaited<
+  ReturnType<typeof getGroupDetailsById>
+>;

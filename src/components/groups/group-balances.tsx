@@ -1,9 +1,8 @@
-import SettleUpButton from '@/components/groups/settle-up-button';
-import { GroupWithData } from '@/db/queries';
+import { SingleGroupWithData } from '@/db/queries';
 import { cn } from '@/lib/utils';
 
 type GroupBalancesProps = {
-  group: GroupWithData;
+  group: SingleGroupWithData;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 const GroupBalances = ({ group, className, ...rest }: GroupBalancesProps) => {

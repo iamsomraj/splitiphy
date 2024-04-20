@@ -1,17 +1,17 @@
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
 } from '@/components/ui/card';
-import { UserGroupsWithData } from '@/db/queries';
+import { ManyGroupWithData } from '@/db/queries';
 import paths from '@/lib/paths';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
 
 type GroupItemProps = {
-  group: UserGroupsWithData[0];
+  group: ManyGroupWithData[0];
 };
 
 const GroupItem = ({ group }: GroupItemProps) => {

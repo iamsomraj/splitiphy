@@ -3,13 +3,13 @@
 import * as actions from '@/actions';
 import { Button, ButtonProps } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
-import { GroupWithData } from '@/db/queries';
+import { SingleGroupWithData } from '@/db/queries';
 import { cn } from '@/lib/utils';
 import { Divide } from 'lucide-react';
 import { useTransition } from 'react';
 
 type GroupMembersProps = {
-  group: GroupWithData;
+  group: SingleGroupWithData;
 } & ButtonProps;
 
 const GroupSimplifyButton = ({

@@ -7,20 +7,20 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { MultiSelect } from '@/components/ui/multi-select';
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
 } from '@/components/ui/popover';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import { GroupWithData } from '@/db/queries';
+import { SingleGroupWithData } from '@/db/queries';
 import { cn, formatNumber } from '@/lib/utils';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
@@ -29,7 +29,7 @@ import { SelectSingleEventHandler } from 'react-day-picker';
 import { useFormState } from 'react-dom';
 
 type GroupExpenseFormProps = {
-  group: GroupWithData;
+  group: SingleGroupWithData;
 };
 
 const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {

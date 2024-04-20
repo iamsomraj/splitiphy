@@ -3,11 +3,11 @@ import * as actions from '@/actions';
 import FormButton from '@/components/shared/form-button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { GroupWithData } from '@/db/queries';
+import { SingleGroupWithData } from '@/db/queries';
 import { useSearchParams } from 'next/navigation';
 
 type GroupUserSearchFormProps = {
-  group: GroupWithData;
+  group: SingleGroupWithData;
 };
 
 const GroupUserSearchForm = ({ group }: GroupUserSearchFormProps) => {

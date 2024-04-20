@@ -1,5 +1,5 @@
 import db from '@/db/drizzle';
-import { groupExpenses, groupMemberships, groups } from '@/db/schema';
+import { groupMemberships, groups } from '@/db/schema';
 import UserAuthService from '@/services/auth-user-service';
 import { auth } from '@clerk/nextjs';
 import { eq, inArray, or } from 'drizzle-orm';
@@ -64,4 +64,4 @@ export const getMyGroups = cache(async () => {
   return allGroups;
 });
 
-export type UserGroupsWithData = Awaited<ReturnType<typeof getMyGroups>>;
+export type ManyGroupWithData = Awaited<ReturnType<typeof getMyGroups>>;
