@@ -5,13 +5,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { ManyGroupWithData } from '@/db/queries';
+import { ManyGroupsWithData } from '@/db/queries';
 import paths from '@/lib/paths';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
 
 type GroupItemProps = {
-  group: ManyGroupWithData[0];
+  group: ManyGroupsWithData[0];
 };
 
 const GroupItem = ({ group }: GroupItemProps) => {

@@ -1,9 +1,9 @@
 import GroupCreateForm from '@/components/groups/group-create-form';
 import GroupItem from '@/components/groups/group-item';
-import { ManyGroupWithData, getMyGroups } from '@/db/queries';
+import { ManyGroupsWithData, getMyGroups } from '@/db/queries';
 
 type Props = {
-  groups: ManyGroupWithData;
+  groups: ManyGroupsWithData;
 };
 
 function GroupList({ groups }: Props) {

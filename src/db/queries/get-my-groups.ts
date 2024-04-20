@@ -64,4 +64,4 @@ export const getMyGroups = cache(async () => {
   return allGroups;
 });
 
-export type ManyGroupWithData = Awaited<ReturnType<typeof getMyGroups>>;
+export type ManyGroupsWithData = Awaited<ReturnType<typeof getMyGroups>>;
