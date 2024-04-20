@@ -20,6 +20,12 @@ const paths = {
   settings() {
     return '/settings';
   },
+  terms() {
+    return '/dashboard';
+  },
+  privacy() {
+    return '/dashboard';
+  },
 };
 
 export default paths;
