@@ -22,7 +22,11 @@ export const CategoryIcon = ({ icon }: { icon: string }) => {
   const Icon = (RadixIcons?.[icon as keyof typeof RadixIcons] ||
     null) as React.ElementType;
   if (!Icon) {
-    return <RadixIcons.MagicWandIcon className="mr-2 h-4 w-4" />;
+    const Icon =
+      RadixIcons[
+        constants.expenseCategoryIcons.DEFAULT_ICON as keyof typeof RadixIcons
+      ];
+    return <Icon className="mr-2 h-4 w-4" />;
   }
   return <Icon className="mr-2 h-4 w-4" />;
 };
@@ -68,7 +72,7 @@ export const ExpenseCategorySelect = ({
                 icon={
                   constants.expensesCategories.find(
                     (category) => category.key === value,
-                  )?.icon || constants.expenseCategoryIcons.MAGIC_WAND_ICON
+                  )?.icon || constants.expenseCategoryIcons.DEFAULT_ICON
                 }
               />
               {options.find((option) => option.value === value)?.label}

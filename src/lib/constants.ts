@@ -22,6 +22,7 @@ const currencies = [
 ] as const;
 
 const expenseCategoryIcons = {
+  DEFAULT_ICON: 'MagicWandIcon',
   MAGIC_WAND_ICON: 'MagicWandIcon',
   LIGHTNING_BOLT_ICON: 'LightningBoltIcon',
   SUN_ICON: 'SunIcon',
