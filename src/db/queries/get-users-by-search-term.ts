@@ -29,7 +29,7 @@ export const getUsersBySearchTerm = cache(
     });
 
     if (!group) {
-      throw new Error('Group not found');
+      return [];
     }
 
     const existingGroupMembersIds = group.groupMemberships.map(

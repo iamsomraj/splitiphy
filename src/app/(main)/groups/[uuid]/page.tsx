@@ -8,6 +8,7 @@ import { SingleGroupWithData, getGroupDetailsById } from '@/db/queries';
 import paths from '@/lib/paths';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 type GroupsShowPageProps = {
   params: {
@@ -57,7 +58,11 @@ const GroupExpenses = ({ group }: GroupExpensesProps) => (
 const GroupDetailsPage = async ({ params }: GroupsShowPageProps) => {
   const group = await getGroupDetailsById(params.uuid);
 
-  return group ? (
+  if (!group) {
+    redirect(paths.dashboard());
+  }
+
+  return (
     <main className="flex flex-1 flex-col gap-6 divide-y py-4 pt-6 sm:py-6 lg:py-12">
       <div className="flex flex-col gap-6 px-6 sm:px-12">
         <GroupHeader
@@ -80,7 +85,7 @@ const GroupDetailsPage = async ({ params }: GroupsShowPageProps) => {
       </div>
       <GroupExpenses group={group} />
     </main>
-  ) : null;
+  );
 };
 
 export default GroupDetailsPage;

@@ -65,10 +65,6 @@ export const getGroupDetailsById = cache(async (groupUuid: string) => {
     },
   });
 
-  if (!group) {
-    return null;
-  }
-
   return group;
 });
 
