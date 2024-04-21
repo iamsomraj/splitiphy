@@ -1,9 +1,9 @@
 'use client';
 import * as actions from '@/actions';
-import constants from '@/lib/constants';
 import FormButton from '@/components/shared/form-button';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
+import { Combobox } from '@/components/ui/combo-box';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { MultiSelect } from '@/components/ui/multi-select';
@@ -22,6 +22,7 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { SingleGroupWithData } from '@/db/queries';
+import constants from '@/lib/constants';
 import { cn, formatNumber } from '@/lib/utils';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
@@ -48,6 +49,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
   );
 
   const [formData, setFormData] = useState({
+    expenseCategory: '',
     expenseDate: undefined as Date | undefined,
     expenseAmount: 0,
     isMultiplePaidBy: false,
@@ -62,6 +64,10 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
       return;
     }
     hiddenExpenseCategoryInputRef.current.value = value;
+    setFormData({
+      ...formData,
+      expenseCategory: value,
+    });
   };
 
   const handleExpenseDateChange: SelectSingleEventHandler = (date) => {
@@ -259,21 +265,15 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
         >
           Category
         </Label>
-        <Select
-          name="expense-category"
-          onValueChange={handleExpenseCategoryChange}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select a category" />
-          </SelectTrigger>
-          <SelectContent>
-            {constants.expensesCategories.map((category) => (
-              <SelectItem key={category.key} value={category.key}>
-                {category.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Combobox
+          placeholder="Select a category"
+          value={formData.expenseCategory}
+          options={constants.expensesCategories.map((category) => ({
+            label: category.name,
+            value: category.key,
+          }))}
+          onChange={handleExpenseCategoryChange}
+        />
         <select
           ref={hiddenExpenseCategoryInputRef}
           id="expense-category"
