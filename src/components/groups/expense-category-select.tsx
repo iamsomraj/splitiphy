@@ -14,8 +14,8 @@ import {
 } from '@/components/ui/popover';
 import constants from '@/lib/constants';
 import { cn } from '@/lib/utils';
-import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
 import * as RadixIcons from '@radix-ui/react-icons';
+import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
 
 export const CategoryIcon = ({ icon }: { icon: string }) => {
@@ -68,7 +68,7 @@ export const ExpenseCategorySelect = ({
                 icon={
                   constants.expensesCategories.find(
                     (category) => category.key === value,
-                  )?.icon || 'MagicWandIcon'
+                  )?.icon || constants.expenseCategoryIcons.MAGIC_WAND_ICON
                 }
               />
               {options.find((option) => option.value === value)?.label}
