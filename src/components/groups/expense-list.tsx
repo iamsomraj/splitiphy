@@ -44,23 +44,25 @@ const ExpenseList = ({ group }: ExpenseListProps) => {
           <TableBody>
             {group.groupExpenses.map((groupExpense) => (
               <TableRow key={groupExpense.uuid}>
-                <TableCell className="flex items-center gap-1">
-                  <ExpenseCategoryIcon
-                    icon={
-                      constants.expenseCategoryKeyIconMap[
-                        (groupExpense?.expense
-                          ?.category as keyof typeof constants.expenseCategoryKeyIconMap) ||
-                          'other'
-                      ]
-                    }
-                    className="ml-2 h-4 w-4"
-                  />
-                  <span>
-                    {constants.expensesCategories.find(
-                      (category) =>
-                        category.key === groupExpense.expense.category,
-                    )?.name || 'Other'}
-                  </span>
+                <TableCell>
+                  <div className="flex items-center gap-1">
+                    <ExpenseCategoryIcon
+                      icon={
+                        constants.expenseCategoryKeyIconMap[
+                          (groupExpense?.expense
+                            ?.category as keyof typeof constants.expenseCategoryKeyIconMap) ||
+                            'other'
+                        ]
+                      }
+                      className="ml-2 h-4 w-4"
+                    />
+                    <span>
+                      {constants.expensesCategories.find(
+                        (category) =>
+                          category.key === groupExpense.expense.category,
+                      )?.name || 'Other'}
+                    </span>
+                  </div>
                 </TableCell>
                 <TableCell>
                   {groupExpense.expense.date.toDateString()}
