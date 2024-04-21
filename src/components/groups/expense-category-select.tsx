@@ -1,3 +1,4 @@
+import { ExpenseCategoryIcon } from '@/components/groups/expense-category-icon';
 import { Button } from '@/components/ui/button';
 import {
   Command,
@@ -14,23 +15,8 @@ import {
 } from '@/components/ui/popover';
 import constants from '@/lib/constants';
 import { cn } from '@/lib/utils';
-import * as RadixIcons from '@radix-ui/react-icons';
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
-
-export const CategoryIcon = ({ icon }: { icon: string }) => {
-  const Icon = (RadixIcons?.[icon as keyof typeof RadixIcons] ||
-    null) as React.ElementType;
-  if (!Icon) {
-    const Icon =
-      RadixIcons[
-        constants.expenseCategoryIcons.DEFAULT_ICON as keyof typeof RadixIcons
-      ];
-    return <Icon className="mr-2 h-4 w-4" />;
-  }
-  return <Icon className="mr-2 h-4 w-4" />;
-};
-
 interface ExpenseCategorySelect {
   value: string;
   onChange: (value: string) => void;
@@ -68,7 +54,7 @@ export const ExpenseCategorySelect = ({
         >
           {value ? (
             <span className="flex items-center gap-2">
-              <CategoryIcon
+              <ExpenseCategoryIcon
                 icon={
                   constants.expensesCategories.find(
                     (category) => category.key === value,
@@ -100,7 +86,7 @@ export const ExpenseCategorySelect = ({
                   value={option.value}
                   onSelect={handleSelect}
                 >
-                  <CategoryIcon icon={option.icon} />
+                  <ExpenseCategoryIcon icon={option.icon} />
                   {option.label}
                   <CheckIcon
                     className={cn(

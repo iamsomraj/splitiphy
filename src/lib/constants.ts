@@ -232,10 +232,16 @@ const expensesCategories = [
   { name: 'Other', key: 'other', icon: expenseCategoryIcons.STAR_ICON },
 ] as const;
 
+const expenseCategoryKeyIconMap = expensesCategories.reduce(
+  (acc, { key, icon }) => ({ ...acc, [key]: icon }),
+  {},
+);
+
 const constants = {
   currencies,
   expensesCategories,
   expenseCategoryIcons,
+  expenseCategoryKeyIconMap,
 };
 
 export default constants;

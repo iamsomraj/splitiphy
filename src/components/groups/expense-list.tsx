@@ -9,7 +9,9 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { SingleGroupWithData } from '@/db/queries';
+import constants from '@/lib/constants';
 import { formatNumber } from '@/lib/utils';
+import { ExpenseCategoryIcon } from './expense-category-icon';
 
 type ExpenseListProps = {
   group: SingleGroupWithData;
@@ -30,6 +32,7 @@ const ExpenseList = ({ group }: ExpenseListProps) => {
           <TableCaption>Group Expenses</TableCaption>
           <TableHeader>
             <TableRow>
+              <TableHead>Expense Category</TableHead>
               <TableHead>Expense Date</TableHead>
               <TableHead>Expense Name</TableHead>
               <TableHead>Expense Description</TableHead>
@@ -41,6 +44,24 @@ const ExpenseList = ({ group }: ExpenseListProps) => {
           <TableBody>
             {group.groupExpenses.map((groupExpense) => (
               <TableRow key={groupExpense.uuid}>
+                <TableCell className="flex items-center gap-1">
+                  <ExpenseCategoryIcon
+                    icon={
+                      constants.expenseCategoryKeyIconMap[
+                        (groupExpense?.expense
+                          ?.category as keyof typeof constants.expenseCategoryKeyIconMap) ||
+                          'other'
+                      ]
+                    }
+                    className="ml-2 h-4 w-4"
+                  />
+                  <span>
+                    {constants.expensesCategories.find(
+                      (category) =>
+                        category.key === groupExpense.expense.category,
+                    )?.name || 'Other'}
+                  </span>
+                </TableCell>
                 <TableCell>
                   {groupExpense.expense.date.toDateString()}
                 </TableCell>
@@ -71,7 +92,7 @@ const ExpenseList = ({ group }: ExpenseListProps) => {
           </TableBody>
           <TableFooter>
             <TableRow>
-              <TableCell colSpan={3}>Total</TableCell>
+              <TableCell colSpan={4}>Total</TableCell>
               <TableCell>{totalAmount}</TableCell>
               <TableCell colSpan={2}></TableCell>
             </TableRow>
@@ -84,9 +105,29 @@ const ExpenseList = ({ group }: ExpenseListProps) => {
             key={groupExpense.uuid}
             className="flex flex-col gap-2 rounded-md border bg-muted/40 p-6 hover:bg-muted/20"
           >
-            <div>{groupExpense.expense.date.toDateString()}</div>
+            <div className="flex items-center justify-between gap-2">
+              <span>{groupExpense.expense.date.toDateString()}</span>
+              <span className="flex items-center font-semibold text-accent-foreground/40">
+                <ExpenseCategoryIcon
+                  icon={
+                    constants.expenseCategoryKeyIconMap[
+                      (groupExpense?.expense
+                        ?.category as keyof typeof constants.expenseCategoryKeyIconMap) ||
+                        'other'
+                    ]
+                  }
+                  className="h-4 w-4"
+                />
+                <span>
+                  {constants.expensesCategories.find(
+                    (category) =>
+                      category.key === groupExpense.expense.category,
+                  )?.name || 'Other'}
+                </span>
+              </span>
+            </div>
             <div className="flex flex-col">
-              <span className="text-lg font-bold">
+              <span className="text-2xl font-bold">
                 {groupExpense.expense.name}
               </span>
               <span className="font-semibold text-accent-foreground/40">
