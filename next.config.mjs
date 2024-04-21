@@ -9,9 +9,6 @@ const nextConfig = {
   eslint: {
     dirs: ['src'],
   },
-  compiler: {
-    removeConsole: true,
-  },
 };
 
 export default nextConfig;

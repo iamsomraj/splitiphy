@@ -22,7 +22,11 @@ const currencies = [
 ] as const;
 
 const expensesCategories = [
-  { name: 'Cleaning', key: 'utilities-cleaning', icon: 'MagicWandIcon' },
+  {
+    name: 'Cleaning',
+    key: 'utilities-cleaning',
+    icon: 'MagicWandIcon',
+  },
   {
     name: 'Electricity',
     key: 'utilities-electricity',
