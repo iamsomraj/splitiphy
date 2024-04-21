@@ -1,5 +1,6 @@
 'use client';
 import * as actions from '@/actions';
+import constants from '@/lib/constants';
 import FormButton from '@/components/shared/form-button';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -33,6 +34,7 @@ type GroupExpenseFormProps = {
 };
 
 const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
+  const hiddenExpenseCategoryInputRef = useRef<HTMLSelectElement>(null);
   const hiddenExpenseSplitWithRef = useRef<HTMLSelectElement>(null);
   const hiddenExpenseDateInputRef = useRef<HTMLInputElement>(null);
   const hiddenExpensePaidBySingleRef = useRef<HTMLSelectElement>(null);
@@ -54,6 +56,13 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
     expenseSplitWith: [] as string[],
     splitAmounts: {} as Record<string, number>,
   });
+
+  const handleExpenseCategoryChange = (value: string) => {
+    if (!hiddenExpenseCategoryInputRef.current) {
+      return;
+    }
+    hiddenExpenseCategoryInputRef.current.value = value;
+  };
 
   const handleExpenseDateChange: SelectSingleEventHandler = (date) => {
     if (!hiddenExpenseDateInputRef.current || !date) {
@@ -240,6 +249,54 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
 
   return (
     <form action={action} className="flex flex-col gap-4">
+      {/* EXPENSE CATEGORY */}
+      <div className="flex flex-col gap-4">
+        <Label
+          htmlFor="expense-category"
+          className={cn({
+            'text-destructive': Boolean(formState?.errors?.category || false),
+          })}
+        >
+          Category
+        </Label>
+        <Select
+          name="expense-category"
+          onValueChange={handleExpenseCategoryChange}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select a category" />
+          </SelectTrigger>
+          <SelectContent>
+            {constants.expensesCategories.map((category) => (
+              <SelectItem key={category.key} value={category.key}>
+                {category.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <select
+          ref={hiddenExpenseCategoryInputRef}
+          id="expense-category"
+          name="expense-category"
+          className="hidden"
+        >
+          {constants.expensesCategories.map((category) => (
+            <option key={category.key} value={category.key}>
+              {category.name}
+            </option>
+          ))}
+        </select>
+        <div className="text-sm text-muted-foreground">
+          This is the category of your expense.
+        </div>
+        {formState.errors.category ? (
+          <span className="text-sm font-medium text-destructive">
+            {formState.errors.category?.join(', ')}
+          </span>
+        ) : null}
+      </div>
+      {/* EXPENSE CATEGORY */}
+
       {/* EXPENSE NAME */}
       <div className="flex flex-col gap-4">
         <Label

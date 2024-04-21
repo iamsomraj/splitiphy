@@ -8,6 +8,7 @@ import {
   groups,
   transactions,
 } from '@/db/schema';
+import constants from '@/lib/constants';
 import paths from '@/lib/paths';
 import { formatNumber } from '@/lib/utils';
 import TransactionManagerService from '@/services/transaction-manager-service';
@@ -18,6 +19,29 @@ import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
 const addGroupExpenseSchema = z.object({
+  category: z
+    .string()
+    .min(3, {
+      message: 'Expense category must be at least 3 characters long',
+    })
+    .max(50, {
+      message: 'Expense category must be at most 50 characters long',
+    })
+    .regex(
+      /[a-zA-Z-]+/,
+      'Expense category must only contain lowercase or uppercase letters, hyphens',
+    )
+    .refine(
+      (value) => {
+        const categories = constants.expensesCategories.map(
+          (category) => category.key,
+        ) as string[];
+        return categories.includes(value);
+      },
+      {
+        message: 'Invalid expense category',
+      },
+    ),
   name: z
     .string()
     .min(3, {
@@ -54,6 +78,7 @@ const addGroupExpenseSchema = z.object({
 
 interface AddGroupExpenseFormState {
   errors: {
+    category?: string[];
     name?: string[];
     description?: string[];
     date?: string[];
@@ -74,6 +99,7 @@ export async function addGroupExpense(
   formData: FormData,
 ): Promise<AddGroupExpenseFormState> {
   const result = addGroupExpenseSchema.safeParse({
+    category: formData.get('expense-category') as string,
     name: formData.get('expense-name') as string,
     description: formData.get('expense-description') as string,
     date: new Date(formData.get('expense-date') as string),
@@ -174,6 +200,7 @@ export async function addGroupExpense(
     const expense = await db
       .insert(expenses)
       .values({
+        category: result.data.category,
         name: result.data.name,
         description: result.data.description,
         amount: `${result.data.amount}`,
