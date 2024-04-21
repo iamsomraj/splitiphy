@@ -52,6 +52,7 @@ const expenseCategoryIcons = {
   FILE_ICON: 'FileIcon',
   ID_CARD_ICON: 'IdCardIcon',
   STAR_ICON: 'StarIcon',
+  LINK_BREAK2_ICON: 'LinkBreak2Icon',
 } as const;
 
 const expensesCategories = [
@@ -128,7 +129,7 @@ const expensesCategories = [
   {
     name: 'Electronics',
     key: 'home-electronics',
-    icon: expenseCategoryIcons.LIGHTNING_BOLT_ICON,
+    icon: expenseCategoryIcons.LINK_BREAK2_ICON,
   },
   {
     name: 'Furniture',
