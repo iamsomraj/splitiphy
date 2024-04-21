@@ -3,6 +3,7 @@ import * as actions from '@/actions';
 import FormButton from '@/components/shared/form-button';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
+import { ExpenseCategorySelect } from '@/components/groups/expense-category-select';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { MultiSelect } from '@/components/ui/multi-select';
@@ -21,6 +22,7 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { SingleGroupWithData } from '@/db/queries';
+import constants from '@/lib/constants';
 import { cn, formatNumber } from '@/lib/utils';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
@@ -33,6 +35,7 @@ type GroupExpenseFormProps = {
 };
 
 const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
+  const hiddenExpenseCategoryInputRef = useRef<HTMLSelectElement>(null);
   const hiddenExpenseSplitWithRef = useRef<HTMLSelectElement>(null);
   const hiddenExpenseDateInputRef = useRef<HTMLInputElement>(null);
   const hiddenExpensePaidBySingleRef = useRef<HTMLSelectElement>(null);
@@ -46,6 +49,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
   );
 
   const [formData, setFormData] = useState({
+    expenseCategory: '',
     expenseDate: undefined as Date | undefined,
     expenseAmount: 0,
     isMultiplePaidBy: false,
@@ -54,6 +58,17 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
     expenseSplitWith: [] as string[],
     splitAmounts: {} as Record<string, number>,
   });
+
+  const handleExpenseCategoryChange = (value: string) => {
+    if (!hiddenExpenseCategoryInputRef.current) {
+      return;
+    }
+    hiddenExpenseCategoryInputRef.current.value = value;
+    setFormData({
+      ...formData,
+      expenseCategory: value,
+    });
+  };
 
   const handleExpenseDateChange: SelectSingleEventHandler = (date) => {
     if (!hiddenExpenseDateInputRef.current || !date) {
@@ -240,6 +255,43 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
 
   return (
     <form action={action} className="flex flex-col gap-4">
+      {/* EXPENSE CATEGORY */}
+      <div className="flex flex-col gap-4">
+        <Label
+          htmlFor="expense-category"
+          className={cn({
+            'text-destructive': Boolean(formState?.errors?.category || false),
+          })}
+        >
+          Category
+        </Label>
+        <ExpenseCategorySelect
+          value={formData.expenseCategory}
+          onChange={handleExpenseCategoryChange}
+        />
+        <select
+          ref={hiddenExpenseCategoryInputRef}
+          id="expense-category"
+          name="expense-category"
+          className="hidden"
+        >
+          {constants.expensesCategories.map((category) => (
+            <option key={category.key} value={category.key}>
+              {category.name}
+            </option>
+          ))}
+        </select>
+        <div className="text-sm text-muted-foreground">
+          This is the category of your expense.
+        </div>
+        {formState.errors.category ? (
+          <span className="text-sm font-medium text-destructive">
+            {formState.errors.category?.join(', ')}
+          </span>
+        ) : null}
+      </div>
+      {/* EXPENSE CATEGORY */}
+
       {/* EXPENSE NAME */}
       <div className="flex flex-col gap-4">
         <Label

@@ -126,6 +126,7 @@ export const groupMembershipsRelations = relations(
 export const expenses = pgTable('expenses', {
   id: serial('id').primaryKey(),
   uuid: uuid('uuid').default(sql`gen_random_uuid()`),
+  category: text('category').default('others'),
   name: text('name').notNull(),
   description: text('description').notNull(),
   date: timestamp('date', {
