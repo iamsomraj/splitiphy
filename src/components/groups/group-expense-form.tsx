@@ -3,7 +3,7 @@ import * as actions from '@/actions';
 import FormButton from '@/components/shared/form-button';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
-import { Combobox } from '@/components/ui/combo-box';
+import { ExpenseCategorySelect } from '@/components/groups/expense-category-select';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { MultiSelect } from '@/components/ui/multi-select';
@@ -265,13 +265,8 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
         >
           Category
         </Label>
-        <Combobox
-          placeholder="Select a category"
+        <ExpenseCategorySelect
           value={formData.expenseCategory}
-          options={constants.expensesCategories.map((category) => ({
-            label: category.name,
-            value: category.key,
-          }))}
           onChange={handleExpenseCategoryChange}
         />
         <select
