@@ -23,7 +23,7 @@ const GroupUserSearchForm = ({ group }: GroupUserSearchFormProps) => {
             id="name"
             type="text"
             name="term"
-            placeholder="John Doe"
+            placeholder="Somraj Mukherjee"
             defaultValue={searchParams.get('term') || ''}
             autoFocus={false}
           />
