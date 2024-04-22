@@ -45,7 +45,6 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
               <TableHead>Expense Description</TableHead>
               <TableHead>Amount</TableHead>
               <TableHead>Details</TableHead>
-              <TableHead>Is Simplified</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -75,7 +74,16 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
                   {groupExpense.expense.date.toDateString()}
                 </TableCell>
                 <TableCell>{groupExpense.expense.name}</TableCell>
-                <TableCell>{groupExpense.expense.description}</TableCell>
+                <TableCell>
+                  <div className="line-clamp-1">
+                    {groupExpense.expense.description}
+                    {groupExpense.isExpenseSimplified && (
+                      <span className="ml-1 text-xs font-bold text-foreground/40">
+                        simplified
+                      </span>
+                    )}
+                  </div>
+                </TableCell>
                 <TableCell>
                   <span className="mr-2">{currencySymbol}</span>
                   {groupExpense.expense.amount}
@@ -86,11 +94,13 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
                       key={transaction.uuid}
                       className="grid w-full grid-cols-3 gap-6"
                     >
-                      <span className="col-span-2">
+                      <span className="col-span-2 line-clamp-1">
                         {transaction.payer.firstName}{' '}
-                        {transaction.payer.lastName} paid{' '}
-                        {transaction.receiver.firstName}{' '}
-                        {transaction.receiver.lastName}
+                        {transaction.payer.lastName.charAt(0).toUpperCase() +
+                          '.'}{' '}
+                        paid {transaction.receiver.firstName}{' '}
+                        {transaction.receiver.lastName.charAt(0).toUpperCase() +
+                          '.'}
                       </span>
                       <span className="col-span-1">
                         <span className="mr-2">{currencySymbol}</span>
@@ -98,9 +108,6 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
                       </span>
                     </div>
                   ))}
-                </TableCell>
-                <TableCell>
-                  {groupExpense.isExpenseSimplified ? 'Yes' : 'No'}
                 </TableCell>
               </TableRow>
             ))}
@@ -112,7 +119,7 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
                 <span className="mr-2">{currencySymbol}</span>
                 {totalAmount}
               </TableCell>
-              <TableCell colSpan={2}></TableCell>
+              <TableCell colSpan={1}></TableCell>
             </TableRow>
           </TableFooter>
         </Table>
@@ -166,9 +173,11 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
                   className="grid w-full grid-cols-3 gap-6 text-sm text-accent-foreground/70"
                 >
                   <span className="col-span-2">
-                    {transaction.payer.firstName} {transaction.payer.lastName}{' '}
+                    {transaction.payer.firstName}{' '}
+                    {transaction.payer.lastName.charAt(0).toUpperCase() + '.'}{' '}
                     paid {transaction.receiver.firstName}{' '}
-                    {transaction.receiver.lastName}
+                    {transaction.receiver.lastName.charAt(0).toUpperCase() +
+                      '.'}
                   </span>
                   <span className="col-span-1">
                     <span className="mr-2">{currencySymbol}</span>

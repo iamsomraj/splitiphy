@@ -76,7 +76,7 @@ const GroupDetailsPage = async ({ params }: GroupDetailsPageProps) => {
           groupName={group.name}
           memberCount={group.groupMemberships.length}
         />
-        <GroupBalances group={group} />
+        <GroupBalances group={group} user={user} />
       </div>
       <div className="flex max-w-full gap-6 overflow-x-auto px-6 pt-6 scrollbar-none sm:px-12">
         <GroupSimplifyButton group={group} />
