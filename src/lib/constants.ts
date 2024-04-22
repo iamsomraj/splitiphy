@@ -21,6 +21,11 @@ const currencies = [
   { code: 'TRY', symbol: '₺' }, // Turkish Lira
 ] as const;
 
+const currenciesCodeSymbolMap = currencies.reduce(
+  (acc, { code, symbol }) => ({ ...acc, [code]: symbol }),
+  {},
+);
+
 const expenseCategoryIcons = {
   DEFAULT_ICON: 'MagicWandIcon',
   MAGIC_WAND_ICON: 'MagicWandIcon',
@@ -242,6 +247,7 @@ const constants = {
   expensesCategories,
   expenseCategoryIcons,
   expenseCategoryKeyIconMap,
+  currenciesCodeSymbolMap,
 };
 
 export default constants;

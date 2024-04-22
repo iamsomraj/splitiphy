@@ -4,17 +4,16 @@ import GroupMembers from '@/components/groups/group-members';
 import GroupSimplifyButton from '@/components/groups/group-simplify-button';
 import SettleUpButton from '@/components/groups/settle-up-button';
 import { Button } from '@/components/ui/button';
-import { SingleGroupWithData, getGroupDetailsById } from '@/db/queries';
+import {
+  LoggedInUser,
+  SingleGroupWithData,
+  getGroupDetailsById,
+  getLoggedInUser,
+} from '@/db/queries';
 import paths from '@/lib/paths';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-
-type GroupsShowPageProps = {
-  params: {
-    uuid: string;
-  };
-};
 
 type GroupHeaderProps = {
   groupName: string;
@@ -32,9 +31,10 @@ const GroupHeader = ({ groupName, memberCount }: GroupHeaderProps) => (
 
 type GroupExpensesProps = {
   group: SingleGroupWithData;
+  user: LoggedInUser;
 };
 
-const GroupExpenses = ({ group }: GroupExpensesProps) => (
+const GroupExpenses = ({ group, user }: GroupExpensesProps) => (
   <div className="flex flex-col gap-6 px-6 pt-6 sm:px-12">
     <div className="flex flex-col  justify-between gap-4 sm:flex-row sm:items-center">
       <span className="text-2xl font-bold">Expenses</span>
@@ -50,13 +50,20 @@ const GroupExpenses = ({ group }: GroupExpensesProps) => (
         No expenses have been added yet.
       </span>
     ) : (
-      <ExpenseList group={group} />
+      <ExpenseList group={group} user={user} />
     )}
   </div>
 );
 
-const GroupDetailsPage = async ({ params }: GroupsShowPageProps) => {
+type GroupDetailsPageProps = {
+  params: {
+    uuid: string;
+  };
+};
+
+const GroupDetailsPage = async ({ params }: GroupDetailsPageProps) => {
   const group = await getGroupDetailsById(params.uuid);
+  const user = await getLoggedInUser();
 
   if (!group) {
     redirect(paths.dashboard());
@@ -83,7 +90,7 @@ const GroupDetailsPage = async ({ params }: GroupsShowPageProps) => {
           ))}
         <GroupMembers group={group} className="w-full" />
       </div>
-      <GroupExpenses group={group} />
+      <GroupExpenses group={group} user={user} />
     </main>
   );
 };

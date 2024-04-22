@@ -8,17 +8,24 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { SingleGroupWithData } from '@/db/queries';
+import { LoggedInUser, SingleGroupWithData } from '@/db/queries';
 import constants from '@/lib/constants';
 import { formatNumber } from '@/lib/utils';
 import { ExpenseCategoryIcon } from './expense-category-icon';
 
 type ExpenseListProps = {
   group: SingleGroupWithData;
+  user: LoggedInUser;
 };
 
-const ExpenseList = ({ group }: ExpenseListProps) => {
-  if (!group) return null;
+const ExpenseList = ({ group, user }: ExpenseListProps) => {
+  if (!group || !user) return null;
+
+  const currencyCode = user.currency;
+  const currencySymbol =
+    constants.currenciesCodeSymbolMap[
+      currencyCode as keyof typeof constants.currenciesCodeSymbolMap
+    ];
 
   let totalAmount = 0;
   group.groupExpenses.forEach((groupExpense) => {
@@ -27,7 +34,7 @@ const ExpenseList = ({ group }: ExpenseListProps) => {
 
   return (
     <>
-      <div className="hidden md:block">
+      <div className="hidden sm:block">
         <Table>
           <TableCaption>Group Expenses</TableCaption>
           <TableHeader>
@@ -69,7 +76,10 @@ const ExpenseList = ({ group }: ExpenseListProps) => {
                 </TableCell>
                 <TableCell>{groupExpense.expense.name}</TableCell>
                 <TableCell>{groupExpense.expense.description}</TableCell>
-                <TableCell>{groupExpense.expense.amount}</TableCell>
+                <TableCell>
+                  <span className="mr-2">{currencySymbol}</span>
+                  {groupExpense.expense.amount}
+                </TableCell>
                 <TableCell>
                   {groupExpense.expense.transactions.map((transaction) => (
                     <div
@@ -82,7 +92,10 @@ const ExpenseList = ({ group }: ExpenseListProps) => {
                         {transaction.receiver.firstName}{' '}
                         {transaction.receiver.lastName}
                       </span>
-                      <span className="col-span-1">{transaction.amount}</span>
+                      <span className="col-span-1">
+                        <span className="mr-2">{currencySymbol}</span>
+                        {transaction.amount}
+                      </span>
                     </div>
                   ))}
                 </TableCell>
@@ -95,17 +108,20 @@ const ExpenseList = ({ group }: ExpenseListProps) => {
           <TableFooter>
             <TableRow>
               <TableCell colSpan={4}>Total</TableCell>
-              <TableCell>{totalAmount}</TableCell>
+              <TableCell>
+                <span className="mr-2">{currencySymbol}</span>
+                {totalAmount}
+              </TableCell>
               <TableCell colSpan={2}></TableCell>
             </TableRow>
           </TableFooter>
         </Table>
       </div>
-      <ul className="flex flex-col gap-6 md:hidden">
+      <ul className="flex flex-col gap-6 sm:hidden">
         {group.groupExpenses.map((groupExpense) => (
           <li
             key={groupExpense.uuid}
-            className="flex flex-col gap-2 rounded-md border bg-muted/40 p-6 hover:bg-muted/20"
+            className="flex flex-col gap-2 rounded-sm border bg-muted/40 p-6 hover:bg-muted/20"
           >
             <div className="flex items-center justify-between gap-2">
               <span>{groupExpense.expense.date.toDateString()}</span>
@@ -137,7 +153,8 @@ const ExpenseList = ({ group }: ExpenseListProps) => {
               </span>
             </div>
             <div className="font-medium">
-              Total {groupExpense.expense.amount}{' '}
+              Total <span className="mx-1">{currencySymbol}</span>
+              {groupExpense.expense.amount}{' '}
               <span className="text-xs font-bold text-accent-foreground/40">
                 {groupExpense.isExpenseSimplified ? 'simplified' : ''}
               </span>
@@ -153,7 +170,10 @@ const ExpenseList = ({ group }: ExpenseListProps) => {
                     paid {transaction.receiver.firstName}{' '}
                     {transaction.receiver.lastName}
                   </span>
-                  <span className="col-span-1">{transaction.amount}</span>
+                  <span className="col-span-1">
+                    <span className="mr-2">{currencySymbol}</span>
+                    {transaction.amount}
+                  </span>
                 </div>
               ))}
             </div>
