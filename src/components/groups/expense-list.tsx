@@ -85,7 +85,7 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
                   </div>
                 </TableCell>
                 <TableCell>
-                  <span className="mr-2">{currencySymbol}</span>
+                  <span className="mr-0.5">{currencySymbol}</span>
                   {groupExpense.expense.amount}
                 </TableCell>
                 <TableCell>
@@ -103,7 +103,7 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
                           '.'}
                       </span>
                       <span className="col-span-1">
-                        <span className="mr-2">{currencySymbol}</span>
+                        <span className="mr-0.5">{currencySymbol}</span>
                         {transaction.amount}
                       </span>
                     </div>
@@ -116,7 +116,7 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
             <TableRow>
               <TableCell colSpan={4}>Total</TableCell>
               <TableCell>
-                <span className="mr-2">{currencySymbol}</span>
+                <span className="mr-0.5">{currencySymbol}</span>
                 {totalAmount}
               </TableCell>
               <TableCell colSpan={1}></TableCell>
@@ -152,15 +152,15 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
               </span>
             </div>
             <div className="flex flex-col">
-              <span className="text-2xl font-bold">
+              <span className="line-clamp-1 text-2xl font-bold">
                 {groupExpense.expense.name}
               </span>
-              <span className="font-semibold text-accent-foreground/40">
+              <span className="line-clamp-1 font-semibold text-accent-foreground/40">
                 {groupExpense.expense.description}
               </span>
             </div>
             <div className="font-medium">
-              Total <span className="mx-1">{currencySymbol}</span>
+              Total <span className="ml-1 mr-0.5">{currencySymbol}</span>
               {groupExpense.expense.amount}{' '}
               <span className="text-xs font-bold text-accent-foreground/40">
                 {groupExpense.isExpenseSimplified ? 'simplified' : ''}
@@ -172,7 +172,7 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
                   key={transaction.uuid}
                   className="grid w-full grid-cols-3 gap-6 text-sm text-accent-foreground/70"
                 >
-                  <span className="col-span-2">
+                  <span className="col-span-2 line-clamp-1">
                     {transaction.payer.firstName}{' '}
                     {transaction.payer.lastName.charAt(0).toUpperCase() + '.'}{' '}
                     paid {transaction.receiver.firstName}{' '}
@@ -180,7 +180,7 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
                       '.'}
                   </span>
                   <span className="col-span-1">
-                    <span className="mr-2">{currencySymbol}</span>
+                    <span className="mr-0.5">{currencySymbol}</span>
                     {transaction.amount}
                   </span>
                 </div>
