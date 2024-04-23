@@ -24,7 +24,6 @@ export default function UserSettingsForm(props: UserSettingsFormProps) {
   const [formState, action] = useFormState(actions.updateUserSettings, {
     errors: {},
   });
-  const currencyCodes = constants.currencies.map((currency) => currency.code);
 
   const handleCurrencyChange = (value: string) => {
     if (!hiddenCurrencyRef.current) {
@@ -53,9 +52,9 @@ export default function UserSettingsForm(props: UserSettingsFormProps) {
             <SelectValue placeholder="Select currency" />
           </SelectTrigger>
           <SelectContent>
-            {currencyCodes.map((currency) => (
-              <SelectItem key={currency} value={currency}>
-                {currency}
+            {constants.currencies.map((currency) => (
+              <SelectItem key={currency.code} value={currency.code}>
+                {currency.code} {currency.symbol}
               </SelectItem>
             ))}
           </SelectContent>
@@ -66,9 +65,9 @@ export default function UserSettingsForm(props: UserSettingsFormProps) {
           className="hidden"
           name="currency"
         >
-          {currencyCodes.map((currency) => (
-            <option key={currency} value={currency}>
-              {currency}
+          {constants.currencies.map((currency) => (
+            <option key={currency.code} value={currency.code}>
+              {currency.code}
             </option>
           ))}
         </select>

@@ -6,7 +6,7 @@ const currencies = [
   { code: 'AUD', symbol: 'A$' }, // Australian Dollar
   { code: 'CAD', symbol: 'C$' }, // Canadian Dollar
   { code: 'CHF', symbol: 'CHF' }, // Swiss Franc
-  { code: 'CNY', symbol: '¥' }, // Chinese Yuan
+  { code: 'CNY', symbol: '元' }, // Chinese Yuan
   { code: 'INR', symbol: '₹' }, // Indian Rupee
   { code: 'SGD', symbol: 'S$' }, // Singapore Dollar
   { code: 'NZD', symbol: 'NZ$' }, // New Zealand Dollar
