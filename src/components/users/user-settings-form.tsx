@@ -72,7 +72,7 @@ export default function UserSettingsForm(props: UserSettingsFormProps) {
           ))}
         </select>
         <div className="text-sm text-muted-foreground">
-          This is the currency you want to use for your expenses.
+          This is the currency you will see on your groups and dashboard
         </div>
         {formState?.errors?.currency ? (
           <span className="text-sm font-medium text-destructive">
