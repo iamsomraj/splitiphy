@@ -51,7 +51,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
   const [formData, setFormData] = useState({
     expenseCategory: '',
     expenseDate: undefined as Date | undefined,
-    expenseAmount: 0,
+    expenseAmount: '' as '' | number,
     isMultiplePaidBy: false,
     paidByList: [] as string[],
     paidByAmounts: {} as Record<string, number>,
