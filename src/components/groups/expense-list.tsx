@@ -39,10 +39,10 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
           <TableCaption>Group Expenses</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead>Expense Category</TableHead>
-              <TableHead>Expense Date</TableHead>
-              <TableHead>Expense Name</TableHead>
-              <TableHead>Expense Description</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Description</TableHead>
               <TableHead>Amount</TableHead>
               <TableHead>Details</TableHead>
             </TableRow>
@@ -130,7 +130,7 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
             key={groupExpense.uuid}
             className="flex flex-col gap-2 rounded-sm border bg-muted/40 p-6 hover:bg-muted/20"
           >
-            <div className="flex items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <span>{groupExpense.expense.date.toDateString()}</span>
               <span className="flex items-center font-semibold text-accent-foreground/40">
                 <ExpenseCategoryIcon
