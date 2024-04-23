@@ -10,10 +10,7 @@ import { redirect } from 'next/navigation';
 export async function settleBalance(groupUuid: string, balanceUuid: string) {
   try {
     await db
-      .update(groupUserBalances)
-      .set({
-        amount: '0.00',
-      })
+      .delete(groupUserBalances)
       .where(eq(groupUserBalances.uuid, balanceUuid));
   } catch (error) {
     return {

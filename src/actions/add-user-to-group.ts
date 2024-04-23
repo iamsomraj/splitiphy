@@ -25,7 +25,6 @@ const createOrUpdateUser = async (currUser: UserListWithData[0]) => {
         lastName: currUser.lastName || '',
         profileImage: currUser.profileImage || '',
         updatedAt: null,
-        isDeleted: false,
       })
       .returning();
   } else {

@@ -33,7 +33,7 @@ export const users = pgTable('users', {
     withTimezone: true,
     mode: 'date',
   }),
-  isDeleted: boolean('is_deleted').notNull().default(false),
+  ed: boolean('is_deleted').notNull().default(false),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
@@ -72,7 +72,6 @@ export const groups = pgTable('groups', {
     withTimezone: true,
     mode: 'date',
   }),
-  isDeleted: boolean('is_deleted').notNull().default(false),
 });
 
 export const groupsRelations = relations(groups, ({ many, one }) => ({
@@ -106,7 +105,6 @@ export const groupMemberships = pgTable('group_memberships', {
     withTimezone: true,
     mode: 'date',
   }),
-  isDeleted: boolean('is_deleted').notNull().default(false),
 });
 
 export const groupMembershipsRelations = relations(
@@ -150,7 +148,6 @@ export const expenses = pgTable('expenses', {
     withTimezone: true,
     mode: 'date',
   }),
-  isDeleted: boolean('is_deleted').notNull().default(false),
 });
 
 export const expensesRelations = relations(expenses, ({ many, one }) => ({
@@ -190,7 +187,6 @@ export const transactions = pgTable('transactions', {
     withTimezone: true,
     mode: 'date',
   }),
-  isDeleted: boolean('is_deleted').notNull().default(false),
 });
 
 export const transactionsRelations = relations(transactions, ({ one }) => ({
@@ -239,7 +235,6 @@ export const groupExpenses = pgTable('group_expenses', {
     withTimezone: true,
     mode: 'date',
   }),
-  isDeleted: boolean('is_deleted').notNull().default(false),
 });
 
 export const groupExpensesRelations = relations(groupExpenses, ({ one }) => ({
@@ -279,7 +274,6 @@ export const groupUserBalances = pgTable(
       withTimezone: true,
       mode: 'date',
     }),
-    isDeleted: boolean('is_deleted').notNull().default(false),
   },
   (table) => {
     return {
