@@ -419,7 +419,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
           id="expense-amount"
           name="expense-amount"
           placeholder="Enter Expense Amount"
-          pattern="[0-9]*"
+          pattern="[0-9]+(\.[0-9]+)?"
           inputMode="numeric"
           value={formData.expenseAmount}
           onChange={handleExpenseAmountChange}
@@ -534,7 +534,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
                     placeholder={`Enter Paid Amount for ${
                       member.user.firstName + ' ' + member.user.lastName
                     }`}
-                    pattern="[0-9]*"
+                    pattern="[0-9]+(\.[0-9]+)?"
                     inputMode="numeric"
                     value={formData.paidByAmounts[member.user.id] || ''}
                     onChange={(e) => handlePaidAmountChange(e, member.user.id)}
@@ -667,7 +667,7 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
                     placeholder={`Enter Split Amount for ${
                       member.user.firstName + ' ' + member.user.lastName
                     }`}
-                    pattern="[0-9]*"
+                    pattern="[0-9]+(\.[0-9]+)?"
                     inputMode="numeric"
                     value={formData.splitAmounts[member.user.id] || ''}
                     onChange={(e) => handleSplitAmountChange(e, member.user.id)}
