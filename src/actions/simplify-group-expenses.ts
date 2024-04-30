@@ -35,7 +35,6 @@ export async function simplifyGroupExpenses(groupUuid: string) {
             },
           },
         },
-        where: eq(groupExpenses.isExpenseSimplified, false),
       },
       groupMemberships: {
         with: {
@@ -93,26 +92,13 @@ export async function simplifyGroupExpenses(groupUuid: string) {
 
   if (balances.length) {
     await db.insert(groupUserBalances).values(balances);
-  }
-
-  const uniqueExpenseIds = [
-    ...Array.from(new Set(group.groupExpenses.map((t) => t.expenseId))),
-  ];
-
-  if (!uniqueExpenseIds.length) {
+  } else {
     return {
       state: false,
-      title: 'Uh oh! Nothing to simplify 😕',
-      message: 'No expenses are available to simplify.',
+      title: 'Group expenses already simplified',
+      message: 'No balances to simplify.',
     };
   }
-
-  await db
-    .update(groupExpenses)
-    .set({
-      isExpenseSimplified: true,
-    })
-    .where(inArray(groupExpenses.expenseId, uniqueExpenseIds));
 
   revalidatePath(paths.groupShow(groupUuid));
   redirect(paths.groupShow(groupUuid));

@@ -5,3 +5,4 @@ export { addGroupExpense } from '@/actions/add-group-expense';
 export { simplifyGroupExpenses } from '@/actions/simplify-group-expenses';
 export { settleBalance } from '@/actions/settle-balance';
 export { updateUserSettings } from '@/actions/update-user-settings';
+export { deleteExpense } from '@/actions/delete-expense';
