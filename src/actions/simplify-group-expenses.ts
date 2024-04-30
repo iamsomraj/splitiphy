@@ -92,6 +92,12 @@ export async function simplifyGroupExpenses(groupUuid: string) {
 
   if (balances.length) {
     await db.insert(groupUserBalances).values(balances);
+  } else {
+    return {
+      state: false,
+      title: 'Group expenses already simplified',
+      message: 'No balances to simplify.',
+    };
   }
 
   revalidatePath(paths.groupShow(groupUuid));

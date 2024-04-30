@@ -67,9 +67,11 @@ export async function deleteExpense(
       ),
     );
 
-    await db.delete(expenses).where(eq(expenses.id, expense.id));
+    await db
+      .delete(groupExpenses)
+      .where(eq(groupExpenses.expenseId, expense.id));
 
-    await db.delete(groupExpenses).where(eq(groupExpenses.groupId, group.id));
+    await db.delete(expenses).where(eq(expenses.id, expense.id));
   } catch (error) {
     return {
       state: false,
