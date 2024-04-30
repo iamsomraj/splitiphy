@@ -77,11 +77,6 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
                 <TableCell>
                   <div className="line-clamp-1">
                     {groupExpense.expense.description}
-                    {groupExpense.isExpenseSimplified && (
-                      <span className="ml-1 text-xs font-bold text-foreground/40">
-                        simplified
-                      </span>
-                    )}
                   </div>
                 </TableCell>
                 <TableCell>
@@ -162,9 +157,6 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
             <div className="font-medium">
               Total <span className="ml-1 mr-0.5">{currencySymbol}</span>
               {groupExpense.expense.amount}{' '}
-              <span className="text-xs font-bold text-accent-foreground/40">
-                {groupExpense.isExpenseSimplified ? 'simplified' : ''}
-              </span>
             </div>
             <div className="flex flex-col gap-4 pt-2">
               {groupExpense.expense.transactions.map((transaction) => (
