@@ -1,3 +1,13 @@
+'use client';
+import * as actions from '@/actions';
+
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import {
   Table,
   TableBody,
@@ -11,6 +21,8 @@ import {
 import { LoggedInUser, SingleGroupWithData } from '@/db/queries';
 import constants from '@/lib/constants';
 import { cn, formatNumber } from '@/lib/utils';
+import { DotsHorizontalIcon, DotsVerticalIcon } from '@radix-ui/react-icons';
+import { useToast } from '../ui/use-toast';
 import { ExpenseCategoryIcon } from './expense-category-icon';
 
 type ExpenseListProps = {
@@ -19,6 +31,8 @@ type ExpenseListProps = {
 };
 
 const ExpenseList = ({ group, user }: ExpenseListProps) => {
+  const { toast } = useToast();
+
   if (!group || !user) return null;
 
   const currencyCode = user.currency;
@@ -47,6 +61,7 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
               <TableHead>Description</TableHead>
               <TableHead>Amount</TableHead>
               <TableHead>Details</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -112,6 +127,36 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
                     </div>
                   ))}
                 </TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="h-8 w-8 p-0">
+                        <span className="sr-only">Open menu</span>
+                        <DotsHorizontalIcon className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        onClick={async () => {
+                          const response = await actions.deleteExpense(
+                            group?.uuid || '',
+                            groupExpense?.uuid || '',
+                          );
+                          const state = response?.state || true;
+                          if (!state) {
+                            toast({
+                              title: 'Uh oh! Something went wrong.',
+                              description:
+                                'An error occurred while deleting the expense.',
+                            });
+                          }
+                        }}
+                      >
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -152,6 +197,34 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
                       category.key === groupExpense.expense.category,
                   )?.name || 'Other'}
                 </span>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="h-8 w-8 p-0">
+                      <span className="sr-only">Open menu</span>
+                      <DotsVerticalIcon className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem
+                      onClick={async () => {
+                        const response = await actions.deleteExpense(
+                          group?.uuid || '',
+                          groupExpense?.uuid || '',
+                        );
+                        const state = response?.state || true;
+                        if (!state) {
+                          toast({
+                            title: 'Uh oh! Something went wrong.',
+                            description:
+                              'An error occurred while deleting the expense.',
+                          });
+                        }
+                      }}
+                    >
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </span>
             </div>
             <div className="flex flex-col">

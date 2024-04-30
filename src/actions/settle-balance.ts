@@ -98,10 +98,6 @@ export async function settleBalance(groupUuid: string, balanceUuid: string) {
       })
       .where(eq(groupUserBalances.uuid, balanceUuid));
   } catch (error) {
-    console.log(
-      '🚀 ~ file: settle-balance.ts:58 ~ settleBalance ~ error:',
-      error,
-    );
     return {
       state: false,
     };
