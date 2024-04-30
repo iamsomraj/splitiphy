@@ -22,9 +22,9 @@ import { LoggedInUser, SingleGroupWithData } from '@/db/queries';
 import constants from '@/lib/constants';
 import { cn, formatNumber } from '@/lib/utils';
 import { DotsHorizontalIcon, DotsVerticalIcon } from '@radix-ui/react-icons';
+import { useTransition } from 'react';
 import { useToast } from '../ui/use-toast';
 import { ExpenseCategoryIcon } from './expense-category-icon';
-import { useTransition } from 'react';
 
 type ExpenseListProps = {
   group: SingleGroupWithData;
