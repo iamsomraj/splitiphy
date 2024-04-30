@@ -48,6 +48,20 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
     }
   });
 
+  const onDeleteExpense = async (
+    groupUuid: string,
+    groupExpenseUuid: string,
+  ) => {
+    const response = await actions.deleteExpense(groupUuid, groupExpenseUuid);
+    const state = response?.state || true;
+    if (!state) {
+      toast({
+        title: 'Uh oh! Something went wrong.',
+        description: 'An error occurred while deleting the expense.',
+      });
+    }
+  };
+
   return (
     <>
       <div className="hidden sm:block">
@@ -137,20 +151,12 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem
-                        onClick={async () => {
-                          const response = await actions.deleteExpense(
+                        onClick={async () =>
+                          await onDeleteExpense(
                             group?.uuid || '',
                             groupExpense?.uuid || '',
-                          );
-                          const state = response?.state || true;
-                          if (!state) {
-                            toast({
-                              title: 'Uh oh! Something went wrong.',
-                              description:
-                                'An error occurred while deleting the expense.',
-                            });
-                          }
-                        }}
+                          )
+                        }
                       >
                         Delete
                       </DropdownMenuItem>
@@ -167,7 +173,7 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
                 <span className="mr-0.5">{currencySymbol}</span>
                 {totalAmount}
               </TableCell>
-              <TableCell colSpan={1}></TableCell>
+              <TableCell colSpan={2}></TableCell>
             </TableRow>
           </TableFooter>
         </Table>
@@ -176,7 +182,11 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
         {group.groupExpenses.map((groupExpense) => (
           <li
             key={groupExpense.uuid}
-            className="flex flex-col gap-2 rounded-sm border bg-muted/40 p-6 hover:bg-muted/20"
+            className={cn(
+              'flex flex-col gap-2 rounded-sm border bg-muted/40 p-6 hover:bg-muted/20',
+              groupExpense.isSystemGenerated &&
+                'text-green-600 dark:text-green-200',
+            )}
           >
             <div className="flex flex-wrap items-center justify-between gap-2">
               <span>{groupExpense.expense.date.toDateString()}</span>
@@ -206,20 +216,12 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem
-                      onClick={async () => {
-                        const response = await actions.deleteExpense(
+                      onClick={async () =>
+                        await onDeleteExpense(
                           group?.uuid || '',
                           groupExpense?.uuid || '',
-                        );
-                        const state = response?.state || true;
-                        if (!state) {
-                          toast({
-                            title: 'Uh oh! Something went wrong.',
-                            description:
-                              'An error occurred while deleting the expense.',
-                          });
-                        }
-                      }}
+                        )
+                      }
                     >
                       Delete
                     </DropdownMenuItem>

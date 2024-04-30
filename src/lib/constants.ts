@@ -82,7 +82,7 @@ const expensesCategories = [
     icon: expenseCategoryIcons.TRASH_ICON,
   },
   {
-    name: 'TV / Phone / Internet',
+    name: 'Mobile / Internet',
     key: 'utilities-tv-phone-internet',
     icon: expenseCategoryIcons.GLOBE_ICON,
   },
