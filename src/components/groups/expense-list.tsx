@@ -24,6 +24,7 @@ import { cn, formatNumber } from '@/lib/utils';
 import { DotsHorizontalIcon, DotsVerticalIcon } from '@radix-ui/react-icons';
 import { useToast } from '../ui/use-toast';
 import { ExpenseCategoryIcon } from './expense-category-icon';
+import { useTransition } from 'react';
 
 type ExpenseListProps = {
   group: SingleGroupWithData;
@@ -32,6 +33,7 @@ type ExpenseListProps = {
 
 const ExpenseList = ({ group, user }: ExpenseListProps) => {
   const { toast } = useToast();
+  const [pending, startTransition] = useTransition();
 
   if (!group || !user) return null;
 
@@ -52,14 +54,16 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
     groupUuid: string,
     groupExpenseUuid: string,
   ) => {
-    const response = await actions.deleteExpense(groupUuid, groupExpenseUuid);
-    const state = response?.state || true;
-    if (!state) {
-      toast({
-        title: 'Uh oh! Something went wrong.',
-        description: 'An error occurred while deleting the expense.',
-      });
-    }
+    startTransition(async () => {
+      const response = await actions.deleteExpense(groupUuid, groupExpenseUuid);
+      const state = response?.state || true;
+      if (!state) {
+        toast({
+          title: 'Uh oh! Something went wrong.',
+          description: 'An error occurred while deleting the expense.',
+        });
+      }
+    });
   };
 
   return (
@@ -85,6 +89,7 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
                 className={cn(
                   groupExpense.isSystemGenerated &&
                     'font-medium text-green-600 dark:text-green-200',
+                  pending && 'pointer-events-none opacity-60',
                 )}
               >
                 <TableCell>
@@ -186,6 +191,7 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
               'flex flex-col gap-2 rounded-sm border bg-muted/40 p-6 hover:bg-muted/20',
               groupExpense.isSystemGenerated &&
                 'text-green-600 dark:text-green-200',
+              pending && 'pointer-events-none opacity-60',
             )}
           >
             <div className="flex flex-wrap items-center justify-between gap-2">
@@ -245,7 +251,7 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
               {groupExpense.expense.transactions.map((transaction) => (
                 <div
                   key={transaction.uuid}
-                  className="grid w-full grid-cols-3 gap-6 text-sm text-accent-foreground/70"
+                  className="grid w-full grid-cols-3 gap-6 text-sm text-accent-foreground/60"
                 >
                   <span className="col-span-2 line-clamp-1">
                     {transaction.payer.firstName}{' '}
