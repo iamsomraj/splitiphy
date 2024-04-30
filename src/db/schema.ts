@@ -214,6 +214,7 @@ export const transactionsRelations = relations(transactions, ({ one }) => ({
 export const groupExpenses = pgTable('group_expenses', {
   id: serial('id').primaryKey(),
   uuid: uuid('uuid').default(sql`gen_random_uuid()`),
+  isSystemGenerated: boolean('is_system_generated').notNull().default(false),
   expenseId: integer('expense_id')
     .references(() => expenses.id, { onDelete: 'cascade' })
     .notNull(),

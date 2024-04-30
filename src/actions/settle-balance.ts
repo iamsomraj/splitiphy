@@ -70,6 +70,7 @@ export async function settleBalance(groupUuid: string, balanceUuid: string) {
       .values({
         groupId: group.id,
         expenseId: expense[0].id,
+        isSystemGenerated: true,
       })
       .returning();
 

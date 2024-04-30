@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/table';
 import { LoggedInUser, SingleGroupWithData } from '@/db/queries';
 import constants from '@/lib/constants';
-import { formatNumber } from '@/lib/utils';
+import { cn, formatNumber } from '@/lib/utils';
 import { ExpenseCategoryIcon } from './expense-category-icon';
 
 type ExpenseListProps = {
@@ -29,7 +29,9 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
 
   let totalAmount = 0;
   group.groupExpenses.forEach((groupExpense) => {
-    totalAmount += formatNumber(groupExpense.expense.amount);
+    if (!groupExpense.isSystemGenerated) {
+      totalAmount += formatNumber(groupExpense.expense.amount);
+    }
   });
 
   return (
@@ -49,7 +51,13 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
           </TableHeader>
           <TableBody>
             {group.groupExpenses.map((groupExpense) => (
-              <TableRow key={groupExpense.uuid}>
+              <TableRow
+                key={groupExpense.uuid}
+                className={cn(
+                  groupExpense.isSystemGenerated &&
+                    'font-medium text-green-600 dark:text-green-200',
+                )}
+              >
                 <TableCell>
                   <div className="flex items-center gap-1">
                     <ExpenseCategoryIcon
@@ -109,7 +117,7 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
           </TableBody>
           <TableFooter>
             <TableRow>
-              <TableCell colSpan={4}>Total</TableCell>
+              <TableCell colSpan={4}>Total Group Spending</TableCell>
               <TableCell>
                 <span className="mr-0.5">{currencySymbol}</span>
                 {totalAmount}
