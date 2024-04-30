@@ -52,7 +52,7 @@ export async function settleBalance(groupUuid: string, balanceUuid: string) {
       .values({
         category: 'other',
         name: `Expense settled`,
-        description: `${groupUserBalance?.recipient?.firstName} ${groupUserBalance?.recipient?.lastName?.charAt(0).toUpperCase()} and ${groupUserBalance?.sender?.firstName} ${groupUserBalance?.sender?.lastName?.charAt(0).toUpperCase()} settled up!`,
+        description: `${groupUserBalance?.recipient?.firstName} ${groupUserBalance?.recipient?.lastName?.charAt(0).toUpperCase() + '.'} and ${groupUserBalance?.sender?.firstName} ${groupUserBalance?.sender?.lastName?.charAt(0).toUpperCase() + '.'} settled up!`,
         amount: groupUserBalance.amount,
         date: new Date(),
         ownerId: session.userId,
