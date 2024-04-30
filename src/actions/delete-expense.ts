@@ -31,7 +31,7 @@ export async function deleteExpense(
     }
 
     const groupExpense = await db.query.groupExpenses.findFirst({
-      where: eq(groupExpenses.groupId, group.id),
+      where: eq(groupExpenses.uuid, groupExpenseUuid),
     });
 
     if (!groupExpense) {
@@ -60,16 +60,16 @@ export async function deleteExpense(
       };
     }
 
-    await db.delete(groupExpenses).where(eq(groupExpenses.groupId, group.id));
-
-    await db.delete(expenses).where(eq(expenses.id, expense.id));
-
     await db.delete(transactions).where(
       inArray(
         transactions.id,
         transactionsToDelete.map((t) => t.id),
       ),
     );
+
+    await db.delete(expenses).where(eq(expenses.id, expense.id));
+
+    await db.delete(groupExpenses).where(eq(groupExpenses.groupId, group.id));
   } catch (error) {
     return {
       state: false,

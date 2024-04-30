@@ -80,7 +80,7 @@ export async function settleBalance(groupUuid: string, balanceUuid: string) {
       };
     }
 
-    const trxs = await db
+    await db
       .insert(transactions)
       .values({
         ownerId: session.userId,
