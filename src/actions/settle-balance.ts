@@ -12,8 +12,6 @@ import paths from '@/lib/paths';
 import { auth } from '@clerk/nextjs';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
-
 export async function settleBalance(groupUuid: string, balanceUuid: string) {
   try {
     const session = await auth();
@@ -101,5 +99,4 @@ export async function settleBalance(groupUuid: string, balanceUuid: string) {
   }
 
   revalidatePath(paths.groupShow(groupUuid));
-  redirect(paths.groupShow(groupUuid));
 }

@@ -21,10 +21,11 @@ const SettleUpButton = ({ groupUuid, balance }: SettleUpButtonProps) => {
   const [isPending, startTransition] = useTransition();
   const onClick = () => {
     startTransition(async () => {
-      const { state } = await actions.settleBalance(
+      const settleResponse = await actions.settleBalance(
         groupUuid,
         balance?.uuid || '',
       );
+      const state = settleResponse?.state || true;
       if (!state) {
         toast({
           title: 'Uh oh! Something went wrong.',
