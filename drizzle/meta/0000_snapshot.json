@@ -1,5 +1,5 @@
 {
-  "id": "92a3e995-f387-4153-8168-7281b95df160",
+  "id": "ca46af1e-f7e1-4dd2-a623-5343527d6f47",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -108,6 +108,13 @@
           "notNull": false,
           "default": "gen_random_uuid()"
         },
+        "is_system_generated": {
+          "name": "is_system_generated",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
         "expense_id": {
           "name": "expense_id",
           "type": "integer",
@@ -119,13 +126,6 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true
-        },
-        "is_expense_simplified": {
-          "name": "is_expense_simplified",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
         },
         "created_at": {
           "name": "created_at",

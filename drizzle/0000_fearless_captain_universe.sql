@@ -14,9 +14,9 @@ CREATE TABLE IF NOT EXISTS "expenses" (
 CREATE TABLE IF NOT EXISTS "group_expenses" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"uuid" uuid DEFAULT gen_random_uuid(),
+	"is_system_generated" boolean DEFAULT false NOT NULL,
 	"expense_id" integer NOT NULL,
 	"group_id" integer NOT NULL,
-	"is_expense_simplified" boolean DEFAULT false NOT NULL,
 	"created_at" timestamp (6) with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp (6) with time zone
 );
