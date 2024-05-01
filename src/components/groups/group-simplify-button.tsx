@@ -25,10 +25,6 @@ const GroupSimplifyButton = ({
   const onClick = () => {
     startTransition(async () => {
       const response = await actions.simplifyGroupExpenses(group?.uuid || '');
-      /**
-       * Default value for state is true, so if the state is false, it means there was an error.
-       * In that case, we show the error message.
-       */
       const state = response?.state || true;
       const title =
         response?.title || 'Great! Your expenses have been simplified.';

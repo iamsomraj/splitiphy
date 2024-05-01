@@ -92,10 +92,7 @@ export async function settleBalance(groupUuid: string, balanceUuid: string) {
       .returning();
 
     await db
-      .update(groupUserBalances)
-      .set({
-        amount: '0',
-      })
+      .delete(groupUserBalances)
       .where(eq(groupUserBalances.uuid, balanceUuid));
   } catch (error) {
     return {

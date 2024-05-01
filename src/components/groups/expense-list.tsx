@@ -55,12 +55,33 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
     groupExpenseUuid: string,
   ) => {
     startTransition(async () => {
-      const response = await actions.deleteExpense(groupUuid, groupExpenseUuid);
-      const state = response?.state || true;
-      if (!state) {
+      const deleteResponse = await actions.deleteExpense(
+        groupUuid,
+        groupExpenseUuid,
+      );
+      const deleteState = deleteResponse?.state || true;
+      if (!deleteState) {
         toast({
           title: 'Uh oh! Something went wrong.',
           description: 'An error occurred while deleting the expense.',
+        });
+      }
+      const simplifyResponse = await actions.simplifyGroupExpenses(groupUuid);
+      const simplifyState = simplifyResponse?.state || true;
+      const simplifyTitle =
+        simplifyResponse?.title || 'Great! Your expenses have been simplified.';
+      const simplifyDescription =
+        simplifyResponse?.message ||
+        `Expenses simplified for group ${group?.name}.`;
+      if (!simplifyState) {
+        toast({
+          title: simplifyTitle,
+          description: simplifyDescription,
+        });
+      } else {
+        toast({
+          title: simplifyTitle,
+          description: simplifyDescription,
         });
       }
     });

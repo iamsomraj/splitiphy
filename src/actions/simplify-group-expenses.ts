@@ -1,11 +1,11 @@
 'use server';
 
 import db from '@/db/drizzle';
-import { groupExpenses, groupUserBalances, groups } from '@/db/schema';
+import { groupUserBalances, groups } from '@/db/schema';
 import paths from '@/lib/paths';
 import SplitManagerService from '@/services/split-manager-service';
 import { auth } from '@clerk/nextjs';
-import { eq, inArray } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
@@ -67,16 +67,8 @@ export async function simplifyGroupExpenses(groupUuid: string) {
       amount: parseFloat(transaction.amount),
     }));
 
-  const existingTransactions = group.groupUserBalances.map((balance) => ({
-    payer: balance.recipient.id,
-    receiver: balance.sender.id,
-    amount: parseFloat(balance.amount),
-  }));
+  const splitManagerService = new SplitManagerService(newTransactions);
 
-  const splitManagerService = new SplitManagerService([
-    ...newTransactions,
-    ...existingTransactions,
-  ]);
   const balances = splitManagerService.settleAllBalances().map((bal) => {
     return {
       groupId: group.id,
