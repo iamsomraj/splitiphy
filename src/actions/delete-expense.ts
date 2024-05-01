@@ -1,5 +1,6 @@
 'use server';
 
+import * as actions from '@/actions';
 import db from '@/db/drizzle';
 import { expenses, groupExpenses, groups, transactions } from '@/db/schema';
 import paths from '@/lib/paths';
@@ -72,6 +73,14 @@ export async function deleteExpense(
       .where(eq(groupExpenses.expenseId, expense.id));
 
     await db.delete(expenses).where(eq(expenses.id, expense.id));
+
+    const response = await actions.simplifyGroupExpenses(groupUuid);
+    const state = response?.state || true;
+    if (!state) {
+      return {
+        state,
+      };
+    }
   } catch (error) {
     return {
       state: false,

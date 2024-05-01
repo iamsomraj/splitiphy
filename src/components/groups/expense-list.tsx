@@ -1,6 +1,6 @@
 'use client';
-import * as actions from '@/actions';
 
+import * as actions from '@/actions';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -65,21 +65,7 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
           title: 'Uh oh! Something went wrong.',
           description: 'An error occurred while deleting the expense.',
         });
-      }
-      const simplifyResponse = await actions.simplifyGroupExpenses(groupUuid);
-      const simplifyState = simplifyResponse?.state || true;
-      const simplifyTitle =
-        simplifyResponse?.title || 'Great! Your expenses have been simplified.';
-      const simplifyDescription =
-        simplifyResponse?.message ||
-        `Expenses simplified for group ${group?.name}.`;
-      if (!simplifyState) {
-        toast({
-          title: simplifyTitle,
-          description: simplifyDescription,
-        });
-      }
-      if (deleteState) {
+      } else {
         toast({
           title: 'Expense deleted successfully.',
           description: 'The expense has been removed from the group.',
