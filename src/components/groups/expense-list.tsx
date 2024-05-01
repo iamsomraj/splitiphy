@@ -78,10 +78,11 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
           title: simplifyTitle,
           description: simplifyDescription,
         });
-      } else {
+      }
+      if (deleteState) {
         toast({
-          title: simplifyTitle,
-          description: simplifyDescription,
+          title: 'Expense deleted successfully.',
+          description: 'The expense has been removed from the group.',
         });
       }
     });
