@@ -14,6 +14,34 @@ import { SignedIn, SignedOut } from '@clerk/nextjs';
 import { DashboardIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 
+type FeatureListProps = {
+  children: React.ReactNode;
+};
+
+type FeatureItemProps = {
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+};
+
+const FeatureList = ({ children }: FeatureListProps) => (
+  <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
+    {children}
+  </div>
+);
+
+const FeatureItem = ({ title, description, icon }: FeatureItemProps) => (
+  <div className="relative overflow-hidden rounded-lg border bg-background p-2">
+    <div className="flex h-[180px] flex-col justify-between rounded-md p-6">
+      {icon}
+      <div className="space-y-2">
+        <h3 className="font-bold">{title}</h3>
+        <p className="text-sm text-muted-foreground">{description} </p>
+      </div>
+    </div>
+  </div>
+);
+
 export default function IndexPage() {
   return (
     <div className="relative flex w-full flex-1 flex-col">
@@ -56,6 +84,51 @@ export default function IndexPage() {
             </Link>
           </PageActions>
         </PageHeader>
+        <section className="container space-y-6 py-8 dark:bg-transparent md:py-12 lg:py-24">
+          <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
+            <PageHeaderHeading>Features</PageHeaderHeading>
+            <PageHeaderDescription>
+              {siteConfig.name} offers a variety of features to help you manage
+              your shared expenses with ease.
+            </PageHeaderDescription>
+          </div>
+          <FeatureList>
+            <FeatureItem
+              title="Expense Tracking"
+              description="Easily keep track of all shared expenses with friends and family."
+              icon={<Icons.dollar className="h-12 w-12 fill-current" />}
+            />
+            <FeatureItem
+              title="Group Expense Splitting"
+              description="Split bills seamlessly among multiple individuals."
+              icon={<Icons.group className="h-12 w-12 fill-current" />}
+            />
+            <FeatureItem
+              title="Expense Categories"
+              description="Organize your expenses into customizable categories."
+              icon={<Icons.folder className="h-12 w-12" />}
+            />
+          </FeatureList>
+        </section>
+
+        <section id="open-source" className="container py-8 md:py-12 lg:py-24">
+          <div className="mx-auto flex max-w-[58rem] flex-col items-center justify-center gap-4 text-center">
+            <PageHeaderHeading>Proudly Open Source</PageHeaderHeading>
+            <PageHeaderDescription>
+              {siteConfig.name} is open source and powered by open source
+              software. <br /> The code is available on{' '}
+              <Link
+                href={siteConfig.links.sourceGithub}
+                target="_blank"
+                rel="noreferrer"
+                className="underline underline-offset-4"
+              >
+                GitHub
+              </Link>
+              .{' '}
+            </PageHeaderDescription>
+          </div>
+        </section>
       </main>
     </div>
   );
