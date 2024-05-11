@@ -10,6 +10,7 @@ import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
 const editGroupSchema = z.object({
+  groupUuid: z.string(),
   name: z
     .string()
     .min(3, {
@@ -26,16 +27,18 @@ const editGroupSchema = z.object({
 
 interface EditGroupFormState {
   errors: {
+    groupUuid?: string[];
     name?: string[];
     _form?: string[];
   };
 }
 
 export async function editGroup(
-  groupUuid: string,
+  _formState: EditGroupFormState,
   formData: FormData,
 ): Promise<EditGroupFormState> {
   const result = editGroupSchema.safeParse({
+    groupUuid: formData.get('group-uuid'),
     name: formData.get('name'),
   });
 
@@ -56,7 +59,7 @@ export async function editGroup(
 
   try {
     const existingGroup = await db.query.groups.findFirst({
-      where: eq(groups.uuid, groupUuid),
+      where: eq(groups.uuid, result.data.groupUuid),
     });
 
     if (!existingGroup) {
@@ -80,7 +83,7 @@ export async function editGroup(
       .set({
         name: result.data.name,
       })
-      .where(eq(groups.uuid, groupUuid));
+      .where(eq(groups.uuid, result.data.groupUuid));
   } catch (err: unknown) {
     if (err instanceof Error) {
       return {
