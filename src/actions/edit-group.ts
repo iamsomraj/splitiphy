@@ -101,5 +101,5 @@ export async function editGroup(
   }
 
   revalidatePath(paths.dashboard());
-  redirect(paths.dashboard());
+  redirect(paths.groupShow(result.data.groupUuid));
 }
