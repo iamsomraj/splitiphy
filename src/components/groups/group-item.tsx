@@ -111,7 +111,6 @@ const GroupItem = ({ group }: GroupItemProps) => {
                         name="name"
                         placeholder="Enter group name"
                         defaultValue={group?.name || ''}
-                        autoComplete="off"
                       />
                       <div className="text-sm text-muted-foreground">
                         This is the name of your group.

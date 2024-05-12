@@ -56,9 +56,11 @@ export async function deleteGroup(groupUuid: string) {
       (grpExpense) => grpExpense.expenseId,
     );
 
-    await db
-      .delete(transactions)
-      .where(inArray(transactions.expenseId, expenseIds));
+    if (expenseIds.length) {
+      await db
+        .delete(transactions)
+        .where(inArray(transactions.expenseId, expenseIds));
+    }
 
     await db.delete(groupExpenses).where(eq(groupExpenses.groupId, group.id));
 
