@@ -1,10 +1,10 @@
 'use server';
 
 import db from '@/db/drizzle';
-import { groups } from '@/db/schema';
+import { groupMemberships, groups } from '@/db/schema';
 import paths from '@/lib/paths';
 import { auth } from '@clerk/nextjs';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
@@ -70,10 +70,17 @@ export async function editGroup(
       };
     }
 
-    if (existingGroup.ownerId !== session.userId) {
+    const groupMembershipRecord = await db.query.groupMemberships.findFirst({
+      where: and(
+        eq(groupMemberships.groupId, existingGroup.id),
+        eq(groupMemberships.userId, session.userId),
+      ),
+    });
+
+    if (!groupMembershipRecord) {
       return {
         errors: {
-          _form: ['You are not the owner of this group.'],
+          _form: ['You are not a member of this group.'],
         },
       };
     }
