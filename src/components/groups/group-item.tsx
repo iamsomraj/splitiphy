@@ -77,7 +77,9 @@ const GroupItem = ({ group }: GroupItemProps) => {
               </DropdownMenuItem>
               <Dialog>
                 <DialogTrigger asChild>
-                  <DropdownMenuItem>Edit</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                    Edit
+                  </DropdownMenuItem>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                   <DialogHeader>
@@ -108,6 +110,8 @@ const GroupItem = ({ group }: GroupItemProps) => {
                         type="text"
                         name="name"
                         placeholder="Enter group name"
+                        defaultValue={group?.name || ''}
+                        autoComplete="off"
                       />
                       <div className="text-sm text-muted-foreground">
                         This is the name of your group.
