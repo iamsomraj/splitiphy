@@ -6,3 +6,5 @@ export { simplifyGroupExpenses } from '@/actions/simplify-group-expenses';
 export { settleBalance } from '@/actions/settle-balance';
 export { updateUserSettings } from '@/actions/update-user-settings';
 export { deleteExpense } from '@/actions/delete-expense';
+export { deleteGroup } from '@/actions/delete-group';
+export { editGroup } from '@/actions/edit-group';
