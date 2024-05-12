@@ -7,6 +7,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -62,12 +63,7 @@ const GroupItem = ({ group }: GroupItemProps) => {
   };
 
   return (
-    <Card
-      className={cn(
-        'hover:bg-accent',
-        pending && 'pointer-events-none opacity-60',
-      )}
-    >
+    <Card className={cn(pending && 'pointer-events-none opacity-60')}>
       <CardHeader>
         <CardTitle className="flex cursor-pointer justify-between">
           <Link href={paths.groupShow(group.uuid)}>
@@ -158,6 +154,13 @@ const GroupItem = ({ group }: GroupItemProps) => {
           <span>{group.groupMemberships.length} members</span>
         </Link>
       </CardContent>
+      <CardFooter>
+        <Link href={paths.groupShow(group.uuid)}>
+          <Button variant="outline" className="w-full">
+            View group
+          </Button>
+        </Link>
+      </CardFooter>
     </Card>
   );
 };
