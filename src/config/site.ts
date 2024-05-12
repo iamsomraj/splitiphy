@@ -13,9 +13,9 @@ export const siteConfig = {
     'flexible',
     'secure',
   ],
-  header: 'splitiphy - Simplify Your Shared Expenses',
+  header: 'splitiphy - manage expenses easily',
   description:
-    'Effortlessly manage and split bills with friends and family. User-friendly. Flexible. Secure.',
+    'Effortlessly split bills with friends and family. User-friendly. Flexible. Secure.',
   links: {
     sourceGithub: 'https://github.com/iamsomraj/splitiphy',
     gitHub: 'https://github.com/iamsomraj',
