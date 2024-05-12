@@ -34,6 +34,13 @@ export async function deleteGroup(groupUuid: string) {
       };
     }
 
+    if (group.ownerId !== session.userId) {
+      return {
+        state: false,
+        message: 'You are not the owner of this group',
+      };
+    }
+
     const groupMembershipRecord = await db.query.groupMemberships.findFirst({
       where: and(
         eq(groupMemberships.groupId, group.id),

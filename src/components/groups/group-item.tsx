@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useToast } from '@/components/ui/use-toast';
 import { ManyGroupsWithData } from '@/db/queries';
 import paths from '@/lib/paths';
 import { cn } from '@/lib/utils';
@@ -41,10 +42,24 @@ type GroupItemProps = {
 };
 
 const GroupItem = ({ group }: GroupItemProps) => {
+  const { toast } = useToast();
   const [pending, startTransition] = useTransition();
   const [formState, action] = useFormState(actions.editGroup, {
     errors: {},
   });
+
+  const onGroupDelete = () => {
+    startTransition(async () => {
+      const response = await actions.deleteGroup(group?.uuid || '');
+      const state = response?.state || true;
+      const message =
+        response?.message || 'Great! Your group has been deleted.';
+      toast({
+        title: state ? 'Success!' : 'Error',
+        description: message,
+      });
+    });
+  };
 
   return (
     <Card
@@ -66,13 +81,7 @@ const GroupItem = ({ group }: GroupItemProps) => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                onClick={() => {
-                  startTransition(async () => {
-                    await actions.deleteGroup(group?.uuid || '');
-                  });
-                }}
-              >
+              <DropdownMenuItem onClick={onGroupDelete}>
                 Delete
               </DropdownMenuItem>
               <Dialog>
