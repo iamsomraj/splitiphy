@@ -35,13 +35,13 @@ To run this project, you will need to add the following environment variables to
 - Install Dependencies
 
 ```bash
-    npm install
+    pnpm install
 ```
 
 - Run the Application
 
 ```bash
-    npm run dev
+    pnpm run dev
 ```
 
 ## Developer
