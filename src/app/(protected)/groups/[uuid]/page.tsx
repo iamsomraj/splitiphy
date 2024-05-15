@@ -62,8 +62,13 @@ type GroupDetailsPageProps = {
 };
 
 const GroupDetailsPage = async ({ params }: GroupDetailsPageProps) => {
-  const group = await getGroupDetailsById(params.uuid);
-  const user = await getLoggedInUser();
+  const [groupResult, userResult] = await Promise.allSettled([
+    getGroupDetailsById(params.uuid),
+    getLoggedInUser(),
+  ]);
+
+  const group = groupResult.status === 'fulfilled' ? groupResult.value : null;
+  const user = userResult.status === 'fulfilled' ? userResult.value : null;
 
   if (!group) {
     redirect(paths.dashboard());
