@@ -1,9 +1,9 @@
 import Auth from '@/app/(marketing)/get-started/_components/auth';
 import {
-  PageHeader,
-  PageHeaderDescription,
-  PageHeaderHeading,
-} from '@/components/shared/page-header';
+  HeroPageHeader,
+  HeroPageHeaderDescription,
+  HeroPageHeaderHeading,
+} from '@/components/shared/hero-header';
 
 export default function Dashboard() {
   return (
@@ -18,12 +18,12 @@ export default function Dashboard() {
         </div>
       </div>
       <div className="hidden items-center justify-center bg-muted md:flex">
-        <PageHeader className="w-[550px]">
-          <PageHeaderHeading>Easily manage expenses</PageHeaderHeading>
-          <PageHeaderDescription>
+        <HeroPageHeader className="w-[550px]">
+          <HeroPageHeaderHeading>Easily manage expenses</HeroPageHeaderHeading>
+          <HeroPageHeaderDescription>
             Get started today and take control of your finances
-          </PageHeaderDescription>
-        </PageHeader>
+          </HeroPageHeaderDescription>
+        </HeroPageHeader>
       </div>
     </main>
   );

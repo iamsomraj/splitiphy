@@ -1,12 +1,12 @@
 import Feature from '@/app/(marketing)/_components/feature';
 import { Announcement } from '@/components/shared/announcements';
-import { Icons } from '@/components/shared/icons';
 import {
-  PageActions,
-  PageHeader,
-  PageHeaderDescription,
-  PageHeaderHeading,
-} from '@/components/shared/page-header';
+  HeroPageActions,
+  HeroPageHeader,
+  HeroPageHeaderDescription,
+  HeroPageHeaderHeading,
+} from '@/components/shared/hero-header';
+import { Icons } from '@/components/shared/icons';
 import { buttonVariants } from '@/components/ui/button';
 import { siteConfig } from '@/config/site';
 import paths from '@/lib/paths';
@@ -19,7 +19,7 @@ export default function IndexPage() {
   return (
     <div className="relative flex w-full flex-1 flex-col">
       <main className="container relative">
-        <PageHeader>
+        <HeroPageHeader>
           <SignedIn>
             <Announcement link={paths.dashboard()}>
               Introducing Simplify Mode
@@ -30,11 +30,11 @@ export default function IndexPage() {
               Introducing Simplify Mode
             </Announcement>
           </SignedOut>
-          <PageHeaderHeading>{siteConfig.header}</PageHeaderHeading>
-          <PageHeaderDescription>
+          <HeroPageHeaderHeading>{siteConfig.header}</HeroPageHeaderHeading>
+          <HeroPageHeaderDescription>
             {siteConfig.description}
-          </PageHeaderDescription>
-          <PageActions>
+          </HeroPageHeaderDescription>
+          <HeroPageActions>
             <SignedIn>
               <Link href={paths.dashboard()} className={cn(buttonVariants())}>
                 <DashboardIcon className="mr-2 h-4 w-4" />
@@ -55,15 +55,15 @@ export default function IndexPage() {
               <Icons.gitHub className="mr-2 h-4 w-4" />
               GitHub
             </Link>
-          </PageActions>
-        </PageHeader>
+          </HeroPageActions>
+        </HeroPageHeader>
         <section className="container space-y-6 py-8 dark:bg-transparent md:py-12 lg:py-24">
           <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
-            <PageHeaderHeading>Features</PageHeaderHeading>
-            <PageHeaderDescription>
+            <HeroPageHeaderHeading>Features</HeroPageHeaderHeading>
+            <HeroPageHeaderDescription>
               {siteConfig.name} offers a variety of features to help you manage
               your shared expenses with ease.
-            </PageHeaderDescription>
+            </HeroPageHeaderDescription>
           </div>
           <Feature.List>
             <Feature.Item
@@ -86,8 +86,8 @@ export default function IndexPage() {
 
         <section id="open-source" className="container py-8 md:py-12 lg:py-24">
           <div className="mx-auto flex max-w-[58rem] flex-col items-center justify-center gap-4 text-center">
-            <PageHeaderHeading>Proudly Open Source</PageHeaderHeading>
-            <PageHeaderDescription>
+            <HeroPageHeaderHeading>Proudly Open Source</HeroPageHeaderHeading>
+            <HeroPageHeaderDescription>
               {siteConfig.name} is open source and powered by open source
               software. <br /> The code is available on{' '}
               <Link
@@ -99,7 +99,7 @@ export default function IndexPage() {
                 GitHub
               </Link>
               .{' '}
-            </PageHeaderDescription>
+            </HeroPageHeaderDescription>
           </div>
         </section>
       </main>
