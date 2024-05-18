@@ -4,10 +4,8 @@ import GroupUserSearchForm from '@/app/(protected)/groups/[uuid]/search/_compone
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -56,13 +54,6 @@ const GroupMembers = ({ group, className, ...rest }: GroupMembersProps) => {
               </li>
             ))}
           </ul>
-          <DialogFooter className="sm:justify-start">
-            <DialogClose asChild>
-              <Button type="button" variant="secondary">
-                Close
-              </Button>
-            </DialogClose>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
