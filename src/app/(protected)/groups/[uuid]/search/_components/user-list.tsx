@@ -1,4 +1,4 @@
-import UserItem from '@/components/groups/user-item';
+import UserItem from '@/app/(protected)/groups/[uuid]/search/_components/user-item';
 import type { UserListWithData } from '@/db/queries';
 
 interface UserListProps {

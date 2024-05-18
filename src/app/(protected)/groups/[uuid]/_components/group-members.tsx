@@ -1,6 +1,6 @@
 import { SingleGroupWithData } from '@/db/queries';
 
-import GroupUserSearchForm from '@/components/groups/group-user-search-form';
+import GroupUserSearchForm from '@/app/(protected)/groups/[uuid]/search/_components/group-user-search-form';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
