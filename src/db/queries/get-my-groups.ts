@@ -60,6 +60,10 @@ export const getMyGroups = cache(async () => {
       },
       owner: true,
     },
+    orderBy: (groups, { desc }) => [
+      desc(groups.createdAt),
+      desc(groups.updatedAt),
+    ],
   });
   return allGroups;
 });

@@ -142,9 +142,12 @@ const GroupItem = ({ group }: GroupItemProps) => {
         </CardTitle>
         <CardDescription className="cursor-pointer text-sm font-semibold text-accent-foreground/40">
           <Link href={paths.groupShow(group.uuid)}>
-            {formatDistanceToNow(new Date(group.createdAt), {
-              addSuffix: true,
-            })}
+            {formatDistanceToNow(
+              new Date(group?.updatedAt || group?.createdAt),
+              {
+                addSuffix: true,
+              },
+            )}
           </Link>
         </CardDescription>
       </CardHeader>

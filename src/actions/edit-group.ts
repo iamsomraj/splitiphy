@@ -89,6 +89,7 @@ export async function editGroup(
       .update(groups)
       .set({
         name: result.data.name,
+        updatedAt: new Date(),
       })
       .where(eq(groups.uuid, result.data.groupUuid));
   } catch (err: unknown) {
