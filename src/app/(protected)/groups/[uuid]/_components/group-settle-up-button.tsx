@@ -7,7 +7,7 @@ import { groupUserBalances, users } from '@/db/schema';
 import { Equal } from 'lucide-react';
 import { useTransition } from 'react';
 
-type SettleUpButtonProps = {
+type GroupSettleUpButtonProps = {
   groupUuid: string;
   balance: typeof groupUserBalances.$inferSelect & {
     sender: typeof users.$inferSelect;
@@ -16,7 +16,10 @@ type SettleUpButtonProps = {
   };
 };
 
-const SettleUpButton = ({ groupUuid, balance }: SettleUpButtonProps) => {
+const GroupSettleUpButton = ({
+  groupUuid,
+  balance,
+}: GroupSettleUpButtonProps) => {
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const onClick = () => {
@@ -49,4 +52,4 @@ const SettleUpButton = ({ groupUuid, balance }: SettleUpButtonProps) => {
   ) : null;
 };
 
-export default SettleUpButton;
+export default GroupSettleUpButton;

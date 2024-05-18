@@ -23,15 +23,15 @@ import constants from '@/lib/constants';
 import { cn, formatNumber } from '@/lib/utils';
 import { DotsHorizontalIcon, DotsVerticalIcon } from '@radix-ui/react-icons';
 import { useTransition } from 'react';
-import { useToast } from '../ui/use-toast';
-import { ExpenseCategoryIcon } from './expense-category-icon';
+import { ExpenseCategoryIcon } from '../../../../../components/groups/expense-category-icon';
+import { useToast } from '../../../../../components/ui/use-toast';
 
-type ExpenseListProps = {
+type GroupExpenseListProps = {
   group: SingleGroupWithData;
   user: LoggedInUser;
 };
 
-const ExpenseList = ({ group, user }: ExpenseListProps) => {
+const GroupExpenseList = ({ group, user }: GroupExpenseListProps) => {
   const { toast } = useToast();
   const [pending, startTransition] = useTransition();
 
@@ -282,4 +282,4 @@ const ExpenseList = ({ group, user }: ExpenseListProps) => {
   );
 };
 
-export default ExpenseList;
+export default GroupExpenseList;
