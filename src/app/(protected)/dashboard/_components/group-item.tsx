@@ -52,11 +52,11 @@ const GroupItem = ({ group }: GroupItemProps) => {
   const onGroupDelete = () => {
     startTransition(async () => {
       const response = await actions.deleteGroup(group?.uuid || '');
-      const state = response?.state || true;
+      const title = response?.title || 'Yay! Group deleted.';
       const message =
         response?.message || 'Great! Your group has been deleted.';
       toast({
-        title: state ? 'Success!' : 'Error',
+        title,
         description: message,
       });
     });

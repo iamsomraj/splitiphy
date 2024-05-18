@@ -18,6 +18,7 @@ export async function deleteGroup(groupUuid: string) {
   if (!session || !session.userId) {
     return {
       state: false,
+      title: 'Shucks! You are not signed in.',
       message: 'You must be signed in to do this.',
     };
   }
@@ -30,6 +31,7 @@ export async function deleteGroup(groupUuid: string) {
     if (!group) {
       return {
         state: false,
+        title: "Shucks! We couldn't find the group.",
         message: 'Group not found',
       };
     }
@@ -37,6 +39,7 @@ export async function deleteGroup(groupUuid: string) {
     if (group.ownerId !== session.userId) {
       return {
         state: false,
+        title: 'Shucks! You do not have permission to delete this group.',
         message: 'You are not the owner of this group',
       };
     }
@@ -51,6 +54,7 @@ export async function deleteGroup(groupUuid: string) {
     if (!groupMembershipRecord) {
       return {
         state: false,
+        title: 'Shucks! You do not have permission to delete this group.',
         message: 'You are not a member of this group',
       };
     }
@@ -84,11 +88,13 @@ export async function deleteGroup(groupUuid: string) {
     if (err instanceof Error) {
       return {
         state: false,
+        title: 'Shucks! Something went wrong.',
         message: err.message,
       };
     } else {
       return {
         state: false,
+        title: 'Shucks! Something went wrong.',
         message: 'Something went wrong',
       };
     }
