@@ -1,18 +1,6 @@
-import { Button } from '@/components/ui/button';
-import UserSettingsForm from '@/components/users/user-settings-form';
+import BackButton from '@/app/(protected)/settings/_components/back-button';
+import UserSettingsForm from '@/app/(protected)/settings/_components/user-settings-form';
 import { getLoggedInUser } from '@/db/queries';
-import paths from '@/lib/paths';
-import { ChevronLeft } from 'lucide-react';
-import Link from 'next/link';
-
-const BackButton = () => (
-  <Link href={paths.dashboard()}>
-    <Button variant="outline" size="icon" className="h-7 w-7">
-      <ChevronLeft className="h-4 w-4" />
-      <span className="sr-only">Back</span>
-    </Button>
-  </Link>
-);
 
 export default async function SettingsPage() {
   const user = await getLoggedInUser();
