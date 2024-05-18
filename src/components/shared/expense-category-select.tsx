@@ -1,4 +1,4 @@
-import { ExpenseCategoryIcon } from '@/components/expense-category-icon';
+import { ExpenseCategoryIcon } from '@/components/shared/expense-category-icon';
 import { Button } from '@/components/ui/button';
 import {
   Command,

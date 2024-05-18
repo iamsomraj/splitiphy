@@ -1,6 +1,6 @@
 'use client';
 import * as actions from '@/actions';
-import { ExpenseCategorySelect } from '@/components/expense-category-select';
+import { ExpenseCategorySelect } from '@/components/shared/expense-category-select';
 import FormButton from '@/components/shared/form-button';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
