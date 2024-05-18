@@ -1,6 +1,7 @@
 'use client';
 
 import * as actions from '@/actions';
+import { ExpenseCategoryIcon } from '@/components/expense-category-icon';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -18,13 +19,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useToast } from '@/components/ui/use-toast';
 import { LoggedInUser, SingleGroupWithData } from '@/db/queries';
 import constants from '@/lib/constants';
 import { cn, formatNumber } from '@/lib/utils';
 import { DotsHorizontalIcon, DotsVerticalIcon } from '@radix-ui/react-icons';
 import { useTransition } from 'react';
-import { ExpenseCategoryIcon } from '../../../../../components/groups/expense-category-icon';
-import { useToast } from '../../../../../components/ui/use-toast';
 
 type GroupExpenseListProps = {
   group: SingleGroupWithData;
