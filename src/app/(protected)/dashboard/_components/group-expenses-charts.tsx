@@ -13,7 +13,7 @@ import {
 type GroupExpensesChartsProps = {
   expenses: {
     name: string;
-    total: number;
+    expense: number;
   }[];
 } & React.HTMLAttributes<HTMLDivElement>;
 
@@ -49,7 +49,7 @@ export default function GroupExpensesCharts({
               }}
             />
             <Line
-              dataKey="total"
+              dataKey="expense"
               fill="currentColor"
               className="fill-primary"
             />

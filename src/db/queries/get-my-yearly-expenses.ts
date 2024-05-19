@@ -135,11 +135,11 @@ export const getMyYearlyExpenses = cache(async () => {
     (sortedAcc, month) => {
       sortedAcc.push({
         name: month,
-        total: Math.round(data[month]),
+        expense: Math.round(data[month]),
       });
       return sortedAcc;
     },
-    [] as { name: string; total: number }[],
+    [] as { name: string; expense: number }[],
   );
 
   return expenses;
