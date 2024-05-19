@@ -21,10 +21,10 @@ const paths = {
     return '/settings';
   },
   terms() {
-    return '/dashboard';
+    return '/';
   },
   privacy() {
-    return '/dashboard';
+    return '/';
   },
 };
 
