@@ -1,7 +1,7 @@
 export const siteConfig = {
   name: 'splitiphy',
   url: 'https://splitiphy.vercel.app',
-  ogImage: 'https://splitiphy.vercel.app/og.jpg',
+  ogImage: 'https://splitiphy.vercel.app/og.png',
   keywords: [
     'splitiphy',
     'split',
