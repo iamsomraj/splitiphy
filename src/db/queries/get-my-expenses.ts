@@ -129,7 +129,7 @@ export const getMyExpenses = cache(async () => {
     (sortedAcc, month) => {
       sortedAcc.push({
         name: month,
-        total: data[month],
+        total: Math.round(data[month]),
       });
       return sortedAcc;
     },

@@ -1,7 +1,14 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import {
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 
 type GroupExpensesChartsProps = {
   expenses: {
@@ -46,6 +53,7 @@ export default function GroupExpensesCharts({
               fill="currentColor"
               className="fill-primary"
             />
+            <Tooltip />
           </LineChart>
         </ResponsiveContainer>
       </CardContent>
