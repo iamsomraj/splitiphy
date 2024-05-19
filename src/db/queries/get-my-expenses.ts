@@ -100,6 +100,12 @@ export const getMyExpenses = cache(async () => {
 
   const data = allGroups.reduce((acc: Acc, group) => {
     group.groupExpenses.forEach((groupExpense) => {
+      if (
+        new Date(groupExpense.expense.date).getFullYear() !==
+        new Date().getFullYear()
+      ) {
+        return;
+      }
       groupExpense.expense.transactions.forEach((transaction) => {
         if (transaction.payer.id === session[0].id) {
           const monthNumber = new Date(groupExpense.expense.date).getMonth();
