@@ -67,9 +67,9 @@ export default function IndexPage() {
           </div>
           <Feature.List>
             <Feature.Item
-              title="Expense Tracking"
-              description="Easily keep track of all shared expenses with friends and family."
-              icon={<Icons.dollar className="h-12 w-12 fill-current" />}
+              title="Expense Charts"
+              description="Visualize your expenses with interactive charts on your dashboard."
+              icon={<Icons.charts className="h-12 w-12 fill-current" />}
             />
             <Feature.Item
               title="Group Expense Splitting"
