@@ -35,7 +35,7 @@ const orderedMonths = [
   'Dec',
 ];
 
-export const getMyExpenses = cache(async () => {
+export const getMyYearlyExpenses = cache(async () => {
   const authUser = await auth();
 
   if (!authUser || !authUser.userId) {
@@ -146,5 +146,5 @@ export const getMyExpenses = cache(async () => {
 });
 
 export type MyExpensesData = NonNullable<
-  Awaited<ReturnType<typeof getMyExpenses>>
+  Awaited<ReturnType<typeof getMyYearlyExpenses>>
 >;
