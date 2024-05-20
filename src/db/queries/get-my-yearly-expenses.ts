@@ -4,21 +4,9 @@ import UserAuthService from '@/services/auth-user-service';
 import { auth } from '@clerk/nextjs';
 import { eq, inArray, or } from 'drizzle-orm';
 import { cache } from 'react';
+import constants from '@/lib/constants';
 
-const monthMap: Record<number, string> = {
-  0: 'Jan',
-  1: 'Feb',
-  2: 'Mar',
-  3: 'Apr',
-  4: 'May',
-  5: 'Jun',
-  6: 'Jul',
-  7: 'Aug',
-  8: 'Sep',
-  9: 'Oct',
-  10: 'Nov',
-  11: 'Dec',
-};
+const { monthIndexMap } = constants;
 
 const orderedMonths = [
   'Jan',
@@ -109,13 +97,13 @@ export const getMyYearlyExpenses = cache(async () => {
       groupExpense.expense.transactions.forEach((transaction) => {
         if (transaction.payer.id === session[0].id) {
           const monthNumber = new Date(groupExpense.expense.date).getMonth();
-          const month = monthMap[monthNumber] as string;
+          const month = monthIndexMap[monthNumber] as string;
           acc[month] = acc[month] || 0;
           acc[month] += parseFloat(transaction.amount);
         }
         if (transaction.receiver.id === session[0].id) {
           const monthNumber = new Date(groupExpense.expense.date).getMonth();
-          const month = monthMap[monthNumber] as string;
+          const month = monthIndexMap[monthNumber] as string;
           acc[month] = acc[month] || 0;
           acc[month] -= parseFloat(transaction.amount);
         }
@@ -125,7 +113,7 @@ export const getMyYearlyExpenses = cache(async () => {
   }, {});
 
   [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].forEach((monthNumber) => {
-    const month = monthMap[monthNumber];
+    const month = monthIndexMap[monthNumber];
     if (!data[month]) {
       data[month] = 0;
     }
