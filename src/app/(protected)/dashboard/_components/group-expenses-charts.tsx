@@ -65,7 +65,7 @@ export default function GroupExpensesCharts({
               <SelectContent>
                 {[
                   {
-                    label: 'From today',
+                    label: 'From this month',
                     value: 'current-month',
                   },
                   {
