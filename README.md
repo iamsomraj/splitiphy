@@ -1,6 +1,6 @@
-<img src="./public/og.png" alt="Splitiphy Home Page" />
+# Splitiphy Home Page
 
-# Splitiphy - manage expenses easily
+![Hero Image](./public/og.png)
 
 Splitiphy is a Modern Full Stack Web Application that allows users to easily split bills with friends and family. It is built with Next JS, Tailwind CSS, and Drizzle.
 
