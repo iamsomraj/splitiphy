@@ -1,4 +1,4 @@
-# Splitiphy Home Page
+# Splitiphy - manage expenses easily
 
 ![Hero Image](./public/og.png)
 
