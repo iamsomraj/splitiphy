@@ -1,8 +1,6 @@
 # Changelog
 
-
 ## v0.1.1
-
 
 ### 🚀 Enhancements
 
@@ -30,4 +28,3 @@
 ### ❤️ Contributors
 
 - Somraj Mukherjee ([@iamsomraj](http://github.com/iamsomraj))
-
