@@ -6,7 +6,12 @@ import paths from '@/lib/paths';
 
 export default authMiddleware({
   // Allow signed out users to access the specified routes:
-  publicRoutes: [paths.home(), paths.getStarted()],
+  publicRoutes: [
+    paths.home(),
+    paths.getStarted(),
+    paths.terms(),
+    paths.privacy(),
+  ],
   // Prevent the specified routes from accessing authentication information:
   ignoredRoutes: [],
 });
