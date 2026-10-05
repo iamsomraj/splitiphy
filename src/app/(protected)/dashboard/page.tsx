@@ -9,9 +9,9 @@ export default async function DashboardPage() {
   const yearlyExpenses = await getMyYearlyExpenses();
 
   return (
-    <main className="grid w-full flex-1 grid-cols-4 gap-6 p-4 sm:p-6 lg:p-12">
-      <div className="col-span-4 sm:col-span-2">
-        <div className="static top-28 z-10 grid grid-cols-2 gap-6 sm:sticky">
+    <main className="grid w-full flex-1 grid-cols-1 items-start gap-6 px-4 pt-6 pb-12 sm:px-6 lg:grid-cols-2 lg:px-12">
+      <div className="min-w-0">
+        <div className="grid grid-cols-2 gap-6 lg:sticky lg:top-24">
           <GroupCreateForm className="col-span-2" />
           <GroupExpensesCharts
             className="col-span-2"

@@ -36,7 +36,7 @@ export default async function InvitePage(props: InvitePageProps) {
 
   if (!group) {
     return (
-      <main className="flex flex-1 items-center justify-center p-6">
+      <main className="flex flex-1 items-center justify-center px-4 py-12 sm:px-6">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle>Invite link is invalid</CardTitle>
@@ -62,7 +62,7 @@ export default async function InvitePage(props: InvitePageProps) {
   const memberCount = group.groupMemberships.length;
 
   return (
-    <main className="flex flex-1 items-center justify-center p-6">
+    <main className="flex flex-1 items-center justify-center px-4 py-12 sm:px-6">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl">Join {group.name}</CardTitle>

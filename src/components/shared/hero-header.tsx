@@ -10,7 +10,7 @@ function HeroPageHeader({
   return (
     <section
       className={cn(
-        'mx-auto flex max-w-[980px] flex-col items-center gap-2 pt-28 pb-14',
+        'mx-auto flex max-w-[980px] flex-col items-center gap-4 pt-12 pb-10 sm:pt-24 sm:pb-14',
         className,
       )}
       {...props}
@@ -57,7 +57,7 @@ function HeroPageActions({
   return (
     <div
       className={cn(
-        'flex w-full items-center justify-center space-x-4 py-4 md:pb-10',
+        'flex w-full flex-col items-stretch justify-center gap-3 py-4 sm:flex-row sm:items-center md:pb-10',
         className,
       )}
       {...props}

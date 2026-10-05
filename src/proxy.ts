@@ -4,7 +4,10 @@ import { clerkMiddleware } from '@clerk/nextjs/server';
 // next to the data: the (protected) layout, server actions, and queries all
 // check the session themselves.
 // See https://clerk.com/docs/reference/nextjs/clerk-middleware
-export default clerkMiddleware();
+export default clerkMiddleware({
+  // Signed-out visitors are sent to our own sign-in page, not Clerk's portal.
+  signInUrl: '/get-started',
+});
 
 export const config = {
   matcher: [
