@@ -5,7 +5,7 @@ type GroupHeaderProps = {
 
 const GroupHeader = ({ groupName, memberCount }: GroupHeaderProps) => (
   <div className="flex flex-wrap items-end gap-2">
-    <span className="text-4xl font-bold">{groupName}</span>
+    <h1 className="text-3xl font-bold break-words sm:text-4xl">{groupName}</h1>
     <span className="font-medium text-accent-foreground/40">
       {memberCount} {memberCount > 1 ? 'members' : 'member'}
     </span>

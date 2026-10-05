@@ -225,12 +225,12 @@ const GroupExpenseList = ({
           </TableFooter>
         </Table>
       </div>
-      <ul className="flex flex-col gap-6 sm:hidden">
+      <ul className="flex flex-col gap-3 sm:hidden">
         {groupExpenses.map((groupExpense) => (
           <li
             key={groupExpense.uuid}
             className={cn(
-              'flex flex-col gap-2 rounded-sm border bg-muted/40 p-6 hover:bg-muted/20',
+              'flex flex-col gap-2 rounded-lg border bg-muted/40 p-4',
               groupExpense.isSystemGenerated &&
                 'text-green-600 dark:text-green-200',
               pending && 'pointer-events-none opacity-60',
@@ -238,7 +238,7 @@ const GroupExpenseList = ({
           >
             <div className="flex flex-wrap items-center justify-between gap-2">
               <span>{groupExpense.expense.date.toDateString()}</span>
-              <span className="flex items-center font-semibold text-accent-foreground/40">
+              <span className="flex items-center gap-1 text-sm font-semibold text-accent-foreground/40">
                 <ExpenseCategoryIcon
                   icon={
                     constants.expenseCategoryKeyIconMap[
@@ -264,7 +264,7 @@ const GroupExpenseList = ({
               </span>
             </div>
             <div className="flex flex-col">
-              <span className="line-clamp-1 text-2xl font-bold">
+              <span className="line-clamp-2 text-xl font-bold break-words">
                 {groupExpense.expense.name}
               </span>
               <span className="line-clamp-1 font-semibold text-accent-foreground/40">
@@ -298,6 +298,13 @@ const GroupExpenseList = ({
           </li>
         ))}
       </ul>
+      <div className="flex items-center justify-between rounded-lg border px-4 py-3 text-sm font-semibold sm:hidden">
+        <span>{isFiltered ? 'Total (filtered)' : 'Total Group Spending'}</span>
+        <span>
+          {currencySymbol}
+          {totalAmount}
+        </span>
+      </div>
     </>
   );
 };
