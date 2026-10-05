@@ -4,6 +4,7 @@
 
 ### 🚀 Enhancements
 
+- Multistep expense form (details → paid by → split → review) with live totals and per-step validation
 - Edit existing expenses: amounts, payers and splits are rebuilt and balances re-simplified
 - Export a group's expenses and splits as a CSV file
 - Search and filter group expenses by text, category and date range

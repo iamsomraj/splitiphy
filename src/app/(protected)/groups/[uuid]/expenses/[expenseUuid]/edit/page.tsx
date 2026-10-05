@@ -2,9 +2,13 @@ import BackButton from '@/app/(protected)/groups/[uuid]/expenses/new/_components
 import GroupExpenseForm, {
   ExpenseFormValues,
 } from '@/app/(protected)/groups/[uuid]/expenses/new/_components/group-expense-form';
-import { getGroupDetailsById, SingleGroupWithData } from '@/db/queries';
+import {
+  getGroupDetailsById,
+  getLoggedInUser,
+  SingleGroupWithData,
+} from '@/db/queries';
+import { currencySymbolFor, formatNumber } from '@/lib/utils';
 import paths from '@/lib/paths';
-import { formatNumber } from '@/lib/utils';
 import { redirect } from 'next/navigation';
 
 type EditExpensePageProps = {
@@ -54,7 +58,10 @@ const toFormValues = ({ expense }: GroupExpense): ExpenseFormValues => {
 
 export default async function EditExpensePage(props: EditExpensePageProps) {
   const { uuid, expenseUuid } = await props.params;
-  const group = await getGroupDetailsById(uuid);
+  const [group, user] = await Promise.all([
+    getGroupDetailsById(uuid),
+    getLoggedInUser(),
+  ]);
 
   if (!group) {
     redirect(paths.dashboard());
@@ -78,6 +85,8 @@ export default async function EditExpensePage(props: EditExpensePageProps) {
       </div>
       <GroupExpenseForm
         group={group}
+        currentUserId={user?.id}
+        currencySymbol={currencySymbolFor(user?.currency)}
         groupExpenseUuid={expenseUuid}
         initialValues={toFormValues(groupExpense)}
       />
