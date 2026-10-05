@@ -1,0 +1,9 @@
+allowBuilds:
+  '@clerk/shared': false
+  core-js: false
+  esbuild: true
+  unrs-resolver: true
+
+overrides:
+  # drizzle-kit pulls an old esbuild via @esbuild-kit (GHSA-67mh-4wv8-2f99, dev only)
+  '@esbuild-kit/core-utils>esbuild': ^0.25.0

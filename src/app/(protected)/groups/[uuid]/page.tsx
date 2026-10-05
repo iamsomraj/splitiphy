@@ -5,16 +5,29 @@ import GroupMembers from '@/app/(protected)/groups/[uuid]/_components/group-memb
 import GroupSettleUpButton from '@/app/(protected)/groups/[uuid]/_components/group-settle-up-button';
 import GroupSimplifyButton from '@/app/(protected)/groups/[uuid]/_components/group-simplify-button';
 import { getGroupDetailsById, getLoggedInUser } from '@/db/queries';
+import { ExpenseFilters } from '@/lib/expense-filters';
 import paths from '@/lib/paths';
 import { redirect } from 'next/navigation';
 
 type GroupDetailsPageProps = {
-  params: {
+  params: Promise<{
     uuid: string;
-  };
+  }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-const GroupDetailsPage = async ({ params }: GroupDetailsPageProps) => {
+const firstValue = (value: string | string[] | undefined) =>
+  Array.isArray(value) ? value[0] : value;
+
+const GroupDetailsPage = async (props: GroupDetailsPageProps) => {
+  const params = await props.params;
+  const searchParams = await props.searchParams;
+  const filters: ExpenseFilters = {
+    q: firstValue(searchParams.q),
+    category: firstValue(searchParams.category),
+    from: firstValue(searchParams.from),
+    to: firstValue(searchParams.to),
+  };
   const [groupResult, userResult] = await Promise.allSettled([
     getGroupDetailsById(params.uuid),
     getLoggedInUser(),
@@ -36,7 +49,7 @@ const GroupDetailsPage = async ({ params }: GroupDetailsPageProps) => {
         />
         <GroupBalances group={group} user={user} />
       </div>
-      <div className="flex max-w-full gap-6 overflow-x-auto px-6 pt-6 scrollbar-none sm:px-12">
+      <div className="scrollbar-none flex max-w-full gap-6 overflow-x-auto px-6 pt-6 sm:px-12">
         <GroupSimplifyButton group={group} />
         {group.groupUserBalances.length > 0 &&
           group.groupUserBalances.map((balance) => (
@@ -46,9 +59,13 @@ const GroupDetailsPage = async ({ params }: GroupDetailsPageProps) => {
               groupUuid={group?.uuid || ''}
             />
           ))}
-        <GroupMembers group={group} className="w-full" />
+        <GroupMembers
+          group={group}
+          currentUserId={user?.id}
+          className="w-full"
+        />
       </div>
-      <GroupDetailContent group={group} user={user} />
+      <GroupDetailContent group={group} user={user} filters={filters} />
     </main>
   );
 };

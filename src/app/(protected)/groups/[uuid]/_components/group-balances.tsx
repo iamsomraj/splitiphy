@@ -24,7 +24,7 @@ const GroupBalances = ({
   return (
     <div className={cn(className)} {...rest}>
       {group.groupUserBalances.length === 0 ? (
-        <h2 className="w-full text-2xl font-bold text-accent-foreground/40 ">
+        <h2 className="w-full text-2xl font-bold text-accent-foreground/40">
           No simplified balances to display.
         </h2>
       ) : (
@@ -36,7 +36,7 @@ const GroupBalances = ({
             >
               {balance.sender.firstName} {balance.sender.lastName} owes{' '}
               {balance.recipient.firstName} {balance.recipient.lastName}{' '}
-              <span className="ml-1.5 mr-0.5">{currencySymbol}</span>
+              <span className="mr-0.5 ml-1.5">{currencySymbol}</span>
               {balance.amount} {' in total'}
             </li>
           ))}

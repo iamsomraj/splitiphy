@@ -12,8 +12,7 @@ import {
 import { LoggedInUser } from '@/db/queries';
 import constants from '@/lib/constants';
 import { cn } from '@/lib/utils';
-import { useRef } from 'react';
-import { useFormState } from 'react-dom';
+import { useActionState, useRef } from 'react';
 
 type UserSettingsFormProps = {
   user: LoggedInUser;
@@ -21,7 +20,7 @@ type UserSettingsFormProps = {
 
 export default function UserSettingsForm(props: UserSettingsFormProps) {
   const hiddenCurrencyRef = useRef<HTMLSelectElement>(null);
-  const [formState, action] = useFormState(actions.updateUserSettings, {
+  const [formState, action] = useActionState(actions.updateUserSettings, {
     errors: {},
   });
 

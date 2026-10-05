@@ -2,6 +2,7 @@
 
 import db from '@/db/drizzle';
 import {
+  expenses,
   groupExpenses,
   groupMemberships,
   groupUserBalances,
@@ -9,7 +10,7 @@ import {
   transactions,
 } from '@/db/schema';
 import paths from '@/lib/paths';
-import { auth } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs/server';
 import { and, eq, inArray } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 
@@ -67,23 +68,19 @@ export async function deleteGroup(groupUuid: string) {
       (grpExpense) => grpExpense.expenseId,
     );
 
-    if (expenseIds.length) {
-      await db
+    // Child rows first, then the group itself, in a single atomic batch.
+    await db.batch([
+      db
         .delete(transactions)
-        .where(inArray(transactions.expenseId, expenseIds));
-    }
-
-    await db.delete(groupExpenses).where(eq(groupExpenses.groupId, group.id));
-
-    await db
-      .delete(groupUserBalances)
-      .where(eq(groupUserBalances.groupId, group.id));
-
-    await db.delete(groups).where(eq(groups.uuid, groupUuid));
-
-    await db
-      .delete(groupMemberships)
-      .where(eq(groupMemberships.groupId, group.id));
+        .where(inArray(transactions.expenseId, expenseIds)),
+      db.delete(groupExpenses).where(eq(groupExpenses.groupId, group.id)),
+      db.delete(expenses).where(inArray(expenses.id, expenseIds)),
+      db
+        .delete(groupUserBalances)
+        .where(eq(groupUserBalances.groupId, group.id)),
+      db.delete(groupMemberships).where(eq(groupMemberships.groupId, group.id)),
+      db.delete(groups).where(eq(groups.id, group.id)),
+    ]);
   } catch (err: unknown) {
     if (err instanceof Error) {
       return {
