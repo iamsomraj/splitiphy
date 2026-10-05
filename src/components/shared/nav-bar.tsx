@@ -26,7 +26,7 @@ import { ClerkLoaded, Show, SignOutButton } from '@clerk/nextjs';
 const NavBar = async () => {
   const user = await getLoggedInUser();
   return (
-    <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur-sm supports-backdrop-filter:bg-background/60 md:px-10">
+    <header className="sticky top-0 z-50 flex min-h-16 items-center gap-2 border-b bg-background/95 px-4 pt-[env(safe-area-inset-top)] backdrop-blur-sm supports-backdrop-filter:bg-background/60 sm:gap-4 md:px-10">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
         <Link
           href={paths.home()}
@@ -97,7 +97,14 @@ const NavBar = async () => {
           </nav>
         </SheetContent>
       </Sheet>
-      <div className="flex w-full items-center justify-end gap-4 md:ml-auto md:gap-2 lg:gap-4">
+      <Link
+        href={paths.home()}
+        className="flex items-center gap-2 font-bold md:hidden"
+      >
+        <Icons.logo className="h-5 w-5" />
+        {siteConfig.name}
+      </Link>
+      <div className="ml-auto flex items-center justify-end gap-2 lg:gap-4">
         <ThemeModeToggle />
         <Show when="signed-in">
           <DropdownMenu>

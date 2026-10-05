@@ -23,10 +23,10 @@ const GroupDetailContent = ({ group, user, filters }: GroupExpensesProps) => {
   const filteredExpenses = filterGroupExpenses(allExpenses, filters);
 
   return (
-    <div className="flex flex-col gap-6 px-6 pt-6 sm:px-12">
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <span className="text-2xl font-bold">Expenses</span>
-        <div className="flex gap-2">
+    <section className="flex flex-col gap-6 pt-6">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <h2 className="text-2xl font-bold">Expenses</h2>
+        <div className="flex items-center gap-2">
           {allExpenses.length > 0 && (
             <Button variant="outline" className="gap-1" asChild>
               {/* Plain anchor: the route streams a file download */}
@@ -37,8 +37,9 @@ const GroupDetailContent = ({ group, user, filters }: GroupExpensesProps) => {
             </Button>
           )}
           <Link href={paths.groupAddNewExpense(group?.uuid || '')}>
-            <Button className="fixed right-5 bottom-5 h-16 w-16 gap-1 rounded-full sm:static sm:h-auto sm:w-auto sm:rounded-md">
-              <Plus className="h-10 w-10 sm:h-3.5 sm:w-3.5" />
+            <Button className="fixed right-5 bottom-[calc(1.25rem+env(safe-area-inset-bottom))] z-40 h-14 w-14 gap-1 rounded-full shadow-lg sm:static sm:h-auto sm:w-auto sm:rounded-md sm:shadow-none">
+              <Plus className="h-7 w-7 sm:h-3.5 sm:w-3.5" />
+              <span className="sr-only sm:hidden">Add Expense</span>
               <span className="hidden sm:block">Add Expense</span>
             </Button>
           </Link>
@@ -67,7 +68,7 @@ const GroupDetailContent = ({ group, user, filters }: GroupExpensesProps) => {
           )}
         </>
       )}
-    </div>
+    </section>
   );
 };
 

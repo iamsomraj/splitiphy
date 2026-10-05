@@ -10,6 +10,13 @@
 - Search and filter group expenses by text, category and date range
 - Shareable group invite links, which the owner can revoke
 
+### 🐛 Fixes
+
+- First sign-in no longer errors: users are upserted, so concurrent requests can't race on the users primary key
+- Sign-in form uses hash routing on `/get-started`, and protected pages redirect there with a return URL
+- Clerk widgets follow the app's light/dark theme and honour Tailwind overrides
+- Mobile: no hidden actions on the group page, safe-area aware spacing, footer, and dialogs that fit small screens
+
 ### 🔒 Security
 
 - Require group membership in every group action (add member, delete expense, settle up, simplify, user search)

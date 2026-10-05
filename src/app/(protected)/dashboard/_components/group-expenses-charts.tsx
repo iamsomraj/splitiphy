@@ -55,9 +55,9 @@ export default function GroupExpensesCharts({
   return (
     <Card {...props}>
       <CardHeader>
-        <CardTitle className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
+        <CardTitle className="flex flex-wrap items-center justify-between gap-4">
           <div>Expenses</div>
-          <div className="w-1/2">
+          <div className="w-full sm:w-56">
             <Select value={filter} onValueChange={setFilter}>
               <SelectTrigger>
                 <SelectValue placeholder="Select range" />

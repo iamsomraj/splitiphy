@@ -1,3 +1,6 @@
+/* Clerk's layer must come before Tailwind's utilities so overrides win */
+@layer theme, base, clerk, components, utilities;
+
 @import 'tailwindcss';
 @import 'tw-animate-css';
 

@@ -43,6 +43,8 @@ const AuthForm = () => (
   <ClerkLoaded>
     <div className="flex flex-col items-center justify-center gap-4">
       <SignIn
+        // /get-started isn't a catch-all route, so Clerk must route via the hash
+        routing="hash"
         fallbackRedirectUrl={paths.dashboard()}
         signUpFallbackRedirectUrl={paths.dashboard()}
         appearance={{
