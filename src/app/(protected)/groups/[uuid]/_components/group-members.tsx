@@ -1,5 +1,6 @@
 import { SingleGroupWithData } from '@/db/queries';
 
+import GroupInviteLink from '@/app/(protected)/groups/[uuid]/_components/group-invite-link';
 import GroupUserSearchForm from '@/app/(protected)/groups/[uuid]/search/_components/group-user-search-form';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,9 +16,15 @@ import { Settings } from 'lucide-react';
 
 type GroupMembersProps = {
   group: SingleGroupWithData;
+  currentUserId?: string;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-const GroupMembers = ({ group, className, ...rest }: GroupMembersProps) => {
+const GroupMembers = ({
+  group,
+  currentUserId,
+  className,
+  ...rest
+}: GroupMembersProps) => {
   return group ? (
     <div className={cn(className)} {...rest}>
       <Dialog>
@@ -34,8 +41,13 @@ const GroupMembers = ({ group, className, ...rest }: GroupMembersProps) => {
               These are the users that are part of this group
             </DialogDescription>
           </DialogHeader>
+          <GroupInviteLink
+            groupUuid={group.uuid || ''}
+            inviteToken={group.inviteToken}
+            isOwner={group.ownerId === currentUserId}
+          />
           <GroupUserSearchForm group={group} />
-          <ul className="flex max-h-48 flex-col gap-2 overflow-y-auto font-bold scrollbar-none">
+          <ul className="scrollbar-none flex max-h-48 flex-col gap-2 overflow-y-auto font-bold">
             {group.groupMemberships.map((member) => (
               <li
                 key={member.uuid}

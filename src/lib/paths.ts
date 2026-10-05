@@ -12,10 +12,19 @@ const paths = {
     return `/groups/${uuid}`;
   },
   groupUserSearch(groupUuid: string | null, term: string | null) {
-    return `/groups/${groupUuid}/search?term=${term}`;
+    return `/groups/${groupUuid}/search?term=${encodeURIComponent(term || '')}`;
   },
   groupAddNewExpense(groupUuid: string | null) {
     return `/groups/${groupUuid}/expenses/new`;
+  },
+  groupEditExpense(groupUuid: string | null, groupExpenseUuid: string | null) {
+    return `/groups/${groupUuid}/expenses/${groupExpenseUuid}/edit`;
+  },
+  groupExportCsv(groupUuid: string | null) {
+    return `/groups/${groupUuid}/export`;
+  },
+  groupInvite(inviteToken: string) {
+    return `/invite/${inviteToken}`;
   },
   settings() {
     return '/settings';
