@@ -1,5 +1,5 @@
 import UserAuthService from '@/services/auth-user-service';
-import { auth } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs/server';
 import { cache } from 'react';
 
 export const getLoggedInUser = cache(async () => {

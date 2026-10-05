@@ -1,7 +1,7 @@
 import db from '@/db/drizzle';
 import { groupMemberships, groups } from '@/db/schema';
 import UserAuthService from '@/services/auth-user-service';
-import { auth } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs/server';
 import { eq, inArray, or } from 'drizzle-orm';
 import { cache } from 'react';
 import constants from '@/lib/constants';

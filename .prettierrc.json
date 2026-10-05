@@ -1,10 +1,9 @@
 {
-    "singleQuote": true,
-    "trailingComma": "all",
-    "semi": true,
-    "bracketSpacing": true,
-    "tabWidth": 2,
-    "plugins": [
-      "prettier-plugin-tailwindcss"
-    ]
-  }
+  "singleQuote": true,
+  "trailingComma": "all",
+  "semi": true,
+  "bracketSpacing": true,
+  "tabWidth": 2,
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "tailwindStylesheet": "./src/app/globals.css"
+}

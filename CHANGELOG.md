@@ -1,5 +1,28 @@
 # Changelog
 
+## Unreleased (v0.2.0)
+
+### 🚀 Enhancements
+
+- Edit existing expenses: amounts, payers and splits are rebuilt and balances re-simplified
+- Export a group's expenses and splits as a CSV file
+- Search and filter group expenses by text, category and date range
+- Shareable group invite links, which the owner can revoke
+
+### 🔒 Security
+
+- Require group membership in every group action (add member, delete expense, settle up, simplify, user search)
+- Scope expense and balance lookups to their group
+- Re-fetch member profiles from Clerk instead of trusting client data
+- Guard CSV exports against spreadsheet formula injection
+- Resolve 71 of 72 `pnpm audit` advisories by upgrading dependencies
+
+### 🏡 Chore
+
+- Upgrade to Next.js 16, React 19, Clerk Core 3, Tailwind CSS 4, Drizzle ORM 0.45, zod 4, ESLint 9 flat config and TypeScript 6
+- Rename `middleware.ts` to `proxy.ts` and move auth checks into the protected layout
+- Require Node.js 22+ (24 recommended)
+
 ## v0.1.1
 
 ### 🚀 Enhancements

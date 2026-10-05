@@ -2,49 +2,91 @@
 
 ![Hero Image](./public/og.png)
 
-Splitiphy is a Modern Full Stack Web Application that allows users to easily split bills with friends and family. It is built with Next JS, Tailwind CSS, and Drizzle.
+Splitiphy is a modern full-stack web application for splitting bills with friends and family. It is built with Next.js, Tailwind CSS, Clerk and Drizzle ORM on Postgres.
 
 ## Preview Link
 
 ✅ [Live] [https://splitiphy.vercel.app/] 😊
 
+## Features
+
+- 👥 **Groups**: create groups, add members by search, or share an invite link
+- 💸 **Expenses**: add, edit and delete expenses with custom splits and multiple payers
+- 🧮 **Simplify debts**: collapse everyone's balances into the fewest possible payments
+- 🤝 **Settle up**: record settlements between members
+- 🔎 **Search & filter**: find expenses by text, category and date range
+- 📄 **CSV export**: download a group's expenses and splits for spreadsheets
+- 📊 **Dashboard**: yearly spending chart across all your groups
+- 🌗 **Themes**: light and dark mode, with a currency preference per user
+
+## Tech Stack
+
+- [Next.js 16](https://nextjs.org/) (App Router, Server Actions) + React 19
+- [Clerk](https://clerk.com/) for authentication
+- [Drizzle ORM](https://orm.drizzle.team/) + [Neon](https://neon.tech/) serverless Postgres
+- [Tailwind CSS 4](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/)
+- Deployed on [Vercel](https://vercel.com/)
+
 ## Run Locally
 
-Following steps are required to run the application:
+### Prerequisites
 
-- Open Terminal
+- Node.js 22 or newer (24 recommended, see `.nvmrc`)
+- [pnpm](https://pnpm.io/)
+- A Clerk application and a Postgres database (for example, Neon)
 
-- Clone Splitiphy Repository
+### Steps
 
-```bash
-    git clone https://github.com/iamsomraj/splitiphy.git
-```
+1. Clone the repository
 
-- Go to Root Directory of the Project
+   ```bash
+   git clone https://github.com/iamsomraj/splitiphy.git
+   cd splitiphy
+   ```
 
-```bash
-    cd splitiphy
-```
+2. Set up environment variables by copying `.env.example` to `.env` and filling in:
 
-- Setup Environment Variables
+   - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` - Clerk publishable key
+   - `CLERK_SECRET_KEY` - Clerk secret key
+   - `DATABASE_URL` - Postgres connection string
 
-To run this project, you will need to add the following environment variables to your `.env` file
+3. Install dependencies
 
-- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` - Clerk Publishable Key
-- `CLERK_SECRET_KEY` - Clerk Secret Key
-- `DATABASE_URL` - Database URL
+   ```bash
+   pnpm install
+   ```
 
-- Install Dependencies
+4. Create the database tables
 
-```bash
-    pnpm install
-```
+   ```bash
+   pnpm db:migrate
+   ```
 
-- Run the Application
+5. Run the application
 
-```bash
-    pnpm run dev
-```
+   ```bash
+   pnpm dev
+   ```
+
+## Scripts
+
+| Script             | Description                                      |
+| ------------------ | ------------------------------------------------ |
+| `pnpm dev`         | Start the development server                     |
+| `pnpm build`       | Create a production build                        |
+| `pnpm start`       | Serve the production build                       |
+| `pnpm lint`        | Lint the project with ESLint                     |
+| `pnpm fix`         | Lint and auto-fix problems                       |
+| `pnpm format`      | Format sources with Prettier                     |
+| `pnpm typecheck`   | Type-check with TypeScript                       |
+| `pnpm db:generate` | Generate a SQL migration from `src/db/schema.ts` |
+| `pnpm db:migrate`  | Apply pending migrations to `DATABASE_URL`       |
+| `pnpm db:push`     | Push the schema directly (prototyping only)      |
+| `pnpm db:studio`   | Open Drizzle Studio                              |
+
+## Deployment
+
+The app deploys to Vercel with zero configuration. Set the three environment variables above in the Vercel project (Production and Preview), and run `pnpm db:migrate` against the production database whenever a new migration is added under `drizzle/`.
 
 ## Developer
 
