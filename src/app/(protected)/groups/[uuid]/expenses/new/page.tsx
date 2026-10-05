@@ -1,7 +1,8 @@
 import BackButton from '@/app/(protected)/groups/[uuid]/expenses/new/_components/back-button';
 import GroupExpenseForm from '@/app/(protected)/groups/[uuid]/expenses/new/_components/group-expense-form';
 import PageHeader from '@/app/(protected)/groups/[uuid]/expenses/new/_components/page-header';
-import { getGroupDetailsById } from '@/db/queries';
+import { getGroupDetailsById, getLoggedInUser } from '@/db/queries';
+import { currencySymbolFor } from '@/lib/utils';
 import paths from '@/lib/paths';
 import { redirect } from 'next/navigation';
 
@@ -13,7 +14,10 @@ type NewExpensePageProps = {
 
 export default async function NewExpensePage(props: NewExpensePageProps) {
   const params = await props.params;
-  const group = await getGroupDetailsById(params.uuid);
+  const [group, user] = await Promise.all([
+    getGroupDetailsById(params.uuid),
+    getLoggedInUser(),
+  ]);
 
   if (!group) {
     redirect(paths.dashboard());
@@ -25,7 +29,11 @@ export default async function NewExpensePage(props: NewExpensePageProps) {
         <BackButton groupUuid={group.uuid || ''} />
         <PageHeader groupName={group.name} />
       </div>
-      <GroupExpenseForm group={group} />
+      <GroupExpenseForm
+        group={group}
+        currentUserId={user?.id}
+        currencySymbol={currencySymbolFor(user?.currency)}
+      />
     </main>
   );
 }
