@@ -35,8 +35,7 @@ import { cn } from '@/lib/utils';
 import { DotsVerticalIcon } from '@radix-ui/react-icons';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
-import { useTransition } from 'react';
-import { useFormState } from 'react-dom';
+import { useActionState, useTransition } from 'react';
 
 type GroupItemProps = {
   group: ManyGroupsWithData[0];
@@ -45,7 +44,7 @@ type GroupItemProps = {
 const GroupItem = ({ group }: GroupItemProps) => {
   const { toast } = useToast();
   const [pending, startTransition] = useTransition();
-  const [formState, action] = useFormState(actions.editGroup, {
+  const [formState, action] = useActionState(actions.editGroup, {
     errors: {},
   });
 

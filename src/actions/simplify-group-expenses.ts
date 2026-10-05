@@ -4,18 +4,21 @@ import db from '@/db/drizzle';
 import { groupUserBalances, groups } from '@/db/schema';
 import paths from '@/lib/paths';
 import SplitManagerService from '@/services/split-manager-service';
-import { auth } from '@clerk/nextjs';
+import { requireGroupMember } from '@/lib/authz';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 
 export async function simplifyGroupExpenses(groupUuid: string) {
   try {
-    const session = await auth();
-    if (!session || !session.userId) {
+    const access = await requireGroupMember(groupUuid);
+    if (!access.ok) {
       return {
         state: false,
         title: 'Uh oh! Something went wrong 😕',
-        message: 'You must be logged in to simplify group expenses.',
+        message:
+          access.reason === 'unauthenticated'
+            ? 'You must be logged in to simplify group expenses.'
+            : 'You do not have access to this group.',
       };
     }
 
@@ -91,7 +94,7 @@ export async function simplifyGroupExpenses(groupUuid: string) {
         message: 'No balances to simplify.',
       };
     }
-  } catch (error) {
+  } catch {
     return {
       state: false,
       title: 'Uh oh! Something went wrong 😕',

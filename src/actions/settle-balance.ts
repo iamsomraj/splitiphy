@@ -5,34 +5,27 @@ import {
   expenses,
   groupExpenses,
   groupUserBalances,
-  groups,
   transactions,
 } from '@/db/schema';
+import { requireGroupMember } from '@/lib/authz';
 import paths from '@/lib/paths';
-import { auth } from '@clerk/nextjs';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 export async function settleBalance(groupUuid: string, balanceUuid: string) {
   try {
-    const session = await auth();
-    if (!session || !session.userId) {
+    const access = await requireGroupMember(groupUuid);
+    if (!access.ok) {
       return {
         state: false,
       };
     }
-
-    const group = await db.query.groups.findFirst({
-      where: eq(groups.uuid, groupUuid),
-    });
-
-    if (!group) {
-      return {
-        state: false,
-      };
-    }
+    const { group, userId } = access;
 
     const groupUserBalance = await db.query.groupUserBalances.findFirst({
-      where: eq(groupUserBalances.uuid, balanceUuid),
+      where: and(
+        eq(groupUserBalances.uuid, balanceUuid),
+        eq(groupUserBalances.groupId, group.id),
+      ),
       with: {
         recipient: true,
         sender: true,
@@ -53,7 +46,7 @@ export async function settleBalance(groupUuid: string, balanceUuid: string) {
         description: `${groupUserBalance?.recipient?.firstName} ${groupUserBalance?.recipient?.lastName?.charAt(0).toUpperCase() + '.'} and ${groupUserBalance?.sender?.firstName} ${groupUserBalance?.sender?.lastName?.charAt(0).toUpperCase() + '.'} settled up!`,
         amount: groupUserBalance.amount,
         date: new Date(),
-        ownerId: session.userId,
+        ownerId: userId,
       } as typeof expenses.$inferInsert)
       .returning();
 
@@ -81,7 +74,7 @@ export async function settleBalance(groupUuid: string, balanceUuid: string) {
     await db
       .insert(transactions)
       .values({
-        ownerId: session.userId,
+        ownerId: userId,
         payerId: groupUserBalance.senderId,
         receiverId: groupUserBalance.recipientId,
         expenseId: expense[0].id,
@@ -92,7 +85,7 @@ export async function settleBalance(groupUuid: string, balanceUuid: string) {
     await db
       .delete(groupUserBalances)
       .where(eq(groupUserBalances.uuid, balanceUuid));
-  } catch (error) {
+  } catch {
     return {
       state: false,
     };

@@ -6,12 +6,13 @@ import paths from '@/lib/paths';
 import { redirect } from 'next/navigation';
 
 type NewExpensePageProps = {
-  params: {
+  params: Promise<{
     uuid: string;
-  };
+  }>;
 };
 
-export default async function NewExpensePage({ params }: NewExpensePageProps) {
+export default async function NewExpensePage(props: NewExpensePageProps) {
+  const params = await props.params;
   const group = await getGroupDetailsById(params.uuid);
 
   if (!group) {
@@ -19,7 +20,7 @@ export default async function NewExpensePage({ params }: NewExpensePageProps) {
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-6 p-4 pb-8 pt-6 sm:p-6 lg:p-12 lg:pb-16">
+    <main className="flex flex-1 flex-col gap-6 p-4 pt-6 pb-8 sm:p-6 lg:p-12 lg:pb-16">
       <div className="flex items-center justify-start gap-2">
         <BackButton groupUuid={group.uuid || ''} />
         <PageHeader groupName={group.name} />

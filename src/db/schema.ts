@@ -57,6 +57,7 @@ export const groups = pgTable('groups', {
   id: serial('id').primaryKey(),
   uuid: uuid('uuid').default(sql`gen_random_uuid()`),
   name: text('name').notNull(),
+  inviteToken: text('invite_token').unique(),
   ownerId: text('owner_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
@@ -273,13 +274,11 @@ export const groupUserBalances = pgTable(
       mode: 'date',
     }),
   },
-  (table) => {
-    return {
-      pk: primaryKey({
-        columns: [table.groupId, table.senderId, table.recipientId],
-      }),
-    };
-  },
+  (table) => [
+    primaryKey({
+      columns: [table.groupId, table.senderId, table.recipientId],
+    }),
+  ],
 );
 
 export const groupUserBalancesRelations = relations(

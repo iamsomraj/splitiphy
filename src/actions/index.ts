@@ -8,3 +8,9 @@ export { updateUserSettings } from '@/actions/update-user-settings';
 export { deleteExpense } from '@/actions/delete-expense';
 export { deleteGroup } from '@/actions/delete-group';
 export { editGroup } from '@/actions/edit-group';
+export { editGroupExpense } from '@/actions/edit-group-expense';
+export {
+  createInviteLink,
+  revokeInviteLink,
+  joinGroupByInvite,
+} from '@/actions/group-invite';

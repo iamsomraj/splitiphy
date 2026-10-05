@@ -1,11 +1,23 @@
 import db from '@/db/drizzle';
-import { groups } from '@/db/schema';
+import { groupMemberships } from '@/db/schema';
+import { requireGroupMember } from '@/lib/authz';
 import UserAuthService from '@/services/auth-user-service';
 import { eq } from 'drizzle-orm';
 import { cache } from 'react';
 
 export const getUsersBySearchTerm = cache(
-  async (searchTerm: string, groupUuid: string) => {
+  async (rawSearchTerm: string | undefined, groupUuid: string) => {
+    const searchTerm = (rawSearchTerm || '').trim();
+    // An empty query would list every user in the Clerk instance.
+    if (searchTerm.length < 2) {
+      return [];
+    }
+
+    const access = await requireGroupMember(groupUuid);
+    if (!access.ok) {
+      return [];
+    }
+
     const userAuthService = new UserAuthService();
     const [dbUsers, authUsers] = await Promise.allSettled([
       userAuthService.getUsersBySearchTermFromDB(searchTerm),
@@ -21,18 +33,11 @@ export const getUsersBySearchTerm = cache(
       new Map(mergedUsers.map((user) => [user.id, user])).values(),
     );
 
-    const group = await db.query.groups.findFirst({
-      where: eq(groups.uuid, groupUuid),
-      with: {
-        groupMemberships: true,
-      },
+    const memberships = await db.query.groupMemberships.findMany({
+      where: eq(groupMemberships.groupId, access.group.id),
     });
 
-    if (!group) {
-      return [];
-    }
-
-    const existingGroupMembersIds = group.groupMemberships.map(
+    const existingGroupMembersIds = memberships.map(
       (membership) => membership.userId,
     );
 

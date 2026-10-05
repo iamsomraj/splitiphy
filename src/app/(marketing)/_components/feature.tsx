@@ -11,7 +11,7 @@ type FeatureItemProps = {
 };
 
 const FeatureList = ({ children }: FeatureListProps) => (
-  <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
+  <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-5xl md:grid-cols-3">
     {children}
   </div>
 );

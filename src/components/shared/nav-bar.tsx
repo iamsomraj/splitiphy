@@ -21,12 +21,12 @@ import {
 import { siteConfig } from '@/config/site';
 import { getLoggedInUser } from '@/db/queries';
 import paths from '@/lib/paths';
-import { ClerkLoaded, SignOutButton, SignedIn, SignedOut } from '@clerk/nextjs';
+import { ClerkLoaded, Show, SignOutButton } from '@clerk/nextjs';
 
 const NavBar = async () => {
   const user = await getLoggedInUser();
   return (
-    <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:px-10">
+    <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur-sm supports-backdrop-filter:bg-background/60 md:px-10">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
         <Link
           href={paths.home()}
@@ -35,20 +35,20 @@ const NavBar = async () => {
           <Icons.logo className="h-6 w-6" />
           <span className="hidden font-bold sm:relative sm:block">
             {siteConfig.name}
-            <span className="absolute -bottom-4 right-0 text-[10px] font-semibold">
+            <span className="absolute right-0 -bottom-4 text-[10px] font-semibold">
               (beta)
             </span>
           </span>
         </Link>
         <ClerkLoaded>
-          <SignedIn>
+          <Show when="signed-in">
             <Link
               href={paths.dashboard()}
               className="text-muted-foreground transition-colors hover:text-foreground"
             >
               Dashboard
             </Link>
-          </SignedIn>
+          </Show>
         </ClerkLoaded>
       </nav>
       <Sheet>
@@ -67,13 +67,13 @@ const NavBar = async () => {
               <Icons.logo className="h-6 w-6" />
               <span className="relative font-bold">
                 {siteConfig.name}
-                <span className="absolute -bottom-4 right-0 text-[10px] font-semibold">
+                <span className="absolute right-0 -bottom-4 text-[10px] font-semibold">
                   (beta)
                 </span>
               </span>
             </Link>
             <ClerkLoaded>
-              <SignedIn>
+              <Show when="signed-in">
                 <SheetClose asChild>
                   <Link
                     href={paths.dashboard()}
@@ -82,8 +82,8 @@ const NavBar = async () => {
                     Dashboard
                   </Link>
                 </SheetClose>
-              </SignedIn>
-              <SignedOut>
+              </Show>
+              <Show when="signed-out">
                 <SheetClose asChild>
                   <Link
                     href={paths.getStarted()}
@@ -92,14 +92,14 @@ const NavBar = async () => {
                     Get Started
                   </Link>
                 </SheetClose>
-              </SignedOut>
+              </Show>
             </ClerkLoaded>
           </nav>
         </SheetContent>
       </Sheet>
       <div className="flex w-full items-center justify-end gap-4 md:ml-auto md:gap-2 lg:gap-4">
         <ThemeModeToggle />
-        <SignedIn>
+        <Show when="signed-in">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               {user?.profileImage ? (
@@ -133,7 +133,7 @@ const NavBar = async () => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        </SignedIn>
+        </Show>
       </div>
     </header>
   );
