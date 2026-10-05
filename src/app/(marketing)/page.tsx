@@ -11,41 +11,41 @@ import { buttonVariants } from '@/components/ui/button';
 import { siteConfig } from '@/config/site';
 import paths from '@/lib/paths';
 import { cn } from '@/lib/utils';
-import { SignedIn, SignedOut } from '@clerk/nextjs';
+import { Show } from '@clerk/nextjs';
 import { DashboardIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 
 export default function IndexPage() {
   return (
     <div className="relative flex w-full flex-1 flex-col">
-      <main className="container relative">
+      <main className="relative container">
         <HeroPageHeader>
-          <SignedIn>
+          <Show when="signed-in">
             <Announcement link={paths.dashboard()}>
               Introducing Simplify Mode
             </Announcement>
-          </SignedIn>
-          <SignedOut>
+          </Show>
+          <Show when="signed-out">
             <Announcement link={paths.getStarted()}>
               Introducing Simplify Mode
             </Announcement>
-          </SignedOut>
+          </Show>
           <HeroPageHeaderHeading>{siteConfig.header}</HeroPageHeaderHeading>
           <HeroPageHeaderDescription>
             {siteConfig.description}
           </HeroPageHeaderDescription>
           <HeroPageActions>
-            <SignedIn>
+            <Show when="signed-in">
               <Link href={paths.dashboard()} className={cn(buttonVariants())}>
                 <DashboardIcon className="mr-2 h-4 w-4" />
                 Dashboard
               </Link>
-            </SignedIn>
-            <SignedOut>
+            </Show>
+            <Show when="signed-out">
               <Link href={paths.getStarted()} className={cn(buttonVariants())}>
                 Get Started
               </Link>
-            </SignedOut>
+            </Show>
             <Link
               target="_blank"
               rel="noopener noreferrer"
@@ -57,8 +57,8 @@ export default function IndexPage() {
             </Link>
           </HeroPageActions>
         </HeroPageHeader>
-        <section className="container space-y-6 py-8 dark:bg-transparent md:py-12 lg:py-24">
-          <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
+        <section className="container space-y-6 py-8 md:py-12 lg:py-24 dark:bg-transparent">
+          <div className="mx-auto flex max-w-232 flex-col items-center space-y-4 text-center">
             <HeroPageHeaderHeading>Features</HeroPageHeaderHeading>
             <HeroPageHeaderDescription>
               {siteConfig.name} offers a variety of features to help you manage
@@ -85,7 +85,7 @@ export default function IndexPage() {
         </section>
 
         <section id="open-source" className="container py-8 md:py-12 lg:py-24">
-          <div className="mx-auto flex max-w-[58rem] flex-col items-center justify-center gap-4 text-center">
+          <div className="mx-auto flex max-w-232 flex-col items-center justify-center gap-4 text-center">
             <HeroPageHeaderHeading>Proudly Open Source</HeroPageHeaderHeading>
             <HeroPageHeaderDescription>
               {siteConfig.name} is open source and powered by open source
