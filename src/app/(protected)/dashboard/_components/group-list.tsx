@@ -7,7 +7,7 @@ type GroupListProps = {
 
 function GroupList({ groups }: GroupListProps) {
   return (
-    <div className="col-span-4 overflow-y-auto sm:col-span-2">
+    <div className="min-w-0">
       <div className="flex flex-col gap-6">
         {groups.map((group) => (
           <GroupItem key={group.id} group={group} />

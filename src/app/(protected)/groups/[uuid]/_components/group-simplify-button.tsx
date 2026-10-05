@@ -25,7 +25,7 @@ const GroupSimplifyButton = ({
   const onClick = () => {
     startTransition(async () => {
       const response = await actions.simplifyGroupExpenses(group?.uuid || '');
-      const state = response?.state || true;
+      const state = response?.state !== false;
       const title =
         response?.title || 'Great! Your expenses have been simplified.';
       const description =
