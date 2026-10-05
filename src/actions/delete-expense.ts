@@ -2,10 +2,10 @@
 
 import * as actions from '@/actions';
 import db from '@/db/drizzle';
-import { expenses, groupExpenses, groups, transactions } from '@/db/schema';
+import { expenses, groupExpenses, transactions } from '@/db/schema';
+import { requireGroupMember } from '@/lib/authz';
 import paths from '@/lib/paths';
-import { auth } from '@clerk/nextjs';
-import { eq, inArray } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
@@ -14,25 +14,20 @@ export async function deleteExpense(
   groupExpenseUuid: string,
 ) {
   try {
-    const session = await auth();
-    if (!session || !session.userId) {
+    const access = await requireGroupMember(groupUuid);
+    if (!access.ok) {
       return {
         state: false,
       };
     }
 
-    const group = await db.query.groups.findFirst({
-      where: eq(groups.uuid, groupUuid),
-    });
-
-    if (!group) {
-      return {
-        state: false,
-      };
-    }
-
+    // Scope the lookup to the group so an expense from another group
+    // can't be deleted by pairing it with a group the caller belongs to.
     const groupExpense = await db.query.groupExpenses.findFirst({
-      where: eq(groupExpenses.uuid, groupExpenseUuid),
+      where: and(
+        eq(groupExpenses.uuid, groupExpenseUuid),
+        eq(groupExpenses.groupId, access.group.id),
+      ),
     });
 
     if (!groupExpense) {
@@ -41,47 +36,18 @@ export async function deleteExpense(
       };
     }
 
-    const expense = await db.query.expenses.findFirst({
-      where: eq(expenses.id, groupExpense.expenseId),
-    });
+    await db.batch([
+      db
+        .delete(transactions)
+        .where(eq(transactions.expenseId, groupExpense.expenseId)),
+      db
+        .delete(groupExpenses)
+        .where(eq(groupExpenses.expenseId, groupExpense.expenseId)),
+      db.delete(expenses).where(eq(expenses.id, groupExpense.expenseId)),
+    ]);
 
-    if (!expense) {
-      return {
-        state: false,
-      };
-    }
-
-    const transactionsToDelete = await db.query.transactions.findMany({
-      where: eq(transactions.expenseId, expense.id),
-    });
-
-    if (transactionsToDelete.length === 0) {
-      return {
-        state: false,
-      };
-    }
-
-    await db.delete(transactions).where(
-      inArray(
-        transactions.id,
-        transactionsToDelete.map((t) => t.id),
-      ),
-    );
-
-    await db
-      .delete(groupExpenses)
-      .where(eq(groupExpenses.expenseId, expense.id));
-
-    await db.delete(expenses).where(eq(expenses.id, expense.id));
-
-    const response = await actions.simplifyGroupExpenses(groupUuid);
-    const state = response?.state || true;
-    if (!state) {
-      return {
-        state,
-      };
-    }
-  } catch (error) {
+    await actions.simplifyGroupExpenses(groupUuid);
+  } catch {
     return {
       state: false,
     };
