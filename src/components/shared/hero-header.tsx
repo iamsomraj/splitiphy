@@ -10,7 +10,7 @@ function HeroPageHeader({
   return (
     <section
       className={cn(
-        'mx-auto flex max-w-[980px] flex-col items-center gap-2 pb-14 pt-28',
+        'mx-auto flex max-w-[980px] flex-col items-center gap-2 pt-28 pb-14',
         className,
       )}
       {...props}
@@ -27,7 +27,7 @@ function HeroPageHeaderHeading({
   return (
     <h1
       className={cn(
-        'text-center text-3xl font-bold leading-tight tracking-tighter md:text-6xl lg:leading-[1.1]',
+        'text-center text-3xl leading-tight font-bold tracking-tighter md:text-6xl lg:leading-[1.1]',
         className,
       )}
       {...props}

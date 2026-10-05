@@ -11,7 +11,7 @@ export default async function DashboardPage() {
   return (
     <main className="grid w-full flex-1 grid-cols-4 gap-6 p-4 sm:p-6 lg:p-12">
       <div className="col-span-4 sm:col-span-2">
-        <div className="static top-[7rem] z-10 grid grid-cols-2 gap-6 sm:sticky ">
+        <div className="static top-28 z-10 grid grid-cols-2 gap-6 sm:sticky">
           <GroupCreateForm className="col-span-2" />
           <GroupExpensesCharts
             className="col-span-2"
