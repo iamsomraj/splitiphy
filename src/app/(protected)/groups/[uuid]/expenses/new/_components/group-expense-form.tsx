@@ -22,164 +22,108 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { SingleGroupWithData } from '@/db/queries';
-import constants from '@/lib/constants';
 import { cn, formatNumber } from '@/lib/utils';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
-import { useRef, useState } from 'react';
-import { SelectSingleEventHandler } from 'react-day-picker';
-import { useFormState } from 'react-dom';
+import { useActionState, useState } from 'react';
+
+export type ExpenseFormValues = {
+  expenseCategory: string;
+  expenseName: string;
+  expenseDescription: string;
+  expenseDate: Date | undefined;
+  expenseAmount: '' | number;
+  isMultiplePaidBy: boolean;
+  paidBy: string;
+  paidByList: string[];
+  paidByAmounts: Record<string, number>;
+  expenseSplitWith: string[];
+  splitAmounts: Record<string, number>;
+};
+
+const emptyFormValues: ExpenseFormValues = {
+  expenseCategory: '',
+  expenseName: '',
+  expenseDescription: '',
+  expenseDate: undefined,
+  expenseAmount: '',
+  isMultiplePaidBy: false,
+  paidBy: '',
+  paidByList: [],
+  paidByAmounts: {},
+  expenseSplitWith: [],
+  splitAmounts: {},
+};
+
+/**
+ * Splits `total` evenly across `ids` (rounded down to cents) and gives the
+ * leftover cents to the first member so the parts always add up to `total`.
+ */
+const splitEvenly = (total: number, ids: string[]) => {
+  const amounts: Record<string, number> = {};
+  if (!ids.length) {
+    return amounts;
+  }
+  const evenAmount = Math.floor((total / ids.length) * 100) / 100;
+  const remaining = formatNumber(total - evenAmount * ids.length);
+  ids.forEach((id) => (amounts[id] = evenAmount));
+  amounts[ids[0]] = formatNumber(amounts[ids[0]] + remaining);
+  return amounts;
+};
 
 type GroupExpenseFormProps = {
   group: SingleGroupWithData;
+  /** When provided, the form edits this group expense instead of adding one. */
+  groupExpenseUuid?: string;
+  initialValues?: ExpenseFormValues;
 };
 
-const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
-  const hiddenExpenseCategoryInputRef = useRef<HTMLSelectElement>(null);
-  const hiddenExpenseSplitWithRef = useRef<HTMLSelectElement>(null);
-  const hiddenExpenseDateInputRef = useRef<HTMLInputElement>(null);
-  const hiddenExpensePaidBySingleRef = useRef<HTMLSelectElement>(null);
-  const hiddenExpensePaidByMultipleRef = useRef<HTMLSelectElement>(null);
+const GroupExpenseForm = ({
+  group,
+  groupExpenseUuid,
+  initialValues = emptyFormValues,
+}: GroupExpenseFormProps) => {
+  const isEditing = Boolean(groupExpenseUuid);
 
-  const [formState, action] = useFormState(
-    actions.addGroupExpense.bind(null, group?.uuid || ''),
+  const [formState, action] = useActionState(
+    isEditing
+      ? actions.editGroupExpense.bind(
+          null,
+          group?.uuid || '',
+          groupExpenseUuid || '',
+        )
+      : actions.addGroupExpense.bind(null, group?.uuid || ''),
     {
       errors: {},
     },
   );
 
-  const [formData, setFormData] = useState({
-    expenseCategory: '',
-    expenseDate: undefined as Date | undefined,
-    expenseAmount: '' as '' | number,
-    isMultiplePaidBy: false,
-    paidByList: [] as string[],
-    paidByAmounts: {} as Record<string, number>,
-    expenseSplitWith: [] as string[],
-    splitAmounts: {} as Record<string, number>,
-  });
-
-  const handleExpenseCategoryChange = (value: string) => {
-    if (!hiddenExpenseCategoryInputRef.current) {
-      return;
-    }
-    hiddenExpenseCategoryInputRef.current.value = value;
-    setFormData({
-      ...formData,
-      expenseCategory: value,
-    });
-  };
-
-  const handleExpenseDateChange: SelectSingleEventHandler = (date) => {
-    if (!hiddenExpenseDateInputRef.current || !date) {
-      return;
-    }
-    setFormData({
-      ...formData,
-      expenseDate: date,
-    });
-    hiddenExpenseDateInputRef.current.value = format(date, 'yyyy-MM-dd');
-  };
-
-  const handleExpenseSinglePaidByChange = (value: string) => {
-    if (!hiddenExpensePaidBySingleRef.current) {
-      return;
-    }
-    hiddenExpensePaidBySingleRef.current.value = value;
-  };
+  const [formData, setFormData] = useState<ExpenseFormValues>(initialValues);
+  // Bumped on reset so uncontrolled children (multi selects) remount.
+  const [resetKey, setResetKey] = useState(0);
 
   const handleExpenseAmountChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const newExpenseAmount = formatNumber(event.target.value);
-    const selectedUsers = formData.expenseSplitWith;
-    const totalSelectedUsers = selectedUsers.length;
-    const isMultiplePaidBy = formData.isMultiplePaidBy;
-
-    let evenSplitAmount =
-      Math.floor((newExpenseAmount / totalSelectedUsers) * 100) / 100;
-
-    let remainingAmount = formatNumber(
-      newExpenseAmount - evenSplitAmount * totalSelectedUsers,
-    );
-
-    const updatedSplitAmounts: Record<string, number> = {};
-    const updatedPaidAmounts: Record<string, number> = {};
-
-    for (let i = 0; i < totalSelectedUsers; i++) {
-      updatedSplitAmounts[selectedUsers[i]] = evenSplitAmount;
-    }
-
-    updatedSplitAmounts[selectedUsers[0]] = formatNumber(
-      updatedSplitAmounts[selectedUsers[0]] + remainingAmount,
-    );
-
-    if (isMultiplePaidBy) {
-      const totalPaidAmount = newExpenseAmount;
-      const selectedPaidByUsers = formData.paidByList;
-      const totalSelectedPaidByUsers = selectedPaidByUsers.length;
-
-      let evenPaidAmount =
-        Math.floor((totalPaidAmount / totalSelectedPaidByUsers) * 100) / 100;
-
-      let remainingPaidAmount = formatNumber(
-        totalPaidAmount - evenPaidAmount * totalSelectedPaidByUsers,
-      );
-
-      for (let i = 0; i < totalSelectedPaidByUsers; i++) {
-        updatedPaidAmounts[selectedPaidByUsers[i]] = evenPaidAmount;
-      }
-
-      updatedPaidAmounts[selectedPaidByUsers[0]] = formatNumber(
-        updatedPaidAmounts[selectedPaidByUsers[0]] + remainingPaidAmount,
-      );
-    }
-
     setFormData({
       ...formData,
-      expenseAmount: formatNumber(newExpenseAmount),
-      splitAmounts: updatedSplitAmounts,
-      paidByAmounts: isMultiplePaidBy
-        ? updatedPaidAmounts
+      expenseAmount: Number.isNaN(newExpenseAmount) ? '' : newExpenseAmount,
+      splitAmounts: splitEvenly(
+        newExpenseAmount || 0,
+        formData.expenseSplitWith,
+      ),
+      paidByAmounts: formData.isMultiplePaidBy
+        ? splitEvenly(newExpenseAmount || 0, formData.paidByList)
         : formData.paidByAmounts,
     });
   };
 
-  const handleSplitWithChange = (options: string[]) => {
-    if (!hiddenExpenseSplitWithRef.current) {
-      return;
-    }
-
-    const selectedUsers = options;
-
-    Array.from(hiddenExpenseSplitWithRef.current.options).forEach((option) => {
-      option.selected = options.includes(option.value);
-    });
-
-    const totalExpense = formData.expenseAmount || 0;
-    const totalSelectedUsers = selectedUsers.length;
-
-    let evenSplitAmount =
-      Math.floor((totalExpense / totalSelectedUsers) * 100) / 100;
-
-    let remainingAmount = formatNumber(
-      totalExpense - evenSplitAmount * totalSelectedUsers,
-    );
-
-    const updatedSplitAmounts: Record<string, number> = {};
-
-    for (let i = 0; i < totalSelectedUsers; i++) {
-      updatedSplitAmounts[selectedUsers[i]] = evenSplitAmount;
-    }
-
-    updatedSplitAmounts[selectedUsers[0]] = formatNumber(
-      updatedSplitAmounts[selectedUsers[0]] + remainingAmount,
-    );
-
+  const handleSplitWithChange = (selectedUsers: string[]) => {
     setFormData({
       ...formData,
       expenseSplitWith: selectedUsers,
-      splitAmounts: updatedSplitAmounts,
+      splitAmounts: splitEvenly(formData.expenseAmount || 0, selectedUsers),
     });
   };
 
@@ -196,43 +140,11 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
     });
   };
 
-  const handlePaidByListChange = (options: string[]) => {
-    if (!hiddenExpensePaidByMultipleRef.current) {
-      return;
-    }
-
-    const selectedUsers = options;
-
-    Array.from(hiddenExpensePaidByMultipleRef.current.options).forEach(
-      (option) => {
-        option.selected = options.includes(option.value);
-      },
-    );
-
-    const totalPaidAmount = formData.expenseAmount || 0;
-    const totalSelectedUsers = selectedUsers.length;
-
-    let evenPaidAmount =
-      Math.floor((totalPaidAmount / totalSelectedUsers) * 100) / 100;
-
-    let remainingAmount = formatNumber(
-      totalPaidAmount - evenPaidAmount * totalSelectedUsers,
-    );
-
-    const updatedPaidAmounts: Record<string, number> = {};
-
-    for (let i = 0; i < totalSelectedUsers; i++) {
-      updatedPaidAmounts[selectedUsers[i]] = evenPaidAmount;
-    }
-
-    updatedPaidAmounts[selectedUsers[0]] = formatNumber(
-      updatedPaidAmounts[selectedUsers[0]] + remainingAmount,
-    );
-
+  const handlePaidByListChange = (selectedUsers: string[]) => {
     setFormData({
       ...formData,
       paidByList: selectedUsers,
-      paidByAmounts: updatedPaidAmounts,
+      paidByAmounts: splitEvenly(formData.expenseAmount || 0, selectedUsers),
     });
   };
 
@@ -249,16 +161,49 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
     });
   };
 
+  const handleReset = () => {
+    setFormData(initialValues);
+    setResetKey((key) => key + 1);
+  };
+
   if (!group) {
     return null;
   }
 
+  const memberOptions = group.groupMemberships.map((membership) => ({
+    label: membership.user.firstName + ' ' + membership.user.lastName,
+    value: membership.user.id,
+  }));
+
   return (
     <form action={action} className="flex flex-col gap-4">
+      {/* Values managed in React state are submitted through hidden inputs */}
+      <input
+        type="hidden"
+        name="expense-category"
+        value={formData.expenseCategory}
+      />
+      <input
+        type="hidden"
+        name="expense-date"
+        value={
+          formData.expenseDate ? format(formData.expenseDate, 'yyyy-MM-dd') : ''
+        }
+      />
+      {formData.isMultiplePaidBy ? (
+        formData.paidByList.map((id) => (
+          <input key={id} type="hidden" name="expense-paid-by" value={id} />
+        ))
+      ) : (
+        <input type="hidden" name="expense-paid-by" value={formData.paidBy} />
+      )}
+      {formData.expenseSplitWith.map((id) => (
+        <input key={id} type="hidden" name="expense-split-with" value={id} />
+      ))}
+
       {/* EXPENSE CATEGORY */}
       <div className="flex flex-col gap-4">
         <Label
-          htmlFor="expense-category"
           className={cn({
             'text-destructive': Boolean(formState?.errors?.category || false),
           })}
@@ -267,20 +212,10 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
         </Label>
         <ExpenseCategorySelect
           value={formData.expenseCategory}
-          onChange={handleExpenseCategoryChange}
+          onChange={(value) =>
+            setFormData({ ...formData, expenseCategory: value })
+          }
         />
-        <select
-          ref={hiddenExpenseCategoryInputRef}
-          id="expense-category"
-          name="expense-category"
-          className="hidden"
-        >
-          {constants.expensesCategories.map((category) => (
-            <option key={category.key} value={category.key}>
-              {category.name}
-            </option>
-          ))}
-        </select>
         <div className="text-sm text-muted-foreground">
           This is the category of your expense.
         </div>
@@ -307,6 +242,10 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
           id="expense-name"
           name="expense-name"
           placeholder="Grocery"
+          value={formData.expenseName}
+          onChange={(e) =>
+            setFormData({ ...formData, expenseName: e.target.value })
+          }
         />
         <div className="text-sm text-muted-foreground">
           This is the name of your expense.
@@ -336,6 +275,10 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
           name="expense-description"
           placeholder="Weekly household grocery"
           className="resize-none"
+          value={formData.expenseDescription}
+          onChange={(e) =>
+            setFormData({ ...formData, expenseDescription: e.target.value })
+          }
         ></Textarea>
         <div className="text-sm text-muted-foreground">
           This is the description of your expense.
@@ -378,8 +321,11 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
             <Calendar
               mode="single"
               selected={formData.expenseDate}
-              onSelect={handleExpenseDateChange}
-              initialFocus
+              defaultMonth={formData.expenseDate}
+              onSelect={(date) =>
+                date && setFormData({ ...formData, expenseDate: date })
+              }
+              autoFocus
             />
           </PopoverContent>
         </Popover>
@@ -391,16 +337,6 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
             {formState.errors.date?.join(', ')}
           </span>
         ) : null}
-      </div>
-      <div className="hidden">
-        <label htmlFor="expense-date">Expense Date</label>
-        <input
-          ref={hiddenExpenseDateInputRef}
-          type="date"
-          id="expense-date"
-          name="expense-date"
-          placeholder="Enter Expense Date"
-        />
       </div>
       {/* EXPENSE DATE */}
 
@@ -419,8 +355,9 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
           id="expense-amount"
           name="expense-amount"
           placeholder="Enter Expense Amount"
-          pattern="[0-9]+(\.[0-9]+)?"
-          inputMode="numeric"
+          step="0.01"
+          min="0"
+          inputMode="decimal"
           value={formData.expenseAmount}
           onChange={handleExpenseAmountChange}
         />
@@ -446,6 +383,12 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
               setFormData({
                 ...formData,
                 isMultiplePaidBy: checked,
+                paidByAmounts: checked
+                  ? splitEvenly(
+                      formData.expenseAmount || 0,
+                      formData.paidByList,
+                    )
+                  : formData.paidByAmounts,
               })
             }
           />
@@ -472,7 +415,6 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
       {formData.isMultiplePaidBy ? (
         <div className="flex flex-col gap-4">
           <Label
-            htmlFor="expense-paid-by"
             className={cn({
               'text-destructive': Boolean(
                 formState?.errors?.paidByList || false,
@@ -482,30 +424,12 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
             Members Paid By
           </Label>
           <MultiSelect
+            key={`paid-by-${resetKey}`}
             placeholder="Select members who paid"
-            options={[
-              ...group.groupMemberships.map((membership) => ({
-                label:
-                  membership.user.firstName + ' ' + membership.user.lastName,
-                value: membership.user.id,
-              })),
-            ]}
+            options={memberOptions}
             value={formData.paidByList}
             onChange={handlePaidByListChange}
           />
-          <select
-            className="hidden"
-            ref={hiddenExpensePaidByMultipleRef}
-            id="expense-paid-by"
-            name="expense-paid-by"
-            multiple
-          >
-            {group?.groupMemberships.map((member) => (
-              <option key={member.user.id} value={member.user.id}>
-                {member.user.firstName + ' ' + member.user.lastName}
-              </option>
-            ))}
-          </select>
           <div className="text-sm text-muted-foreground">
             This is the selection of members who paid for the expense.
           </div>
@@ -534,9 +458,10 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
                     placeholder={`Enter Paid Amount for ${
                       member.user.firstName + ' ' + member.user.lastName
                     }`}
-                    pattern="[0-9]+(\.[0-9]+)?"
-                    inputMode="numeric"
-                    value={formData.paidByAmounts[member.user.id] || ''}
+                    step="0.01"
+                    min="0"
+                    inputMode="decimal"
+                    value={formData.paidByAmounts[member.user.id] ?? ''}
                     onChange={(e) => handlePaidAmountChange(e, member.user.id)}
                   />
                 </div>
@@ -555,7 +480,6 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
       ) : (
         <div className="flex flex-col gap-4">
           <Label
-            htmlFor="expense-paid-by"
             className={cn({
               'text-destructive': Boolean(formState?.errors?.paidBy || false),
             })}
@@ -563,32 +487,22 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
             Paid By
           </Label>
           <Select
-            name="expense-paid-by"
-            onValueChange={handleExpenseSinglePaidByChange}
+            value={formData.paidBy}
+            onValueChange={(value) =>
+              setFormData({ ...formData, paidBy: value })
+            }
           >
             <SelectTrigger>
               <SelectValue placeholder="Select a member" />
             </SelectTrigger>
             <SelectContent>
-              {group?.groupMemberships.map((member) => (
-                <SelectItem key={member.user.id} value={member.user.id}>
-                  {member.user.firstName + ' ' + member.user.lastName}
+              {memberOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          <select
-            ref={hiddenExpensePaidBySingleRef}
-            id="expense-paid-by"
-            className="hidden"
-            name="expense-paid-by"
-          >
-            {group?.groupMemberships.map((member) => (
-              <option key={member.user.id} value={member.user.id}>
-                {member.user.firstName + ' ' + member.user.lastName}
-              </option>
-            ))}
-          </select>
           <div className="text-sm text-muted-foreground">
             This is the member who paid for the expense.
           </div>
@@ -604,7 +518,6 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
       {/* SPLIT WITH */}
       <div className="flex flex-col gap-4">
         <Label
-          htmlFor="expense-split-with"
           className={cn({
             'text-destructive': Boolean(formState?.errors?.splitWith || false),
           })}
@@ -612,30 +525,12 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
           Split With
         </Label>
         <MultiSelect
+          key={`split-with-${resetKey}`}
           placeholder="Select members to split with"
-          options={[
-            ...group.groupMemberships.map((membership) => ({
-              label: membership.user.firstName + ' ' + membership.user.lastName,
-              value: membership.user.id,
-            })),
-          ]}
+          options={memberOptions}
           value={formData.expenseSplitWith}
           onChange={handleSplitWithChange}
         />
-        <select
-          className="hidden"
-          ref={hiddenExpenseSplitWithRef}
-          id="expense-split-with"
-          name="expense-split-with"
-          multiple
-        >
-          {group?.groupMemberships.map((member) => (
-            <option key={member.user.id} value={member.user.id}>
-              {member.user.firstName + ' ' + member.user.lastName}
-            </option>
-          ))}
-        </select>
-
         <div className="text-sm text-muted-foreground">
           This is the selection of members with whom the expense is split.
         </div>
@@ -667,9 +562,10 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
                     placeholder={`Enter Split Amount for ${
                       member.user.firstName + ' ' + member.user.lastName
                     }`}
-                    pattern="[0-9]+(\.[0-9]+)?"
-                    inputMode="numeric"
-                    value={formData.splitAmounts[member.user.id] || ''}
+                    step="0.01"
+                    min="0"
+                    inputMode="decimal"
+                    value={formData.splitAmounts[member.user.id] ?? ''}
                     onChange={(e) => handleSplitAmountChange(e, member.user.id)}
                   />
                 </div>
@@ -695,8 +591,13 @@ const GroupExpenseForm = ({ group }: GroupExpenseFormProps) => {
       ) : null}
 
       <div className="flex w-full flex-col gap-4 sm:flex-row">
-        <FormButton className="w-full">Add</FormButton>
-        <Button variant="outline" type="reset" className="w-full">
+        <FormButton className="w-full">{isEditing ? 'Save' : 'Add'}</FormButton>
+        <Button
+          variant="outline"
+          type="button"
+          className="w-full"
+          onClick={handleReset}
+        >
           Reset
         </Button>
       </div>

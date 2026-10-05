@@ -33,16 +33,16 @@ class DirectedGraph {
   }
 
   getBalances(): Balances {
-    let balances: Balances = {};
+    const balances: Balances = {};
 
-    for (let source in this.adjList) {
+    for (const source in this.adjList) {
       if (!balances[source]) {
         balances[source] = 0;
       }
 
-      for (let edge of this.adjList[source]) {
-        let destination = edge.node;
-        let weight = edge.weight;
+      for (const edge of this.adjList[source]) {
+        const destination = edge.node;
+        const weight = edge.weight;
 
         if (!balances[destination]) {
           balances[destination] = 0;
@@ -75,11 +75,11 @@ class SplitManagerService {
   }
 
   settleBalances(balances: Balances): Transaction[] {
-    let settlements: Transaction[] = [];
+    const settlements: Transaction[] = [];
     let settlement = false;
 
-    for (let source in balances) {
-      for (let destination in balances) {
+    for (const source in balances) {
+      for (const destination in balances) {
         if (balances[source] < 0 && balances[destination] > 0) {
           const amount = Math.min(-balances[source], balances[destination]);
           balances[source] += amount;
@@ -102,7 +102,7 @@ class SplitManagerService {
   }
 
   settleAllBalances(): Transaction[] {
-    let balances = this.graph.getBalances();
+    const balances = this.graph.getBalances();
     return this.settleBalances(balances);
   }
 }

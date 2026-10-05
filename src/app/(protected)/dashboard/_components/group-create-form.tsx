@@ -21,12 +21,12 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import { useFormState } from 'react-dom';
+import { useActionState } from 'react';
 
 type Props = React.HTMLAttributes<HTMLDivElement>;
 
 const GroupCreateForm = ({ className, ...rest }: Props) => {
-  const [formState, action] = useFormState(actions.createGroup, {
+  const [formState, action] = useActionState(actions.createGroup, {
     errors: {},
   });
 

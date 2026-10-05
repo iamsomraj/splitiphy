@@ -7,18 +7,17 @@ import paths from '@/lib/paths';
 import { redirect } from 'next/navigation';
 
 type GroupUserSearchPageProps = {
-  params: {
+  params: Promise<{
     uuid: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     term: string;
-  };
+  }>;
 };
 
-const GroupUserSearchPage = async ({
-  params,
-  searchParams,
-}: GroupUserSearchPageProps) => {
+const GroupUserSearchPage = async (props: GroupUserSearchPageProps) => {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const group = await getGroupDetailsById(params.uuid);
 
   if (!group) {
@@ -26,7 +25,7 @@ const GroupUserSearchPage = async ({
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-6 p-4 pb-8 pt-6 sm:p-6 lg:p-12 lg:pb-16">
+    <main className="flex flex-1 flex-col gap-6 p-4 pt-6 pb-8 sm:p-6 lg:p-12 lg:pb-16">
       <div className="flex items-center justify-start gap-4">
         <BackButton groupUuid={group?.uuid || ''} />
         <PageHeader groupName={group?.name || ''} />

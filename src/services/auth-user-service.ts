@@ -1,20 +1,11 @@
 import db from '@/db/drizzle';
 import { users } from '@/db/schema';
-import { clerkClient, currentUser } from '@clerk/nextjs';
-import { User as ClerkUser } from '@clerk/nextjs/server';
+import {
+  User as ClerkUser,
+  clerkClient,
+  currentUser,
+} from '@clerk/nextjs/server';
 import { eq, ilike, or } from 'drizzle-orm';
-
-interface CurrentUser {
-  id: string;
-  externalAccounts?: { username: string }[];
-  emailAddresses?: { id: string; emailAddress: string }[];
-  primaryEmailAddressId?: string;
-  phoneNumbers?: { id: string; phoneNumber: string }[];
-  primaryPhoneNumberId?: string;
-  firstName?: string;
-  lastName?: string;
-  imageUrl?: string;
-}
 
 class UserAuthService {
   private async getCurrentUser(): Promise<ClerkUser | null> {
@@ -66,14 +57,26 @@ class UserAuthService {
   }
 
   public async getUsersBySearchTermFromAuth(searchTerm: string) {
-    const response = await clerkClient.users.getUserList({
+    const client = await clerkClient();
+    const response = await client.users.getUserList({
       query: searchTerm,
     });
 
-    return response.map((user) => this.mapUserToDbFormat(user));
+    return response.data.map((user) => this.mapUserToDbFormat(user));
+  }
+
+  public async getUserByIdFromAuth(userId: string) {
+    try {
+      const client = await clerkClient();
+      const user = await client.users.getUser(userId);
+      return this.mapUserToDbFormat(user);
+    } catch {
+      return null;
+    }
   }
 
   public async getUsersBySearchTermFromDB(searchTerm: string) {
+    searchTerm = searchTerm.replace(/[\\%_]/g, (char) => `\\${char}`);
     const response = await db.query.users.findMany({
       where: or(
         ilike(users.username, `%${searchTerm}%`),

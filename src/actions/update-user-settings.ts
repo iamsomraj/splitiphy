@@ -2,23 +2,19 @@
 
 import db from '@/db/drizzle';
 import { users } from '@/db/schema';
+import constants from '@/lib/constants';
 import paths from '@/lib/paths';
-import { auth } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs/server';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
 const updateUserSettingsSchema = z.object({
-  currency: z
-    .string()
-    .min(3, {
-      message: 'Currency must be at least 3 characters long',
-    })
-    .max(3, {
-      message: 'Currency must be at most 50 characters long',
-    })
-    .regex(/[A-Z]+/, 'Group currency must only contain uppercase letters'),
+  currency: z.enum(
+    constants.currencies.map((currency) => currency.code),
+    { error: 'Please select a supported currency' },
+  ),
 });
 
 interface UpdateUserSettingsFormState {
@@ -38,7 +34,7 @@ export async function updateUserSettings(
 
   if (!result.success) {
     return {
-      errors: result.error.flatten().fieldErrors,
+      errors: z.flattenError(result.error).fieldErrors,
     };
   }
 
