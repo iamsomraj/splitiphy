@@ -41,15 +41,16 @@ const GroupDetailsPage = async (props: GroupDetailsPageProps) => {
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-6 divide-y py-4 pt-6 sm:py-6 lg:py-12">
-      <div className="flex flex-col gap-6 px-6 sm:px-12">
+    <main className="flex flex-1 flex-col divide-y px-4 pt-6 pb-28 sm:px-6 sm:pb-12 lg:px-12">
+      <section className="flex flex-col gap-4 pb-6">
         <GroupHeader
           groupName={group.name}
           memberCount={group.groupMemberships.length}
         />
         <GroupBalances group={group} user={user} />
-      </div>
-      <div className="scrollbar-none flex max-w-full gap-6 overflow-x-auto px-6 pt-6 sm:px-12">
+      </section>
+      {/* Wraps instead of scrolling so no action is hidden off-screen on phones */}
+      <section className="grid grid-cols-1 gap-3 py-6 sm:flex sm:flex-wrap">
         <GroupSimplifyButton group={group} />
         {group.groupUserBalances.length > 0 &&
           group.groupUserBalances.map((balance) => (
@@ -59,12 +60,8 @@ const GroupDetailsPage = async (props: GroupDetailsPageProps) => {
               groupUuid={group?.uuid || ''}
             />
           ))}
-        <GroupMembers
-          group={group}
-          currentUserId={user?.id}
-          className="w-full"
-        />
-      </div>
+        <GroupMembers group={group} currentUserId={user?.id} />
+      </section>
       <GroupDetailContent group={group} user={user} filters={filters} />
     </main>
   );

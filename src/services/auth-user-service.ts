@@ -5,7 +5,7 @@ import {
   clerkClient,
   currentUser,
 } from '@clerk/nextjs/server';
-import { eq, ilike, or } from 'drizzle-orm';
+import { ilike, or } from 'drizzle-orm';
 
 class UserAuthService {
   private async getCurrentUser(): Promise<ClerkUser | null> {
@@ -39,21 +39,19 @@ class UserAuthService {
       return null;
     }
 
-    const user = await db.query.users.findFirst({
-      where: eq(users.id, currUser.id),
-    });
+    const userData = this.mapUserToDbFormat(currUser);
 
-    const userData = await this.mapUserToDbFormat(currUser);
-
-    if (!user) {
-      return await db.insert(users).values(userData).returning();
-    } else {
-      return await db
-        .update(users)
-        .set(userData)
-        .where(eq(users.id, currUser.id))
-        .returning();
-    }
+    // A single upsert: the navbar and the page both call this on the first
+    // request after sign-up, and a find-then-insert would race on the PK.
+    // `currency` is not part of userData, so the user's preference survives.
+    return await db
+      .insert(users)
+      .values(userData)
+      .onConflictDoUpdate({
+        target: users.id,
+        set: { ...userData, updatedAt: new Date() },
+      })
+      .returning();
   }
 
   public async getUsersBySearchTermFromAuth(searchTerm: string) {

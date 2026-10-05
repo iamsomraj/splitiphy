@@ -28,7 +28,7 @@ const GroupSettleUpButton = ({
         groupUuid,
         balance?.uuid || '',
       );
-      const state = settleResponse?.state || true;
+      const state = settleResponse?.state !== false;
       if (!state) {
         toast({
           title: 'Uh oh! Something went wrong.',
@@ -39,7 +39,12 @@ const GroupSettleUpButton = ({
   };
 
   return balance.uuid && groupUuid ? (
-    <Button variant={'outline'} disabled={isPending} onClick={onClick}>
+    <Button
+      variant={'outline'}
+      disabled={isPending}
+      onClick={onClick}
+      className="h-auto min-h-9 justify-start text-left whitespace-normal sm:justify-center"
+    >
       <Equal className="mr-2 h-3.5 w-3.5" />
       {isPending ? (
         'Settling...'
