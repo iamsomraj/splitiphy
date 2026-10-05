@@ -1,5 +1,6 @@
 'use server';
 
+import * as actions from '@/actions';
 import db from '@/db/drizzle';
 import {
   expenses,
@@ -15,13 +16,14 @@ import {
 } from '@/lib/expense-form';
 import paths from '@/lib/paths';
 import TransactionManagerService from '@/services/transaction-manager-service';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
-export async function addGroupExpense(
+export async function editGroupExpense(
   groupUuid: string,
+  groupExpenseUuid: string,
   _formState: ExpenseFormState,
   formData: FormData,
 ): Promise<ExpenseFormState> {
@@ -44,6 +46,29 @@ export async function addGroupExpense(
   const { group, userId } = access;
 
   try {
+    const groupExpense = await db.query.groupExpenses.findFirst({
+      where: and(
+        eq(groupExpenses.uuid, groupExpenseUuid),
+        eq(groupExpenses.groupId, group.id),
+      ),
+    });
+
+    if (!groupExpense) {
+      return {
+        errors: {
+          _form: ['Expense not found'],
+        },
+      };
+    }
+
+    if (groupExpense.isSystemGenerated) {
+      return {
+        errors: {
+          _form: ['Settlements cannot be edited'],
+        },
+      };
+    }
+
     const groupMembers = await db.query.groupMemberships.findMany({
       where: eq(groupMemberships.groupId, group.id),
     });
@@ -60,65 +85,37 @@ export async function addGroupExpense(
       };
     }
 
-    const expense = await db
-      .insert(expenses)
-      .values({
-        category: result.data.category,
-        name: result.data.name,
-        description: result.data.description || '',
-        amount: `${result.data.amount}`,
-        date: new Date(result.data.date),
-        ownerId: userId,
-      })
-      .returning();
-
-    if (!expense.length || !expense[0].uuid || !expense[0].id) {
-      return {
-        errors: {
-          _form: ['Something went wrong while creating the expense'],
-        },
-      };
-    }
-
-    const groupExpense = await db
-      .insert(groupExpenses)
-      .values({
-        groupId: group.id,
-        expenseId: expense[0].id,
-      })
-      .returning();
-
-    if (!groupExpense.length || !groupExpense[0].id) {
-      return {
-        errors: {
-          _form: ['Something went wrong while creating the expense'],
-        },
-      };
-    }
-
     const transactionRecords = TransactionManagerService.createTransactions({
       isMultiplePaidBy: result.data.isMultiplePaidBy,
       paidByAmounts: result.data.paidByAmounts || {},
       splitAmounts: { ...(result.data.splitAmounts || {}) },
       sessionUserId: userId,
-      expenseId: expense[0].id,
+      expenseId: groupExpense.expenseId,
       paidBy: result.data.paidBy || '',
       paidByList: result.data.paidByList || [],
       splitWith: result.data.splitWith,
     });
 
-    const trxs = await db
-      .insert(transactions)
-      .values(transactionRecords)
-      .returning();
+    // neon-http has no interactive transactions; batch runs these atomically.
+    await db.batch([
+      db
+        .update(expenses)
+        .set({
+          category: result.data.category,
+          name: result.data.name,
+          description: result.data.description || '',
+          amount: `${result.data.amount}`,
+          date: new Date(result.data.date),
+          updatedAt: new Date(),
+        })
+        .where(eq(expenses.id, groupExpense.expenseId)),
+      db
+        .delete(transactions)
+        .where(eq(transactions.expenseId, groupExpense.expenseId)),
+      db.insert(transactions).values(transactionRecords),
+    ]);
 
-    if (!trxs.length) {
-      return {
-        errors: {
-          _form: ['Something went wrong while creating the transactions'],
-        },
-      };
-    }
+    await actions.simplifyGroupExpenses(groupUuid);
   } catch (err) {
     return {
       errors: {
@@ -126,6 +123,7 @@ export async function addGroupExpense(
       },
     };
   }
+
   revalidatePath(paths.groupShow(groupUuid));
   redirect(paths.groupShow(groupUuid));
 }

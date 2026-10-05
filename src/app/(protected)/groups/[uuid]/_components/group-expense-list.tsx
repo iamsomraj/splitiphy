@@ -23,15 +23,63 @@ import { useToast } from '@/components/ui/use-toast';
 import { LoggedInUser, SingleGroupWithData } from '@/db/queries';
 import constants from '@/lib/constants';
 import { cn, formatNumber } from '@/lib/utils';
+import paths from '@/lib/paths';
 import { DotsHorizontalIcon, DotsVerticalIcon } from '@radix-ui/react-icons';
+import Link from 'next/link';
 import { useTransition } from 'react';
+
+type GroupExpense = NonNullable<SingleGroupWithData>['groupExpenses'][number];
 
 type GroupExpenseListProps = {
   group: SingleGroupWithData;
+  groupExpenses: GroupExpense[];
   user: LoggedInUser;
+  isFiltered?: boolean;
 };
 
-const GroupExpenseList = ({ group, user }: GroupExpenseListProps) => {
+type ExpenseActionsMenuProps = {
+  groupUuid: string;
+  groupExpense: GroupExpense;
+  icon: React.ReactNode;
+  onDelete: (groupUuid: string, groupExpenseUuid: string) => void;
+};
+
+const ExpenseActionsMenu = ({
+  groupUuid,
+  groupExpense,
+  icon,
+  onDelete,
+}: ExpenseActionsMenuProps) => (
+  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <Button variant="ghost" className="h-8 w-8 p-0">
+        <span className="sr-only">Open menu</span>
+        {icon}
+      </Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent align="end">
+      {!groupExpense.isSystemGenerated && (
+        <DropdownMenuItem asChild>
+          <Link href={paths.groupEditExpense(groupUuid, groupExpense.uuid)}>
+            Edit
+          </Link>
+        </DropdownMenuItem>
+      )}
+      <DropdownMenuItem
+        onClick={() => onDelete(groupUuid, groupExpense.uuid || '')}
+      >
+        Delete
+      </DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+);
+
+const GroupExpenseList = ({
+  group,
+  groupExpenses,
+  user,
+  isFiltered = false,
+}: GroupExpenseListProps) => {
   const { toast } = useToast();
   const [pending, startTransition] = useTransition();
 
@@ -44,22 +92,20 @@ const GroupExpenseList = ({ group, user }: GroupExpenseListProps) => {
     ];
 
   let totalAmount = 0;
-  group.groupExpenses.forEach((groupExpense) => {
+  groupExpenses.forEach((groupExpense) => {
     if (!groupExpense.isSystemGenerated) {
       totalAmount += formatNumber(groupExpense.expense.amount);
     }
   });
 
-  const onDeleteExpense = async (
-    groupUuid: string,
-    groupExpenseUuid: string,
-  ) => {
+  const onDeleteExpense = (groupUuid: string, groupExpenseUuid: string) => {
     startTransition(async () => {
       const deleteResponse = await actions.deleteExpense(
         groupUuid,
         groupExpenseUuid,
       );
-      const deleteState = deleteResponse?.state || true;
+      // On success the action redirects, so only a failure returns a value.
+      const deleteState = deleteResponse?.state !== false;
       if (!deleteState) {
         toast({
           title: 'Uh oh! Something went wrong.',
@@ -91,7 +137,7 @@ const GroupExpenseList = ({ group, user }: GroupExpenseListProps) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {group.groupExpenses.map((groupExpense) => (
+            {groupExpenses.map((groupExpense) => (
               <TableRow
                 key={groupExpense.uuid}
                 className={cn(
@@ -155,33 +201,21 @@ const GroupExpenseList = ({ group, user }: GroupExpenseListProps) => {
                   ))}
                 </TableCell>
                 <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="h-8 w-8 p-0">
-                        <span className="sr-only">Open menu</span>
-                        <DotsHorizontalIcon className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem
-                        onClick={async () =>
-                          await onDeleteExpense(
-                            group?.uuid || '',
-                            groupExpense?.uuid || '',
-                          )
-                        }
-                      >
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <ExpenseActionsMenu
+                    groupUuid={group.uuid || ''}
+                    groupExpense={groupExpense}
+                    icon={<DotsHorizontalIcon className="h-4 w-4" />}
+                    onDelete={onDeleteExpense}
+                  />
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
           <TableFooter>
             <TableRow>
-              <TableCell colSpan={4}>Total Group Spending</TableCell>
+              <TableCell colSpan={4}>
+                {isFiltered ? 'Total (filtered)' : 'Total Group Spending'}
+              </TableCell>
               <TableCell>
                 <span className="mr-0.5">{currencySymbol}</span>
                 {totalAmount}
@@ -192,7 +226,7 @@ const GroupExpenseList = ({ group, user }: GroupExpenseListProps) => {
         </Table>
       </div>
       <ul className="flex flex-col gap-6 sm:hidden">
-        {group.groupExpenses.map((groupExpense) => (
+        {groupExpenses.map((groupExpense) => (
           <li
             key={groupExpense.uuid}
             className={cn(
@@ -221,26 +255,12 @@ const GroupExpenseList = ({ group, user }: GroupExpenseListProps) => {
                       category.key === groupExpense.expense.category,
                   )?.name || 'Other'}
                 </span>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="h-8 w-8 p-0">
-                      <span className="sr-only">Open menu</span>
-                      <DotsVerticalIcon className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem
-                      onClick={async () =>
-                        await onDeleteExpense(
-                          group?.uuid || '',
-                          groupExpense?.uuid || '',
-                        )
-                      }
-                    >
-                      Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <ExpenseActionsMenu
+                  groupUuid={group.uuid || ''}
+                  groupExpense={groupExpense}
+                  icon={<DotsVerticalIcon className="h-4 w-4" />}
+                  onDelete={onDeleteExpense}
+                />
               </span>
             </div>
             <div className="flex flex-col">
@@ -252,7 +272,7 @@ const GroupExpenseList = ({ group, user }: GroupExpenseListProps) => {
               </span>
             </div>
             <div className="font-medium">
-              Total <span className="ml-1 mr-0.5">{currencySymbol}</span>
+              Total <span className="mr-0.5 ml-1">{currencySymbol}</span>
               {groupExpense.expense.amount}{' '}
             </div>
             <div className="flex flex-col gap-4 pt-2">

@@ -8,6 +8,13 @@
       "when": 1714535628214,
       "tag": "0000_fearless_captain_universe",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791224987801,
+      "tag": "0001_invite_token",
+      "breakpoints": true
     }
   ]
 }
