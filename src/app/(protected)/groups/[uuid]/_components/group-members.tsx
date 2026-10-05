@@ -29,7 +29,7 @@ const GroupMembers = ({
     <div className={cn(className)} {...rest}>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="outline">
+          <Button variant="outline" className="w-full sm:w-auto">
             <Settings className="mr-2 h-3.5 w-3.5" />
             Manage
           </Button>

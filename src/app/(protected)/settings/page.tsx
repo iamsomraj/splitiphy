@@ -6,14 +6,12 @@ export default async function SettingsPage() {
   const user = await getLoggedInUser();
 
   return (
-    <main className="flex flex-1 flex-col gap-6 divide-y py-4 pt-6 sm:py-6 lg:py-12">
-      <div className="flex flex-col gap-6 px-6 sm:px-12">
-        <div className="flex flex-wrap items-center gap-4">
-          <BackButton />
-          <span className="text-4xl font-bold">Settings</span>
-        </div>
-        <UserSettingsForm user={user} />
+    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 pt-6 pb-12 sm:px-6 lg:px-12">
+      <div className="flex flex-wrap items-center gap-4">
+        <BackButton />
+        <h1 className="text-3xl font-bold sm:text-4xl">Settings</h1>
       </div>
+      <UserSettingsForm user={user} />
     </main>
   );
 }

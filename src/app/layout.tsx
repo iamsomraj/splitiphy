@@ -1,4 +1,5 @@
 import Providers from '@/components/providers';
+import Footer from '@/components/shared/footer';
 import NavBar from '@/components/shared/nav-bar';
 import { siteConfig } from '@/config/site';
 import { cn } from '@/lib/utils';
@@ -10,8 +11,8 @@ import './globals.css';
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  // Lets content extend under notches; spacing uses safe-area insets instead.
+  viewportFit: 'cover',
 };
 
 export const metadata: Metadata = {
@@ -74,6 +75,7 @@ export default function RootLayout({
         <Providers>
           <NavBar />
           {children}
+          <Footer />
         </Providers>
       </body>
     </html>

@@ -25,7 +25,7 @@ const GroupUserSearchPage = async (props: GroupUserSearchPageProps) => {
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-6 p-4 pt-6 pb-8 sm:p-6 lg:p-12 lg:pb-16">
+    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 pt-6 pb-12 sm:px-6 lg:px-12">
       <div className="flex items-center justify-start gap-4">
         <BackButton groupUuid={group?.uuid || ''} />
         <PageHeader groupName={group?.name || ''} />
