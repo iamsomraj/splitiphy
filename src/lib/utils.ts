@@ -22,3 +22,24 @@ export const currencySymbolFor = (code?: string | null): string => {
     (constants.currenciesCodeSymbolMap as Record<string, string>)[code] ?? code
   );
 };
+
+/** Money with grouping and two decimals, e.g. ₹1,240.00 */
+export const formatMoney = (symbol: string, value: number | string): string =>
+  `${symbol}${formatNumber(value).toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+
+type NamedUser = { id: string; firstName: string; lastName: string };
+
+/** "Aisha K.", or "You" for the signed-in user. */
+export const shortName = (person: NamedUser, viewerId?: string): string => {
+  if (viewerId && person.id === viewerId) {
+    return 'You';
+  }
+  const initial = person.lastName.charAt(0).toUpperCase();
+  return initial ? `${person.firstName} ${initial}.` : person.firstName;
+};
+
+export const initials = (person: NamedUser): string =>
+  `${person.firstName.charAt(0)}${person.lastName.charAt(0)}`.toUpperCase();
