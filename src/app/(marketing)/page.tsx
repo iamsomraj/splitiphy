@@ -24,6 +24,7 @@ import {
   SunMoon,
   WandSparkles,
 } from 'lucide-react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 
 const features = [
@@ -113,9 +114,37 @@ const PrimaryCta = ({ className }: { className?: string }) => (
   </>
 );
 
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+};
+
+// Lets search engines show splitiphy as a free web app
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: siteConfig.name,
+  url: siteConfig.url,
+  description: siteConfig.description,
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  author: {
+    '@type': 'Person',
+    name: 'Somraj Mukherjee',
+    url: siteConfig.links.gitHub,
+  },
+  sameAs: [siteConfig.links.sourceGithub],
+};
+
 export default function IndexPage() {
   return (
     <div className="relative flex w-full flex-1 flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c'),
+        }}
+      />
       <main className="relative container flex flex-col gap-16 px-4 pb-16 sm:gap-24 sm:px-6 sm:pb-24">
         <HeroPageHeader>
           <Announcement link={paths.getStarted()}>

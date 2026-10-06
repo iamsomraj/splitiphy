@@ -1,21 +1,43 @@
-# Splitiphy - manage expenses easily
+<div align="center">
+
+# splitiphy
+
+**Split bills, not friendships.**
+
+A free, open-source Splitwise alternative for trips, flats and friends.<br>
+Track shared expenses, simplify who owes whom, and settle up in one tap.
+
+[![Release](https://img.shields.io/github/v/release/iamsomraj/splitiphy?color=0d9467)](https://github.com/iamsomraj/splitiphy/releases)
+[![License: GPL v3](https://img.shields.io/github/license/iamsomraj/splitiphy?color=0d9467)](./LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/iamsomraj/splitiphy?style=flat&color=0d9467)](https://github.com/iamsomraj/splitiphy/stargazers)
+[![Next.js 16](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org/)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-0d9467)](./CONTRIBUTING.md)
+
+[**Try it live →**](https://splitiphy.vercel.app/) · [Report a bug](https://github.com/iamsomraj/splitiphy/issues/new?template=bug_report.yml) · [Request a feature](https://github.com/iamsomraj/splitiphy/issues/new?template=feature_request.yml)
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./public/screenshots/landing-dark.png">
-  <img alt="Splitiphy landing page" src="./public/screenshots/landing-light.png">
+  <img alt="splitiphy landing page" src="./public/screenshots/landing-light.png">
 </picture>
 
-Splitiphy is a modern full-stack web application for splitting bills with friends and family. It is built with Next.js, Tailwind CSS, Clerk and Drizzle ORM on Postgres.
+</div>
 
-## Preview Link
+> [!TIP]
+> If splitiphy saves you an awkward "who paid for what" conversation, please **[give it a ⭐ on GitHub](https://github.com/iamsomraj/splitiphy/stargazers)**. It helps other people find it.
 
-✅ [splitiphy.vercel.app](https://splitiphy.vercel.app/)
+## Why splitiphy?
+
+- **Free and open source.** No ads, no premium tier, no limits on groups or expenses.
+- **Built for real splits.** Several people can pay for one bill, and shares can be equal or custom.
+- **Fewest payments to settle.** "Simplify" turns a web of IOUs into the smallest set of transfers.
+- **Works great on your phone.** Mobile-first layout, light and dark mode, 20 currencies.
+- **Yours to run.** Deploy your own copy on Vercel in a few minutes.
 
 ## Screenshots
 
-| Mobile | Link preview |
+| On your phone | Link preview |
 | --- | --- |
-| <img alt="Splitiphy on a phone" src="./public/screenshots/landing-mobile.png" width="260"> | <img alt="Splitiphy social preview card" src="./public/og.png" width="520"> |
+| <img alt="splitiphy on a phone" src="./public/screenshots/landing-mobile.png" width="260"> | <img alt="splitiphy social preview card" src="./public/og.png" width="520"> |
 
 ## Features
 
@@ -95,19 +117,23 @@ Splitiphy is a modern full-stack web application for splitting bills with friend
 
 ## Deployment
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fiamsomraj%2Fsplitiphy&env=NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,CLERK_SECRET_KEY,DATABASE_URL&envDescription=Clerk%20keys%20and%20a%20Postgres%20connection%20string&envLink=https%3A%2F%2Fgithub.com%2Fiamsomraj%2Fsplitiphy%23run-locally&project-name=splitiphy&repository-name=splitiphy)
+
 The app deploys to Vercel with zero configuration. Set the three environment variables above in the Vercel project (Production and Preview), and run `pnpm db:migrate` against the production database whenever a new migration is added under `drizzle/`.
 
-## Developer
+## Contributing
 
-LinkedIn : [iamsomraj](https://www.linkedin.com/in/iamsomraj/) 😊
+Contributions are very welcome, from typo fixes to new features. Read [CONTRIBUTING.md](./CONTRIBUTING.md) to get set up, and look for issues labelled [`good first issue`](https://github.com/iamsomraj/splitiphy/labels/good%20first%20issue) if you're new here.
 
-Portfolio: [Somraj Mukherjee](https://iamsomraj.github.io/) 😊
+## Author
 
-## Show Your Support
+Built by **Somraj Mukherjee**: [LinkedIn](https://www.linkedin.com/in/iamsomraj/) · [Portfolio](https://iamsomraj.github.io/) · [GitHub](https://github.com/iamsomraj)
 
-Give me a star ⭐
+## Show your support
 
-if this project helped you 👦 👧
+If you like splitiphy, a ⭐ on [GitHub](https://github.com/iamsomraj/splitiphy) means a lot and helps others discover it.
+
+[![Star History Chart](https://api.star-history.com/svg?repos=iamsomraj/splitiphy&type=Date)](https://star-history.com/#iamsomraj/splitiphy&Date)
 
 ## License
 
