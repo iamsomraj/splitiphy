@@ -185,7 +185,7 @@ const RemainingIndicator = ({
       className={cn(
         'rounded-md px-3 py-2 text-sm font-medium',
         remaining === 0
-          ? 'bg-green-500/10 text-green-700 dark:text-green-300'
+          ? 'bg-primary/10 text-primary'
           : 'bg-destructive/10 text-destructive',
       )}
     >

@@ -32,12 +32,9 @@ const NavBar = async () => {
           href={paths.home()}
           className="flex items-center gap-2 text-lg font-semibold md:text-base"
         >
-          <Icons.logo className="h-6 w-6" />
-          <span className="hidden font-bold sm:relative sm:block">
+          <Icons.logo className="h-6 w-6 text-primary" />
+          <span className="hidden font-bold tracking-tight sm:block">
             {siteConfig.name}
-            <span className="absolute right-0 -bottom-4 text-[10px] font-semibold">
-              (beta)
-            </span>
           </span>
         </Link>
         <ClerkLoaded>
@@ -64,12 +61,9 @@ const NavBar = async () => {
               href={paths.home()}
               className="flex items-center gap-2 text-lg font-semibold"
             >
-              <Icons.logo className="h-6 w-6" />
-              <span className="relative font-bold">
+              <Icons.logo className="h-6 w-6 text-primary" />
+              <span className="font-bold tracking-tight">
                 {siteConfig.name}
-                <span className="absolute right-0 -bottom-4 text-[10px] font-semibold">
-                  (beta)
-                </span>
               </span>
             </Link>
             <ClerkLoaded>
@@ -101,7 +95,7 @@ const NavBar = async () => {
         href={paths.home()}
         className="flex items-center gap-2 font-bold md:hidden"
       >
-        <Icons.logo className="h-5 w-5" />
+        <Icons.logo className="h-5 w-5 text-primary" />
         {siteConfig.name}
       </Link>
       <div className="ml-auto flex items-center justify-end gap-2 lg:gap-4">

@@ -1,17 +1,23 @@
 # Changelog
 
-## Unreleased (v0.2.0)
+## v1.0.0
+
+[compare changes](https://github.com/iamsomraj/splitiphy/compare/v0.1.1...v1.0.0)
 
 ### 🚀 Enhancements
 
+- **ui:** Emerald theme and Inter font with tabular numbers, themed charts, and no more beta tag ([de16a78](https://github.com/iamsomraj/splitiphy/commit/de16a78))
+- Branded Open Graph image for link previews, and new README screenshots
 - Multistep expense form (details → paid by → split → review) with live totals and per-step validation
 - Edit existing expenses: amounts, payers and splits are rebuilt and balances re-simplified
 - Export a group's expenses and splits as a CSV file
 - Search and filter group expenses by text, category and date range
 - Shareable group invite links, which the owner can revoke
 
-### 🐛 Fixes
+### 🩹 Fixes
 
+- **mobile:** Prevent iOS input zoom and horizontal overflow ([5857502](https://github.com/iamsomraj/splitiphy/commit/5857502))
+- Mobile spacing, landing page refresh and first sign-in error ([6c0fe69](https://github.com/iamsomraj/splitiphy/commit/6c0fe69))
 - First sign-in no longer errors: users are upserted, so concurrent requests can't race on the users primary key
 - Sign-in form uses hash routing on `/get-started`, and protected pages redirect there with a return URL
 - Clerk widgets follow the app's light/dark theme and honour Tailwind overrides
@@ -19,6 +25,7 @@
 
 ### 🔒 Security
 
+- Enforce group membership checks in server actions ([575c68f](https://github.com/iamsomraj/splitiphy/commit/575c68f))
 - Require group membership in every group action (add member, delete expense, settle up, simplify, user search)
 - Scope expense and balance lookups to their group
 - Re-fetch member profiles from Clerk instead of trusting client data
@@ -30,6 +37,11 @@
 - Upgrade to Next.js 16, React 19, Clerk Core 3, Tailwind CSS 4, Drizzle ORM 0.45, zod 4, ESLint 9 flat config and TypeScript 6
 - Rename `middleware.ts` to `proxy.ts` and move auth checks into the protected layout
 - Require Node.js 22+ (24 recommended)
+- Add changelogen release scripts ([df01061](https://github.com/iamsomraj/splitiphy/commit/df01061))
+
+### ❤️ Contributors
+
+- Somraj Mukherjee ([@iamsomraj](https://github.com/iamsomraj))
 
 ## v0.1.1
 
