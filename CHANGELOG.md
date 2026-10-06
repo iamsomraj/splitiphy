@@ -1,5 +1,26 @@
 # Changelog
 
+## v1.1.0
+
+[compare changes](https://github.com/iamsomraj/splitiphy/compare/v1.0.1...v1.1.0)
+
+### 🚀 Enhancements
+
+- **seo:** Sitemap, robots, web manifest, app icons and structured data ([bd9b7ef](https://github.com/iamsomraj/splitiphy/commit/bd9b7ef))
+
+### 📖 Documentation
+
+- README for discoverability, contributing guide and issue templates ([afbfa63](https://github.com/iamsomraj/splitiphy/commit/afbfa63))
+- Link author to portfolio-iamsomraj.vercel.app ([59d3cb6](https://github.com/iamsomraj/splitiphy/commit/59d3cb6))
+
+### 🏡 Chore
+
+- `pnpm release` no longer opens a GitHub release page in the browser; publish with `pnpm release:gh` after pushing the tag
+
+### ❤️ Contributors
+
+- Somraj Mukherjee ([@iamsomraj](https://github.com/iamsomraj))
+
 ## v1.0.1
 
 [compare changes](https://github.com/iamsomraj/splitiphy/compare/v1.0.0...v1.0.1)
