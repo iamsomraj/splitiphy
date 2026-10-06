@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   authors: [
     {
       name: 'iamsomraj',
-      url: 'https://portfolio-iamsomraj.vercel.app',
+      url: siteConfig.links.portfolio,
     },
   ],
   creator: 'iamsomraj',
