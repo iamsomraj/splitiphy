@@ -18,7 +18,7 @@ export default function Dashboard() {
         </div>
       </div>
       <div className="hidden items-center justify-center bg-muted md:flex">
-        <HeroPageHeader className="w-[550px]">
+        <HeroPageHeader className="w-full max-w-[550px]">
           <HeroPageHeaderHeading>Easily manage expenses</HeroPageHeaderHeading>
           <HeroPageHeaderDescription>
             Get started today and take control of your finances
