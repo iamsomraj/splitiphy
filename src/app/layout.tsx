@@ -32,6 +32,8 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL(siteConfig.url),
   description: siteConfig.description,
+  applicationName: siteConfig.name,
+  category: 'finance',
   keywords: siteConfig.keywords,
   authors: [
     {
@@ -54,10 +56,6 @@ export const metadata: Metadata = {
     description: siteConfig.description,
     creator: '@iSomraj',
   },
-  icons: {
-    icon: '/favicon.ico',
-  },
-  manifest: `${siteConfig.url}/site.webmanifest`,
 };
 
 export default function RootLayout({
