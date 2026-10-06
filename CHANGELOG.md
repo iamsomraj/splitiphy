@@ -7,6 +7,7 @@
 ### 🚀 Enhancements
 
 - **ui:** Emerald theme and Inter font with tabular numbers, themed charts, and no more beta tag ([de16a78](https://github.com/iamsomraj/splitiphy/commit/de16a78))
+- Branded Open Graph image for link previews, and new README screenshots
 - Multistep expense form (details → paid by → split → review) with live totals and per-step validation
 - Edit existing expenses: amounts, payers and splits are rebuilt and balances re-simplified
 - Export a group's expenses and splits as a CSV file

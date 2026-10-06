@@ -1,12 +1,21 @@
 # Splitiphy - manage expenses easily
 
-![Hero Image](./public/og.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./public/screenshots/landing-dark.png">
+  <img alt="Splitiphy landing page" src="./public/screenshots/landing-light.png">
+</picture>
 
 Splitiphy is a modern full-stack web application for splitting bills with friends and family. It is built with Next.js, Tailwind CSS, Clerk and Drizzle ORM on Postgres.
 
 ## Preview Link
 
-✅ [Live] [https://splitiphy.vercel.app/] 😊
+✅ [splitiphy.vercel.app](https://splitiphy.vercel.app/)
+
+## Screenshots
+
+| Mobile | Link preview |
+| --- | --- |
+| <img alt="Splitiphy on a phone" src="./public/screenshots/landing-mobile.png" width="260"> | <img alt="Splitiphy social preview card" src="./public/og.png" width="520"> |
 
 ## Features
 
