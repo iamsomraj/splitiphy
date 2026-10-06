@@ -21,6 +21,7 @@ export const siteConfig = {
   links: {
     sourceGithub: 'https://github.com/iamsomraj/splitiphy',
     gitHub: 'https://github.com/iamsomraj',
+    portfolio: 'https://portfolio-iamsomraj.vercel.app',
   },
 };
 

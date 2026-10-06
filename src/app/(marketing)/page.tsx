@@ -131,7 +131,8 @@ const jsonLd = {
   author: {
     '@type': 'Person',
     name: 'Somraj Mukherjee',
-    url: siteConfig.links.gitHub,
+    url: siteConfig.links.portfolio,
+    sameAs: [siteConfig.links.gitHub, 'https://www.linkedin.com/in/iamsomraj/'],
   },
   sameAs: [siteConfig.links.sourceGithub],
 };

@@ -9,7 +9,7 @@ export default function Footer() {
         <p className="text-center text-sm leading-loose text-balance text-muted-foreground md:text-left">
           © {new Date().getFullYear()} {siteConfig.name}. Built by{' '}
           <a
-            href={siteConfig.links.gitHub}
+            href={siteConfig.links.portfolio}
             target="_blank"
             rel="noreferrer"
             className="font-medium underline underline-offset-4"

@@ -127,7 +127,7 @@ Contributions are very welcome, from typo fixes to new features. Read [CONTRIBUT
 
 ## Author
 
-Built by **Somraj Mukherjee**: [LinkedIn](https://www.linkedin.com/in/iamsomraj/) · [Portfolio](https://iamsomraj.github.io/) · [GitHub](https://github.com/iamsomraj)
+Built by **Somraj Mukherjee**: [LinkedIn](https://www.linkedin.com/in/iamsomraj/) · [Portfolio](https://portfolio-iamsomraj.vercel.app/) · [GitHub](https://github.com/iamsomraj)
 
 ## Show your support
 
