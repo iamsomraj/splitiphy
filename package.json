@@ -15,7 +15,9 @@
     "db:studio": "drizzle-kit studio --config=src/drizzle.config.ts",
     "db:push": "drizzle-kit push --config=src/drizzle.config.ts",
     "prepare": "husky",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "release": "changelogen --release --push",
+    "release:gh": "changelogen gh release"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.9.10",
@@ -62,6 +64,7 @@
     "@types/node": "^26.6.4",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "changelogen": "^0.6.2",
     "dotenv": "^18.0.5",
     "drizzle-kit": "^0.31.11",
     "eslint": "^9.39.5",
