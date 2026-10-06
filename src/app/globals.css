@@ -177,6 +177,11 @@
       'ss01' 1;
   }
 
+  /* iOS Safari gives search fields its own rounded look */
+  input[type='search'] {
+    appearance: none;
+  }
+
   /* Hack for Hiding Clerk Tag */
   div[class^='cl-internal-'] {
     @apply border-none bg-inherit;
