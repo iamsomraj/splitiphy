@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.0.1
+
+[compare changes](https://github.com/iamsomraj/splitiphy/compare/v1.0.0...v1.0.1)
+
+### 🩹 Fixes
+
+- **groups:** Compact filter bar with calendar range picker ([95adcf5](https://github.com/iamsomraj/splitiphy/commit/95adcf5))
+
+### ❤️ Contributors
+
+- Somraj Mukherjee ([@iamsomraj](https://github.com/iamsomraj))
+
 ## v1.0.0
 
 [compare changes](https://github.com/iamsomraj/splitiphy/compare/v0.1.1...v1.0.0)
