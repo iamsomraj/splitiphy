@@ -91,13 +91,13 @@ export default function GroupExpensesCharts({
           <LineChart data={filteredExpenses}>
             <XAxis
               dataKey="name"
-              stroke="#888888"
+              stroke="hsl(var(--muted-foreground))"
               fontSize={12}
               tickLine={false}
               axisLine={false}
             />
             <YAxis
-              stroke="#888888"
+              stroke="hsl(var(--muted-foreground))"
               fontSize={12}
               tickLine={false}
               axisLine={false}
@@ -110,10 +110,19 @@ export default function GroupExpensesCharts({
             />
             <Line
               dataKey="expense"
-              fill="currentColor"
-              className="fill-primary"
+              type="monotone"
+              stroke="hsl(var(--primary))"
+              strokeWidth={2}
+              dot={{ r: 3, fill: 'hsl(var(--primary))' }}
             />
-            <Tooltip />
+            <Tooltip
+              contentStyle={{
+                background: 'hsl(var(--popover))',
+                border: '1px solid hsl(var(--border))',
+                borderRadius: 'var(--radius)',
+                color: 'hsl(var(--popover-foreground))',
+              }}
+            />
           </LineChart>
         </ResponsiveContainer>
       </CardContent>

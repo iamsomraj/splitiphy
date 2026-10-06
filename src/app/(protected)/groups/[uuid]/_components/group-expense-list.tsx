@@ -141,8 +141,7 @@ const GroupExpenseList = ({
               <TableRow
                 key={groupExpense.uuid}
                 className={cn(
-                  groupExpense.isSystemGenerated &&
-                    'font-medium text-green-600 dark:text-green-200',
+                  groupExpense.isSystemGenerated && 'font-medium text-primary',
                   pending && 'pointer-events-none opacity-60',
                 )}
               >
@@ -231,8 +230,7 @@ const GroupExpenseList = ({
             key={groupExpense.uuid}
             className={cn(
               'flex flex-col gap-2 rounded-lg border bg-muted/40 p-4',
-              groupExpense.isSystemGenerated &&
-                'text-green-600 dark:text-green-200',
+              groupExpense.isSystemGenerated && 'text-primary',
               pending && 'pointer-events-none opacity-60',
             )}
           >
